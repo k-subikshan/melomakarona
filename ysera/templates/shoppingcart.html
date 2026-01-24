@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Home{% endblock title %}
+{% block title %}{% endblock title %}
 {% block index %}
 
     <style>
@@ -90,7 +90,7 @@
                                                     <td class="product-name">
                                                         <a href="#" class="title">{{c.p_name}}</a>
                                                     </td>
-                                                    <form action="{% url 'add to cart' c.cart_item_id %}" method="POST">
+                                                    <form action="{% url 'add to cart' product_id=c.slug %}" method="POST">
                                                     {% csrf_token %}
                                                     <td class="product-quantity" data-title="Quantity">
                                                         <div class="quantity">
@@ -123,7 +123,7 @@
                                     </form>
 
                                     <div class="control-cart">
-                                        <button class="button btn-continue-shopping">Continue Shopping</button>
+                                        <button class="button btn-cart-to-checkout"type="submit" ><a href="{% url 'home' %}">Continue Shopping</a></button>
                                         <button class="button btn-cart-to-checkout">Checkout</button>
                                     </div>
                                 </div>

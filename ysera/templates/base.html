@@ -101,7 +101,7 @@
                     </div>
                     <div class="col-lg-7 col-sm-8 col-md-6 col-xs-5 col-ts-12">
                         <div class="block-search-block">
-                            <form class="form-search form-search-width-category">
+                            <form class="form-search form-search-width-category" action="{% url "search" s='0' page='1' %}">
                                 <div class="form-content">
                                     <div class="category">
                                         <select title="cate"
@@ -123,7 +123,7 @@
                                     <div class="inner">
                                         <input type="text" class="input" name="s" value="" placeholder="Search here">
                                     </div>
-                                    <button class="btn-search" type="submit">
+                                    <button class="btn-search" type="submit" >
                                         <span class="icon-search"></span>
                                     </button>
                                 </div>
@@ -132,8 +132,8 @@
                     </div>
                     <div class="col-lg-2 col-sm-12 col-md-3 col-xs-12 col-ts-12">
                         <div class="header-control">
-                            <div class="block-minicart ysera-mini-cart block-header ysera-dropdown">
-                                <a href="javascript:void(0);" class="shopcart-icon" data-ysera="ysera-dropdown">
+                            <div class="block-minicart ysera-mini-cart block-header">
+                                <a href="{% url "cart" %}" class="shopcart-icon" >
                                     Cart 
                                     <span class="count">
                                         {{cart}}
@@ -151,11 +151,11 @@
                             </div>
                             <div class="block-account block-header ysera-dropdown">
                                 {% if log == '1' %}
-                                <a href="{% url "login" %}" data-ysera="ysera-dropdown">
+                                <a href="{% url "login" %}" >
                                     <span class="flaticon-user"></span>
                                 </a>
                                 {% else %}
-                                <a href="{% url "myaccount" %}" data-ysera="ysera-dropdown">
+                                <a href="{% url "myaccount" %}" >
                                     <span class="flaticon-user"></span>
                                 </a>
                                 {% endif %}

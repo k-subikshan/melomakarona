@@ -19,7 +19,7 @@ from .models import (
     Category, Product, ProductImage,
     Cart, CartItem,
     Order, OrderItem,
-    UserProfile, Coupon, OfferImage
+    UserProfile, Coupon, OfferImage,blog
 )
 
 # ================= ADMIN BRANDING =================
@@ -224,7 +224,9 @@ class CouponAdmin(admin.ModelAdmin):
 class OfferImageAdmin(admin.ModelAdmin):
     list_display = ("img_id", "title", "Type", "active", "where_to_display")
     list_filter = ("active", "Type")
-
+@admin.register(blog)
+class blogadmin(admin.ModelAdmin):
+    list_display=("blog_id","image","desc","date")
 # ==================================================
 # 📊 SALES CHART (MATCHES YOUR MODELS)
 # ==================================================
