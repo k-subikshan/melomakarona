@@ -241,3 +241,9 @@ class OfferImage(models.Model):
 
     def __str__(self):
         return self.title or f"Offer Image #{self.img_id}"
+class blog(models.Model):
+    blog_id=models.IntegerField(primary_key=True)
+    image = models.ImageField(upload_to="offers", blank=True, null=True)
+    desc=models.CharField(max_length=500)
+    date=models.DateField( auto_now=False, auto_now_add=False)
+    

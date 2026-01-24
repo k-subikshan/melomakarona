@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render,get_object_or_404
-from .models import Cart, CartItem, Product, ProductImage,OfferImage
+from .models import Cart, CartItem, Product, ProductImage,OfferImage,blog
 from datetime import datetime,timedelta
 # Helper function to get product data including first image
 def get_product_data(products):
@@ -64,7 +64,7 @@ def home(request):
     else:
         cart, created = Cart.objects.get_or_create(user=request.user)
         cart_items = CartItem.objects.filter(cart=cart).count
-
+    blogs=blog.objects.all()
         
         
     # ------------------ CONTEXT ------------------
@@ -85,6 +85,7 @@ def home(request):
         "offers_3": offers_3,
         "offers_4": offers_4,
         "offers_5": offers_5,
+        "blog":blogs
     }
 
     return render(request, 'index.html', context)
