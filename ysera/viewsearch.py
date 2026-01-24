@@ -181,7 +181,7 @@ def search(request, s,page):
     else:
         cart, created = Cart.objects.get_or_create(user=request.user)
         products = CartItem.objects.filter(cart=cart).count
-    page_product1=Paginator(results,1)
+    page_product1=Paginator(results,6)
     page_product=page_product1.get_page(page)
     total_page=page_product1.page_range
     ifprev=page_product.has_previous()
