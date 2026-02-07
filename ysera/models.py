@@ -26,6 +26,20 @@ class Product(models.Model):
     size= models.CharField(max_length=1000, default="")
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     del_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    rentalprice=models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    CHOICES = [
+        ('0', 'buy'),
+        ('1', 'rental'),
+        ('2','both')
+        
+    ]
+    availablity=models.CharField(
+
+        max_length=10,
+        choices=CHOICES,
+        default='2'
+    )
+
     save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
 
@@ -95,7 +109,7 @@ class ProductImage(models.Model):
         choices=CHOICES,
         default='none'
     )
-    slug = models.SlugField(unique=True, blank=True, null=True, default="")
+    slug = models.SlugField( blank=True, null=True, default="")
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -118,6 +132,16 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    CHOICES = [
+        ('0', 'buy'),
+        ('1', 'rental'),
+        
+    ]
+    carttype=models.CharField(
+        max_length=10,
+        choices=CHOICES,
+        default='0'
+    )
 
     def __str__(self):
         return f"{self.quantity} x {self.product.p_name}"

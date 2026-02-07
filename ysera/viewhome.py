@@ -26,6 +26,7 @@ def get_product_data(products):
             'where_to_display': product.where_to_display,
             'slug': product.slug,
             'image_url': image_url,
+            "availablity":product.availablity
             
 
         }

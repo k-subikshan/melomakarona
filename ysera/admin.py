@@ -55,8 +55,11 @@ class ProductAdmin(admin.ModelAdmin):
         "p_name",
         "category",
         "price",
+        "rentalprice",
+        "availablity",
         "stock_status",
         "where_to_display",
+
     )
     list_filter = ("category", "stock_status", "where_to_display", "new")
     search_fields = ("p_name", "brand_name", "desc")
@@ -70,7 +73,7 @@ class ProductAdmin(admin.ModelAdmin):
             "fields": ("p_name", "brand_name", "category", "desc", "slug"),
         }),
         ("✨ Pricing", {
-            "fields": ("price", "del_price", "save_upto"),
+            "fields": ("price", "rentalprice","del_price","availablity", "save_upto"),
         }),
         ("📦 Inventory", {
             "fields": ("stock_status", "size", "delivery_times"),
