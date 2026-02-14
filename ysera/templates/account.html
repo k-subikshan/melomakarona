@@ -2,7 +2,178 @@
 {% load static %}
 {% block title %}Account{% endblock title %}
 {% block index %}
-    <style>
+<style>
+ .status {
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Status colors */
+.status.pending {
+    color: #1e88e5;
+    background: #e3f2fd;
+}
+
+.status.paid {
+    color: #6a1b9a;
+    background: #f3e5f5;
+}
+
+.status.shipped {
+    color: #fb8c00;
+    background: #fff3e0;
+}
+
+.status.out_for_delivery {
+    color: #00897b;
+    background: #e0f2f1;
+}
+
+.status.delivered {
+    color: #2e7d32;
+    background: #e6f7ec;
+}
+
+.status.cancelled {
+    color: #c62828;
+    background: #fdecea;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+.order-table thead {
+    background: #f7f7f7;
+}
+
+.order-table th {
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    color: #444;
+}
+
+/* Rows */
+.order-table td {
+    padding: 12px;
+    font-size: 14px;
+    color: #333;
+}
+
+.order-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s ease;
+}
+
+.order-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* Status badge */
+.status {
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+/* Status colors */
+.status.pending {
+    background: #e3f2fd;
+    color: #1e88e5;
+}
+
+.status.paid {
+    background: #ede7f6;
+    color: #5e35b1;
+}
+
+.status.shipped {
+    background: #fff3e0;
+    color: #fb8c00;
+}
+
+.status.out_for_delivery {
+    background: #e0f2f1;
+    color: #00897b;
+}
+
+.status.delivered {
+    background: #e6f7ec;
+    color: #2e7d32;
+}
+
+.status.cancelled {
+    background: #fdecea;
+    color: #c62828;
+}
+
+/* Responsive (mobile friendly) */
+@media (max-width: 768px) {
+    .order-table thead {
+        display: none;
+    }
+
+    .order-table tr {
+        display: block;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .order-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .order-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #666;
+    }
+}
+
+    .order-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    summary {
+        list-style: none;
+        cursor: pointer;
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    details:not([open]) .order-table,
+    details:not([open]) .order-total {
+        display: none;
+    }
+
         /* Account Page Styles */
         #account-page {
             font-family: 'Raleway', sans-serif;
@@ -453,7 +624,7 @@
         #account-page .faq-answer li {
             margin-bottom: 8px;
         }
-    </style>
+ </style>
     <!-- Account Page Content -->
     <div id="account-page">
         <div class="account-container">
@@ -464,68 +635,130 @@
             
             <div class="account-content">
                 <!-- Profile Section -->
-                <div class="profile-section">
-                    <div class="section-header">
-                        <h2>Profile Information</h2>
-                        <button class="edit-btn" id="editProfileBtn">
-                            <i class="fa fa-edit"></i> Edit Profile
-                        </button>
-                    </div>
-                    
-                    <div class="profile-details">
-                        <form id="profileForm" method="POST" action="{% url 'edit' %}">
-                            {% csrf_token %}
-                
-                            <div class="profile-field">
-                                <label for="fullname">Full Name</label>
-                                <input type="text"  name="name" id="fullname" value="{{request.user.first_name}}" disabled>
-                            </div>
-                            
-                            <div class="profile-field">
-                                <label for="email">Email Address</label>
-                                <input type="email" name="email" id="email" value="{{request.user.email}}" disabled>
-                            </div>
-                            
-                            <div class="profile-field">
-                                <label for="phone">Contact Number</label>
-                                <input type="tel"  name="mobile" id="phone" value="+91 {{profile.mobile}}" disabled>
-                            </div>
-                            
-                            <div class="profile-field">
-                                <label for="address">Address</label>
-                                <textarea id="address" name="address" rows="3" disabled>{{profile.address}}</textarea>
-                            </div>
-                            
-                            <div class="profile-field">
-                                <label for="pincode">Pincode/ZIP</label>
-                                <input type="text" name="zipcode" id="pincode" value="{{profile.zip_code}}" disabled>
-                            </div>
-                            
-                            <div class="profile-actions hidden" id="profileActions">
-                                <button type="button" class="cancel-btn" id="cancelEditBtn">Cancel</button>
-                                <button type="submit" class="save-btn">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+              <div class="profile-section">
+    <div class="section-header">
+        <h2>Profile Information</h2>
+        <button type="button" class="edit-btn" id="editProfileBtn">
+            <i class="fa fa-edit"></i> Edit Profile
+        </button>
+    </div>
+
+    <div class="profile-details">
+        <form id="profileForm" method="POST" action="{% url 'edit' %}">
+            {% csrf_token %}
+
+            <div class="profile-field">
+                <label for="fullname">Full Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    id="fullname"
+                    value="{{ request.user.first_name }}"
+                    disabled
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="email">Email Address</label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value="{{ request.user.email }}"
+                    disabled
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="mobile">Contact Number</label>
+                <input
+                    type="tel"
+                    name="mobile"
+                    id="mobile"
+                    value="{{ profile.mobile }}"
+                    disabled
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="address">Address</label>
+                <textarea
+                    id="address"
+                    name="address"
+                    rows="3"
+                    disabled
+                >{{ profile.address }}</textarea>
+            </div>
+
+            <div class="profile-field">
+                <label for="zipcode">Pincode / ZIP</label>
+                <input
+                    type="text"
+                    name="zipcode"
+                    id="zipcode"
+                    value="{{ profile.zip_code }}"
+                    disabled
+                >
+            </div>
+
+            <div class="profile-actions hidden" id="profileActions">
+                <button type="button" class="cancel-btn" id="cancelEditBtn">
+                    Cancel
+                </button>
+                <button type="submit" class="save-btn">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
                 
                 <!-- Orders Section -->
                 <div class="orders-section">
                     <div class="section-header">
                         <h2>Order History</h2>
-                        <div class="ysera-countdown">
-                            <div class="box-count">
-                                <span class="number">5</span>
-                                <span class="text">Orders</span>
-                            </div>
-                        </div>
+                     
                     </div>
-                    
-                    <div class="orders-list" id="ordersList">
-                        <!-- Orders will be loaded here via JavaScript -->
-                    </div>
-                </div>
-                
+             <div class="orders-list" id="ordersList">
+                {% if cart1 %}
+                    <table class="order-table">
+                        
+                        <thead>
+                            <tr>
+                                <th>Order Id</th>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c1 in cart1 %}
+                            <tr>
+                               <td data-label="Id">{{ c1.id }}</td>
+                                <td data-label="Item">{{ c1.p_name }}</td>
+                                <td data-label="Qty">{{ c1.qty }}</td>
+                                <td data-label="Price">{{ c1.price }}</td>
+                                <td data-label="Status">
+                                    <span class="status {{ c1.status|lower }}">
+                                        {{ c1.status }}
+                                    </span>
+                                </td>
+
+
+                                
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                   
+             
+                {% endif %}
+            </div>
+
+             
                 <!-- FAQ Section -->
                 <div class="faq-section">
                     <div class="section-header">
@@ -606,21 +839,7 @@
     </div>
     <script>
         // Sample order data
-        const orders = [
-        {% if cart1 %}
-            {
-                id: "YS-2023-001",
-                date: "2023-10-15",
-                status: "delivered",
-                type: "bought",
-                items: [
-                    { name: "Diamond Eternity Ring", qty: 1, price: "$1,250", rental: false },
-                    { name: "Pearl Drop Earrings", qty: 1, price: "$450", rental: false }
-                ],
-                total: "$1,700"
-            },
-            {% endif %}
-        ];
+        
         
         // DOM elements - scoped to account page
         const accountPage = document.getElementById('account-page');
@@ -808,4 +1027,23 @@
             });
         }
     </script>
+    <script>
+const editBtn = document.getElementById("editProfileBtn");
+const cancelBtn = document.getElementById("cancelEditBtn");
+const actions = document.getElementById("profileActions");
+const fields = document.querySelectorAll(
+    "#profileForm input, #profileForm textarea"
+);
+
+editBtn.onclick = () => {
+    fields.forEach(f => f.disabled = false);
+    actions.classList.remove("hidden");
+};
+
+cancelBtn.onclick = () => {
+    fields.forEach(f => f.disabled = true);
+    actions.classList.add("hidden");
+};
+</script>
+
 {% endblock index %}

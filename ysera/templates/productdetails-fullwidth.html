@@ -82,7 +82,7 @@
                                 <div class="group-button">
                                     <div class="yith-wcwl-add-to-wishlist">
                                         <div class="yith-wcwl-add-button">
-                                            <a href="#">Add to Wishlist</a>
+                                            <a href="{% url 'add to wishlist' product_slug=product.slug %}">Add to Wishlist</a>
                                         </div>
                                     </div>
                                     <div class="size-chart-wrapp">
@@ -108,6 +108,7 @@
                                         <button class="single_add_to_cart_button button" type="submit" formaction="{% url 'add to cart' product_id=product.slug %}" >Add to cart</button>
                                     </div>
                                     </form>
+                                    {% endif %}
                                     <div class="rental-section">
                                         <!-- Pincode Check -->
                                         <div class="pincode-check-container">
@@ -129,16 +130,11 @@
 
                                         <!-- Rent Now Button (initially hidden/disabled) -->
                                         <div class="rental-action" style="display: none;">
-                                            <button id="rent-now-btn" class="button rent-now-btn" disabled>Rent
-                                                Now</button>
-                                            <div class="rental-info">
-                                                <p class="rental-price">Rental: <span>Rs.200/day</span></p>
-                                                <p class="rental-note">Min. rental period: 3 days</p>
-                                                <p class="security-note">Security deposit: Rs.2000 (refundable)</p>
-                                            </div>
+                                           <a href="{% url 'add to rental' product_id=product.slug %}" <button class="button rent-now-btn"  disabled>Rent
+                                                Now</button></a>
                                         </div>
                                     </div>
-                                    {% endif %}
+                            
                                 </div>
                             </div>
                         </div>
@@ -333,7 +329,7 @@
                                                     <div class="thumb-group">
                                                         <div class="yith-wcwl-add-to-wishlist">
                                                             <div class="yith-wcwl-add-button">
-                                                                <a href="#">Add to Wishlist</a>
+                                                                <a href="{% url 'add to wishlist' product_slug=same.slug %}">Add to Wishlist</a>
                                                             </div>
                                                         </div>
 

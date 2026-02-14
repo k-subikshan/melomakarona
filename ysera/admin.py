@@ -105,8 +105,14 @@ class CartAdmin(admin.ModelAdmin):
 # ================= CART ITEM =================
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
-    list_display = ("id", "cart", "product", "quantity", "subtotal")
-
+    list_display = ("id", "cart", "product", "quantity", "subtotal","carttype")
+    list_filter=("id", "cart", "product", "quantity","carttype")
+    search_fields =("id", "cart", "product", "quantity","carttype")
+@admin.register(blog)
+class blogAdmin(admin.ModelAdmin):
+    list_display = ("blog_id","image","desc","author","date")
+    list_filter=("blog_id","image","desc","author","date")
+    search_fields =("blog_id","image","desc","author","date")
 # ================= USER PROFILE =================
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -227,9 +233,25 @@ class CouponAdmin(admin.ModelAdmin):
 class OfferImageAdmin(admin.ModelAdmin):
     list_display = ("img_id", "title", "Type", "active", "where_to_display")
     list_filter = ("active", "Type")
-@admin.register(blog)
-class blogadmin(admin.ModelAdmin):
-    list_display=("blog_id","image","desc","date")
+from django.contrib import admin
+from .models import Wishlist, WishItem
+
+
+# ================= WISHLIST =================
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "created_at")
+    list_filter = ("user", "created_at")
+    search_fields = ("user__username", "user__email")
+
+
+# ================= WISHLIST ITEM =================
+@admin.register(WishItem)
+class WishItemAdmin(admin.ModelAdmin):
+    list_display = ("id", "wishlist", "product")
+    list_filter = ("wishlist", "product")
+    search_fields = ("wishlist__user__username", "product__name")
+
 # ==================================================
 # 📊 SALES CHART (MATCHES YOUR MODELS)
 # ==================================================

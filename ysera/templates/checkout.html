@@ -1,10 +1,12 @@
 {% extends "base.html" %}
-{% block title %}Checkout{% endblock title %}
-{% block content %}
+{% load static %}
+{% block title %}Cart{% endblock title %}
+{% block index %}
+
 <style>
 :root {
-  --primary: #4a6de5;
-  --primary-light: #5e82f2;
+  --primary: #c09578;
+  --primary-light: #c09578;
   --secondary: #f8f9fa;
   --accent: #ff6b6b;
   --text: #333;
@@ -46,51 +48,26 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
 .small-muted { font-size:13px; color:#666; margin-top:8px; }
 </style>
 <div class="breadcrumb">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="breadcrumb__title">
-                            <h1>check out</h1>
-                            <ul>
-                                <li>
-                                    <a href="{% url "home" %}">Home</a>
-                                </li>
-                                <li class="color__blue">
-                                   CHECK OUT
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 <div class="checkout-container">
-  <!-- LEFT SIDE: PROFILE & ADDRESS -->
+  
   <div class="card">
     <h2>Delivery Information</h2>
     <div class="user-info">
       <div class="info-item"><div class="info-label">Name:</div><div class="info-value">{{ request.user.first_name }}</div></div>
       <div class="info-item"><div class="info-label">Email:</div><div class="info-value">{{ request.user.email }}</div></div>
       <div class="info-item"><div class="info-label">Mobile:</div><div class="info-value">+91 {{ profile.mobile }}</div></div>
-      <div class="info-item"><div class="info-label">Zipcode:</div><div class="info-value">+91 {{ profile.zipcode }}</div></div>
+      <div class="info-item"><div class="info-label">Zipcode:</div><div class="info-value">{{ profile.zip_code }}</div></div>
+      <div class="info-item"><div class="info-label">Address:</div><div class="info-value">{{ profile.address }}</div></div>
     </div>
-    <form id="address-form">
-      {% csrf_token %}
-      <div class="address-section">
-        <label for="addr">Delivery Address</label>
-        <textarea id="addr" name="address" rows="4">{{ profile.address }}</textarea>
-        <div style="margin-top:10px;">
-          <button type="button" id="save-address" class="apply-btn">Save Address</button>
-          <span id="address-msg" class="small-muted"></span>
-        </div>
-      </div>
-    </form>
+    
     <a href="{% url 'myaccount' %}">
-      <button name="edit_profile" class="apply-btn" style="margin-top:8px;">My Account</button>
+      <button name="edit_profile" class="apply-btn" style="margin-top:8px;">Edit Delivery Information</button>
     </a>
   </div>
 
-  <!-- RIGHT SIDE: ORDER + PAYMENT -->
+  
   <div class="card">
     <h3>Your Order</h3>
     <table style="width:100%; margin-bottom:12px;">
@@ -98,10 +75,11 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
       {% for item in items %}
       <tr><td>{{ item.product.p_name }}</td><td style="text-align:right;">₹{{ item.product.price }}</td></tr>
       {% endfor %}
+       <tr><td>Delivery price</td><td style="text-align:right;">+₹100</td></tr>
       <tr><td><strong>Total</strong></td><td style="text-align:right;"><strong id="display-total">₹{{ total_amount }}</strong></td></tr>
     </table>
 
-    <!-- COUPON -->
+  
     <form method="post" id="coupon-form">
       {% csrf_token %}
       <div class="coupon-section">
@@ -114,17 +92,17 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
       </div>
     </form>
 
-    <!-- OTP Step -->
+
     <button type="button" class="otp-btn" id="send-otp" style="width:100%;">Proceed to OTP Verification</button>
 
-    <!-- Razorpay button (hidden until verified & selected) -->
+
     <div id="razorpay-container" style="display:none; margin-top:15px;">
       <button id="pay-online-launch" class="default__button">Pay Online (Razorpay)</button>
     </div>
   </div>
 </div>
 
-<!-- OTP MODAL -->
+
 <div class="modal-overlay" id="otp-modal">
   <div class="modal-content">
     <h4>Verify Your OTP</h4>
@@ -145,151 +123,218 @@ body { background-color: white; color: var(--text); font-family: 'Poppins', sans
     </div>
   </div>
 </div>
-
 <script>
+
+
 // === CSRF ===
-function getCookie(name){let v=null;if(document.cookie){document.cookie.split(';').forEach(c=>{c=c.trim();if(c.startsWith(name+'='))v=decodeURIComponent(c.substring(name.length+1));});}return v;}
+function getCookie(name){
+  let v=null;
+  if(document.cookie){
+    document.cookie.split(';').forEach(c=>{
+      c=c.trim();
+      if(c.startsWith(name+'='))v=decodeURIComponent(c.substring(name.length+1));
+    });
+  }
+  return v;
+}
 const csrftoken=getCookie('csrftoken');
 
-
-paymentrazor
-
-
 // ELEMENTS
-const sendOtpBtn=document.getElementById('send-otp'),otpModal=document.getElementById('otp-modal'),
-verifyOtpBtn=document.getElementById('verify-otp'),resendOtpBtn=document.getElementById('resend-otp'),
-otpInput=document.getElementById('otp-input'),otpMsg=document.getElementById('otp-message'),
-paymentChoices=document.getElementById('payment-choices'),chooseCod=document.getElementById('choose-cod'),
-chooseOnline=document.getElementById('choose-online'),couponInput=document.getElementById('coupon'),
-applyCouponBtn=document.getElementById('apply-coupon'),couponMsg=document.getElementById('coupon-msg'),
-displayTotal=document.getElementById('display-total'),addressField=document.getElementById('addr'),
-addressMsg=document.getElementById('address-msg'),saveAddressBtn=document.getElementById('save-address'),
-razorpayContainer=document.getElementById('razorpay-container');
+const sendOtpBtn=document.getElementById('send-otp'),
+otpModal=document.getElementById('otp-modal'),
+verifyOtpBtn=document.getElementById('verify-otp'),
+resendOtpBtn=document.getElementById('resend-otp'),
+otpInput=document.getElementById('otp-input'),
+otpMsg=document.getElementById('otp-message'),
+paymentChoices=document.getElementById('payment-choices'),
+chooseCod=document.getElementById('choose-cod'),
+chooseOnline=document.getElementById('choose-online'),
+couponInput=document.getElementById('coupon'),
+applyCouponBtn=document.getElementById('apply-coupon'),
+couponMsg=document.getElementById('coupon-msg'),
+displayTotal=document.getElementById('display-total');
 
 let lastVerified=false;
 
-// MODAL HANDLERS
-function openOtpModal(){otpModal.style.display='flex';otpInput.value='';otpMsg.textContent='';paymentChoices.style.display='none';}
+// === MODAL HANDLERS ===
+function openOtpModal(){
+  otpModal.style.display='flex';
+  otpInput.value='';
+  otpMsg.textContent='';
+  paymentChoices.style.display='none';
+}
 function closeOtpModal(){otpModal.style.display='none';}
 otpModal.addEventListener('click',e=>{if(e.target===otpModal)closeOtpModal();});
 
 // === SEND OTP ===
 sendOtpBtn.addEventListener('click',()=>{
-
-
-fetch("{% url 'send_checkout_otp1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}})
-
-
-.then(r=>r.json()).then(d=>{if(d.status==='sent'){openOtpModal();otpMsg.textContent='OTP sent.';}else alert('Failed to send OTP.');})
-.catch(()=>alert('Network error.'));
+  fetch("{% url 'send_checkout_otp1' %}",{
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==='sent'){
+      openOtpModal();
+      otpMsg.textContent='OTP sent to your email.';
+      otpMsg.className='small-muted';
+    } else {
+      alert('Failed to send OTP. Try again.');
+    }
+  })
+  .catch(()=>alert('Network error.'));
 });
 
 // === RESEND OTP ===
 resendOtpBtn.addEventListener('click',()=>{
-
-
-fetch("{% url 'send_checkout_otp1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}})
-
-
-.then(r=>r.json()).then(d=>{otpMsg.textContent=d.status==='sent'?'OTP resent.':'Failed to resend.';});
+  fetch("{% url 'send_checkout_otp1' %}",{
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'}
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    otpMsg.textContent=d.status==='sent'?'OTP resent.':'Failed to resend OTP.';
+  });
 });
 
 // === VERIFY OTP ===
 verifyOtpBtn.addEventListener('click',()=>{
-const otp=otpInput.value.trim();
-if(!otp){otpMsg.textContent='Enter OTP';otpMsg.className='error-msg';return;}
+  const otp=otpInput.value.trim();
+  if(!otp){
+    otpMsg.textContent='Enter OTP';
+    otpMsg.className='error-msg';
+    return;
+  }
 
-
-fetch("{% url 'verify_order_otp1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({otp})})
-
-
-.then(r=>r.json()).then(d=>{
-if(d.status==='verified'){otpMsg.textContent='Verified!';otpMsg.className='success-msg';paymentChoices.style.display='block';lastVerified=true;}
-else{otpMsg.textContent='Invalid OTP';otpMsg.className='error-msg';}
-});
+  fetch("{% url 'verify_order_otp1' %}",{
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
+    body:JSON.stringify({otp})
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==='verified'){
+      otpMsg.textContent='OTP verified! Choose a payment method below.';
+      otpMsg.className='success-msg';
+      paymentChoices.style.display='block';
+      lastVerified=true;
+    } else if(d.status==='no_otp'){
+      otpMsg.textContent='No OTP found. Please resend.';
+      otpMsg.className='error-msg';
+    } else {
+      otpMsg.textContent='Invalid or expired OTP.';
+      otpMsg.className='error-msg';
+    }
+  });
 });
 
 // === APPLY COUPON ===
 applyCouponBtn.addEventListener('click',()=>{
-
-  const code = couponInput.value.trim();
+  const code=couponInput.value.trim();
   if(!code){
-    couponMsg.textContent = "Please enter a coupon code.";
-    couponMsg.className = "error-msg";
+    couponMsg.textContent="Please enter a coupon code.";
+    couponMsg.className="error-msg";
     return;
   }
 
-  fetch("{% url 'apply_coupon' %}", {
-    method: 'POST',
-    headers: {
-      'X-CSRFToken': csrftoken,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ coupon: code })
+  fetch("{% url 'apply_coupon' %}",{
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
+    body:JSON.stringify({coupon:code})
   })
-  .then(res => res.json())
-  .then(data => {
-    if(data.status === 'ok'){
-      displayTotal.textContent = '₹' + data.total;
-      couponMsg.textContent = data.message || "Coupon applied successfully!";
-      couponMsg.className = 'success-msg';
-    }
-    else if(data.status === 'invalid'){
-      couponMsg.textContent = data.message || "Invalid or expired coupon.";
-      couponMsg.className = 'error-msg';
-    }
-    else {
-      couponMsg.textContent = "Something went wrong. Please try again.";
-      couponMsg.className = 'error-msg';
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.status==='ok'){
+      displayTotal.textContent='₹'+data.total;
+      couponMsg.textContent=data.message||"Coupon applied successfully!";
+      couponMsg.className='success-msg';
+    } else if(data.status==='invalid'){
+      couponMsg.textContent=data.message||"Invalid or expired coupon.";
+      couponMsg.className='error-msg';
+    } else {
+      couponMsg.textContent="Something went wrong. Please try again.";
+      couponMsg.className='error-msg';
     }
   })
-  .catch(err => {
-    couponMsg.textContent = "Network error. Try again.";
-    couponMsg.className = 'error-msg';
+  .catch(err=>{
+    couponMsg.textContent="Network error. Try again.";
+    couponMsg.className='error-msg';
     console.error(err);
   });
-
-});
-
-
-
-// === SAVE ADDRESS ===
-saveAddressBtn.addEventListener('click',()=>{
-fetch("{% url 'edit' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim()})})
-.then(r=>r.json()).then(d=>{addressMsg.textContent=d.status==='ok'?'Saved!':'Failed.';});
 });
 
 // === CHOOSE COD ===
 chooseCod.addEventListener('click',()=>{
-if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
+  if(!lastVerified){
+    otpMsg.textContent='Verify OTP first.';
+    otpMsg.className='error-msg';
+    return;
+  }
 
-
-fetch("{% url 'place_cod_order1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({address:addressField.value.trim(),coupon:couponInput.value.trim()})})
-
-
-.then(r=>r.json()).then(d=>{if(d.status==='placed')window.location.href=d.redirect;else document.getElementById('payment-msg').textContent=d.message;});
+  fetch("{% url 'place_cod_order1' %}",{
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
+    body:JSON.stringify({coupon:couponInput.value.trim()})
+  })
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status==='placed'){
+      window.location.href=d.redirect;
+    } else {
+      document.getElementById('payment-msg').textContent=d.message||'Failed to place order.';
+    }
+  });
 });
 
-// === CHOOSE ONLINE ===
+// === CHOOSE ONLINE (Razorpay) ===
 chooseOnline.addEventListener('click',()=>{
-if(!lastVerified){otpMsg.textContent='Verify OTP first.';return;}
+  if(!lastVerified){
+    otpMsg.textContent='Verify OTP first.';
+    otpMsg.className='error-msg';
+    return;
+  }
 
+  fetch("{% url 'create_razorpay_order1' %}",{   // ✅ CORRECT URL
+    method:'POST',
+    credentials: 'include',
+    headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},
+    body:JSON.stringify({coupon:couponInput.value.trim()})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    console.log("Razorpay create response:", data);
 
-fetch("{% url 'create_razorpay_order1' %}",{method:'POST',headers:{'X-CSRFToken':csrftoken,'Content-Type':'application/json'},body:JSON.stringify({coupon:couponInput.value.trim(),address:addressField.value.trim()})})
+    if(data.status==='created'){
+      const options={
+        key:data.key,
+        amount:data.amount,
+        currency:'INR',
+        order_id:data.order_id,
+       "callback_url": "http://127.0.0.1:8000//payment/success-cart1/",
+   
 
-
-.then(r=>r.json()).then(data=>{
-if(data.status==='created'){
-const opt={key:data.key,amount:data.amount,currency:'INR',order_id:data.order_id,
-
-
-handler:function(res){window.location.href="{% url 'payment_success1' %}?pid="+res.razorpay_payment_id;},theme:{color:'#4a6de5'}};
-
-
-new Razorpay(opt).open();
-}});
+      
+    
+        theme:{color:'#4a6de5'}
+      };
+      const rzp=new Razorpay(options);
+      rzp.open();
+    } else {
+      document.getElementById('payment-msg').textContent=data.message||'Failed to create Razorpay order.';
+    }
+  })
+  .catch(err=>{
+    console.error("Error creating Razorpay order:",err);
+    document.getElementById('payment-msg').textContent='Network error creating payment.';
+  });
 });
 </script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-{% endblock %}
+{% endblock index %}
+

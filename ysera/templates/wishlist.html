@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Wishlist{% endblock title %}
+{% block index %}
+<style>
+    /* Mobile Double Grid */
+@media (max-width: 767px) {
+    .list-products.product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+    
+    .list-products.product-grid .product-item {
+        width: 50%;
+        padding-left: 8px;
+        padding-right: 8px;
+        margin-bottom: 20px;
+        float: none;
+    }
+    
+    .list-products.product-grid .product-inner {
+        width: 100%;
+    }
+    
+    /* Clearfix for the grid */
+    .list-products.product-grid::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
+/* For very small mobile devices (optional) */
+@media (max-width: 480px) {
+    .list-products.product-grid {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    
+    .list-products.product-grid .product-item {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+</style>
+<style>
+.no-result {
+    text-align: center;
+    font-family: 'Playfair Display', serif; /* luxury feel */
+    font-size: 26px;
+    font-weight: 500;
+    color: #b89b5e; /* elegant gold */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: reveal 1.6s ease-out forwards, shimmer 3s ease-in-out infinite;
+}
+
+/* Fade + Float */
+@keyframes reveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Soft gold shimmer */
+@keyframes shimmer {
+    0%, 100% {
+        text-shadow: 0 0 0 rgba(184,155,94,0);
+    }
+    50% {
+        text-shadow: 0 0 12px rgba(184,155,94,0.35);
+    }
+}
+</style>
+
+<div class="main-content main-content-product no-sidebar">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-trail breadcrumbs">
+                    <ul class="trail-items breadcrumb">
+                        <li class="trail-item trail-begin">
+                            <a href="{% url "home" %}">Home</a>
+                        </li>
+                        <li class="trail-item trail-end active">
+                            Wishlist
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="content-area shop-grid-content full-width col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <div class="site-main">
+                    
+                    <h3 class="custom_blog_title">
+                        Grid Products
+                    </h3>
+                    <ul class="row list-products auto-clear equal-container product-grid">
+                    {% if results %}
+                    {% for result in results %}
+                        <li class="product-item product-type-variable col-lg-3 col-md-4 col-sm-6 col-xs-12 col-ts-6 style-1">
+                            <div class="product-inner equal-element">
+                                <div class="product-top">
+                                </div>
+                                <div class="product-thumb">
+                                    <div class="thumb-inner">
+                                        <a href="{% url "product" p=result.slug %}">
+                                            <img src="{{result.image_url}}" alt="img">
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h5 class="product-name product_title">
+                                        <a href="{% url "product" p=result.slug %}">{{result.p_name}}</a>
+                                    </h5>
+                                    <div class="group-info">
+                                        
+                                        <div class="price">
+                                            <del>
+                                                {{result.del_price}}
+                                            </del>
+                                            <ins>
+                                                {{result.price}}
+                                            </ins>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    {% else %}
+<h3 class="no-result">No Result Found</h3>
+
+
+
+
+                    {% endif %}
+                    </ul>
+                    <div class="pagination clearfix style2">
+                        <div class="nav-link">
+                            {% if ifprev %}
+                            <a href="{% url "wishlist" page=prevpage %}" class="page-numbers"><i class="icon fa fa-angle-left"
+                                                                aria-hidden="true" style="color:red"></i></a>
+                            {% else %}
+                            <a href="javascript:void(0);" onclick="noPreviousPage()" class="page-numbers"><i class="icon fa fa-angle-left"
+                                                                aria-hidden="true" ></i></a>
+                            
+                            {% endif %}
+                            {% for i in page_range %}
+                            {% if i == currentpage %}
+                            <a href="{% url "wishlist" page=i %}" class="page-numbers current" >{{i}}</a>
+                            {% else %}
+                            <a href="{% url "wishlist" page=i %}" class="page-numbers" >{{i}}</a>
+                            {% endif %}
+                            {% endfor %}
+                            {% if ifnext %}
+                            <a href="{% url "wishlist" page=nextpage %}" class="page-numbers"><i class="icon fa fa-angle-right"
+                                                                aria-hidden="true" style="color:red"></i></a>
+                            {% else %}
+                            <a href="javascript:void(0);" onclick="noNextPage()" class="page-numbers"><i class="icon fa fa-angle-right"
+                                                                aria-hidden="true"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<script>
+    function noPreviousPage() {
+        alert("No more previous pages available.");
+    }
+    function noNextPage() {
+        alert("No more next pages available.");
+    }
+</script>
+{% endblock index %}

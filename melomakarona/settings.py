@@ -176,5 +176,13 @@ SESSION_COOKIE_SECURE = True
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+RAZORPAY_KEY_ID = "rzp_test_SDgcKGRjkg9kGi"
+RAZORPAY_KEY_SECRET = "Bq1NHixGJDzI3xELwiCpcHDY"
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'angelsglamnglow@gmail.com'
+EMAIL_HOST_PASSWORD = 'qctp dcvt cern kvml'  # Use App Password, not your Gmail password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -133,12 +133,21 @@
                     <div class="col-lg-2 col-sm-12 col-md-3 col-xs-12 col-ts-12">
                         <div class="header-control">
                             <div class="block-minicart ysera-mini-cart block-header">
+                                {% if log == '1' %}
+                                <a href="{% url "login" %}" class="shopcart-icon" >
+                                    Cart 
+                                    <span class="count">
+                                        {{cart}}
+                                    </span>
+                                </a>
+                                 {% else %}
                                 <a href="{% url "cart" %}" class="shopcart-icon" >
                                     Cart 
                                     <span class="count">
                                         {{cart}}
                                     </span>
                                 </a>
+                                {% endif %}
                                 <div class="no-product ysera-submenu">
                                     <p class="text">
                                         You have
@@ -417,6 +426,9 @@
                                     </ul>
                                 </li>
                                 <li class="menu-item">
+                                    <a href="{% url "blog" page=1 %}" class="ysera-menu-item-title" title="About">Blog</a>
+                                </li>
+                                <li class="menu-item">
                                     <a href="about.html" class="ysera-menu-item-title" title="About">About</a>
                                 </li>
 
@@ -450,12 +462,33 @@
                         <i class="fa fa-times" aria-hidden="true"></i>
                     </a>
                     <div class="header-searchform-box">
-                        <form class="header-searchform">
-                            <div class="searchform-wrap">
-                                <input type="text" class="search-input" placeholder="Enter keywords to search...">
-                                <input type="submit" class="submit button" value="Search">
-                            </div>
-                        </form>
+                       <form class="form-search form-search-width-category" action="{% url "search" s='0' page='1' %}">
+                                <div class="form-content">
+                                    <div class="category">
+                                        <select title="cate"
+                                            data-placeholder="All Categories"
+                                            class="chosen-select"
+                                            tabindex="1"
+                                            onchange="goToCategory(this.value)">
+                                            
+                                        <option value=""></option>
+                                        <option value="Rings">Rings</option>
+                                        <option value="Bracelets">Bracelets</option>
+                                        <option value="Necklace">Necklace</option>
+                                        <option value="Earring">Earring</option>
+                                        <option value="Bangles">Bangles</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+
+                                    </div>
+                                    <div class="inner">
+                                        <input type="text" class="input" name="s" value="" placeholder="Search here">
+                                    </div>
+                                    <button class="btn-search" type="submit" >
+                                        <span class="icon-search"></span>
+                                    </button>
+                                </div>
+                            </form>
                     </div>
                 </div>
             </div>
@@ -502,7 +535,7 @@
                     <div class="ysera-custommenu default">
                         <h2 class="widgettitle">Quick Links</h2>
                         <ul class="menu">
-                            <li class="menu-item"><a href="#">Home</a></li>
+                            <li class="menu-item"><a href="{% url "home" %}">Home</a></li>
                             <li class="menu-item"><a href="#">About Us</a></li>
                             <li class="menu-item"><a href="#">Store</a></li>
                             <li class="menu-item"><a href="#">Contact</a></li>
@@ -561,7 +594,7 @@
             </a>
         </div>
         <div class="footer-device-mobile-item device-home device-wishlist">
-            <a href="#">
+            <a href="{% url "wishlist" page=1 %}">
                 <span class="icon">
                     <i class="fa fa-heart" aria-hidden="true"></i>
                 </span>
@@ -569,21 +602,41 @@
             </a>
         </div>
         <div class="footer-device-mobile-item device-home device-cart">
-            <a href="#">
+            {% if log == '1' %}
+            <a href="{% url "login" %}">
                 <span class="icon">
                     <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                     <span class="count-icon">0</span>
                 </span>
                 <span class="text">Cart</span>
             </a>
+            {% else %}
+            <a href="{% url "cart" %}">
+                <span class="icon">
+                    <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                    <span class="count-icon">{{cart}}</span>
+                </span>
+                <span class="text">Cart</span>
+            </a>
+            {% endif %}
         </div>
         <div class="footer-device-mobile-item device-home device-user">
-            <a href="login.html">
+            {% if log == '1' %}
+            <a href="{% url "login" %}">
                 <span class="icon">
                     <i class="fa fa-user" aria-hidden="true"></i>
                 </span>
                 Account
             </a>
+            {% else %}
+            <a href="{% url "myaccount" %}">
+                <span class="icon">
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                </span>
+                Account
+            </a>
+            {% endif %}
+
         </div>
     </div>
 </div>

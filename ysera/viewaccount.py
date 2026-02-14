@@ -43,8 +43,11 @@ def account_detail(request):
                 "price": float(item.price*item.quantity),  # price at purchase time
                 "qty": item.quantity,
                 "status": item.order.status,
+                "id":item.order.id,
+                "date":item.order.created_at
 
             })
+           
     # get only products
     products = []
     for item in cart_items:

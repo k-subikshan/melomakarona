@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{% endblock title %}
+{% block title %}Cart{% endblock title %}
 {% block index %}
 
     <style>
@@ -78,35 +78,46 @@
                                                     <th class="product-subtotal"></th>
                                                 </tr>
                                             </thead>
-                                            {% for c in cart %}
+                                            {% for c in carts %}
                                             <tbody>
 
                                                 <!-- ITEM -->
                                                 <tr class="cart_item">
-                                                    <td class="product-remove"><a href="#" class="remove"></a></td>
+                                                    <td class="product-remove"><a href="{% url 'remove_from_cart' item_id=c.p_id type='0' %}" class="remove"></a></td>
                                                     <td class="product-thumbnail">
-                                                        <img src="{% static "images/cart-item-2.jpg" %}" alt="">
+                                                        <img src="{{c.image_url}}" alt="">
                                                     </td>
                                                     <td class="product-name">
                                                         <a href="#" class="title">{{c.p_name}}</a>
                                                     </td>
-                                                    <form action="{% url 'add to cart' product_id=c.slug %}" method="POST">
-                                                    {% csrf_token %}
+                                                
                                                     <td class="product-quantity" data-title="Quantity">
-                                                        <div class="quantity">
-                                                            <div class="control">
-                                                                
-                                                                <a class="btn-number qtyminus quantity-minus"
-                                                                    href="#">-</a>
-                                                                <input type="text" data-step="1" name="quantity" data-min="0" value="{{c.quantity_in_cart}}" title="Qty" class="input-qty qty" size="4">
-                                                                <a href="#" class="btn-number qtyplus quantity-plus">+</a>
-                                                            </div>
-                                                        </div>
+                                                       
+                                                           
+   
+
+    <button type="submit" name="action" value="decrease">-</button>
+
+      <input
+                                                                    type="text"
+                                                                    name="quantity"
+                                                                    data-step="1"
+                                                                    data-min="1"
+                                                                    value="{{c.quantity_in_cart}}"
+                                                                    title="Qty"
+                                                                    class="input-qty qty"
+                                                                    size="4"
+                                                                >
+
+    <button type="submit" name="action" value="increase">+</button>
+
+
+
                                                     </td>
                                                     <td class="product-price">Rs.{{c.price}}</td>
                                                 </tr>
                                                 {% endfor %}
-                                            </form>
+                                            
                                                 <!-- TOTAL -->
                                                 <tr>
                                                     <td class="actions" colspan="6">
@@ -123,8 +134,12 @@
                                     </form>
 
                                     <div class="control-cart">
-                                        <button class="button btn-cart-to-checkout"type="submit" ><a href="{% url 'home' %}">Continue Shopping</a></button>
-                                        <button class="button btn-cart-to-checkout">Checkout</button>
+                                                                                <button type="button" onclick="window.location.href='{% url 'home' %}'">
+    Continue Shopping
+</button>
+                                                                               <button type="button" onclick="window.location.href='{% url 'cart_checkout' %}'">
+    Checkout
+
                                     </div>
                                 </div>
                             </div>
@@ -151,51 +166,71 @@
                                                     <th class="product-subtotal"></th>
                                                 </tr>
                                             </thead>
+                                            {% if rental %}
+                                            {% for r in rental %}
                                             <tbody>
 
                                                 <!-- RENT ITEM -->
                                                 <tr class="cart_item">
-                                                    <td class="product-remove"><a href="#" class="remove"></a></td>
+                                                    <td class="product-remove"><a href="{% url 'remove_from_cart' item_id=r.p_id type='1' %}" class="remove"></a></td>
                                                     <td class="product-thumbnail">
-                                                        <img src="{% static "images/cart-item-3.jpg" %}" alt="">
+                                                        <img src="{{r.image_url}}" alt="">
                                                     </td>
                                                     <td class="product-name">
-                                                        <a href="#" class="title">Chafing Dish</a>
+                                                        <a href="#" class="title">{{r.p_name}}</a>
                                                         <span class="attributes-select"> Days to Rent</span>
                                                     <td class="product-quantity" data-title="Quantity">
+                                                      
+                                                   <form method="POST" action="{% url 'add to rental' r.slug %}">
+                                                        {% csrf_token %}
+
                                                         <div class="quantity">
                                                             <div class="control">
-                                                                <a class="btn-number qtyminus quantity-minus"
-                                                                    href="#">-</a>
-                                                                <input type="text" data-step="1" data-min="0" value="1"
-                                                                    title="Qty" class="input-qty qty" size="4">
-                                                                <a href="#"
-                                                                    class="btn-number qtyplus quantity-plus">+</a>
+
+                                                                <a class="btn-number qtyminus quantity-minus" href="javascript:void(0)">-</a>
+
+                                                                <input
+                                                                    type="text"
+                                                                    name="quantity"
+                                                                    data-step="1"
+                                                                    data-min="1"
+                                                                    value="{{ r.quantity_in_cart }}"
+                                                                    title="Qty"
+                                                                    class="input-qty qty"
+                                                                    size="4"
+                                                                >
+
+                                                                <a class="btn-number qtyplus quantity-plus" href="javascript:void(0)">+</a>
+
                                                             </div>
                                                         </div>
+
+                                                        <button type="submit" class="add-btn">Update</button>
+                                                    </form>
+
+
                                                     </td>
+                                                <td><h5 {% if r.status == 'pending' %}style="color:blue" {% elif r.status == "cancelled" %}style="color:red"{% else %}style="color:green"{% endif %}>{{r.status}}</h5>
                                                     </td>
-                                                    <td class="product-quantity">1</td>
-                                                    <td class="product-price">$20 / Day</td>
+                                                    
                                                 </tr>
 
                                                 <!-- TOTAL -->
-                                                <tr>
-                                                    <td class="actions" colspan="6">
-                                                        <div class="order-total">
-                                                            <span class="title">Total Rent:</span>
-                                                            <span class="total-price">$40</span>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                               
 
                                             </tbody>
+                                            {% endfor %}
+                                            {% else %}
+                                            <h5 style="color:red;">NO rental product is avaialable</h5>
+                                            {% endif %}
                                         </table>
                                     </form>
 
                                     <div class="control-cart">
-                                        <button class="button btn-continue-shopping">Continue Shopping</button>
-                                        <button class="button btn-cart-to-checkout">Checkout Rental</button>
+                                        <button type="button" onclick="window.location.href='{% url 'home' %}'">
+    Continue Shopping
+</button>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -224,4 +259,6 @@
             });
         });
     </script>
+
+
 {% endblock index %}

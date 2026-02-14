@@ -137,6 +137,15 @@ class CartItem(models.Model):
         ('1', 'rental'),
         
     ]
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('shipped', 'Shipped'),
+        ('out_for_delivery', 'Out for Delivery'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled')
+    ]
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     carttype=models.CharField(
         max_length=10,
         choices=CHOICES,
@@ -267,7 +276,24 @@ class OfferImage(models.Model):
         return self.title or f"Offer Image #{self.img_id}"
 class blog(models.Model):
     blog_id=models.IntegerField(primary_key=True)
-    image = models.ImageField(upload_to="offers", blank=True, null=True)
+    title=models.CharField(max_length=500)
+    image = models.ImageField(upload_to="offers/blog", blank=True, null=True)
+    link=models.CharField(max_length=500)
     desc=models.CharField(max_length=500)
+    author=models.CharField(max_length=100)
     date=models.DateField( auto_now=False, auto_now_add=False)
-    
+class PendingOrder(models.Model):
+    order_id = models.CharField(max_length=100, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    product_slug = models.CharField(max_length=200)
+    quantity = models.IntegerField(default=1)
+    coupon = models.CharField(max_length=50, blank=True)
+    address = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wish")
+    created_at = models.DateTimeField(auto_now_add=True)
+# ---------------- ORDER ITEM ----------------
+class WishItem(models.Model):
+    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
