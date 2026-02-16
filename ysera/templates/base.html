@@ -4,6 +4,7 @@
 
 <head>
     <title>Ysera - {% block title %}{% endblock title %}</title>
+    {% block metatag %}{% endblock metatag %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -429,11 +430,11 @@
                                     <a href="{% url "blog" page=1 %}" class="ysera-menu-item-title" title="About">Blog</a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="about.html" class="ysera-menu-item-title" title="About">About</a>
+                                    <a href="{% url "about" %}" class="ysera-menu-item-title" title="About">About</a>
                                 </li>
 
                                 <li class="menu-item">
-                                    <a href="contact.html" class="ysera-menu-item-title" title="About">Contact</a>
+                                    <a href="{% url "contact" %}" class="ysera-menu-item-title" title="Contact">Contact</a>
                                 </li>
                             </ul>
                         </div>

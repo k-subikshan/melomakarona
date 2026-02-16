@@ -1,6 +1,50 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Account{% endblock title %}
+{% block metatag %}
+<meta name="description"
+        content="Access your Thara Trinkets account to manage orders, wishlist, and jewellery rentals securely.">
+
+    <meta name="keywords" content="Thara Trinkets account, jewellery account login, customer dashboard">
+
+    <meta name="author" content="Thara Trinkets">
+
+    <!-- IMPORTANT: DO NOT INDEX ACCOUNT PAGE -->
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="googlebot" content="noindex, nofollow">
+
+    <!-- ================= MOBILE ================= -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ================= THEME COLOR ================= -->
+    <meta name="theme-color" content="#EDD1A4">
+    <meta name="msapplication-TileColor" content="#EDD1A4">
+
+    <!-- ================= CANONICAL ================= -->
+    <link rel="canonical" href="https://www.tharatrinkets.com/account">
+
+    <!-- ================= FAVICON ================= -->
+<link rel="apple-touch-icon" sizes="180x180" href="{% static  "fonts/favicon_io/apple-touch-icon.png"  %}">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static  "fonts/favicon_io/favicon-32x32.png"  %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static  "fonts/favicon_io/favicon-16x16.png"  %}">
+<link rel="manifest" href="{% static  "fonts/favicon_io/site.webmanifest" %}">
+<link rel="shortcut icon" href="{% static  "fonts/favicon_io/favicon.ico" type="image/x-icon" %}">
+
+    <!-- ================= OPEN GRAPH ================= -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="My Account | Thara Trinkets">
+    <meta property="og:description"
+        content="Login securely to your Thara Trinkets account to manage jewellery orders and rentals.">
+    <meta property="og:url" content="https://www.tharatrinkets.com/account">
+    <meta property="og:image" content="https://www.tharatrinkets.com/assets/images/og-image.jpg">
+    <meta property="og:site_name" content="Thara Trinkets">
+
+    <!-- ================= TWITTER CARD ================= -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Thara Trinkets Account Login">
+    <meta name="twitter:description" content="Secure account access for Thara Trinkets customers.">
+    <meta name="twitter:image" content="https://www.tharatrinkets.com/assets/images/og-image.jpg">
+    {% endblock metatag %}
 {% block index %}
 <style>
  .status {

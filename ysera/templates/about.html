@@ -1,0 +1,336 @@
+
+   
+    <!-- ================= BASIC META ================= -->
+{% extends "base.html" %}
+{% load static %}
+
+<title>{% block title %}About Thara Trinkets | Bridal & Fancy Jewellery Store in Erode{% endblock title %}</title>
+ {% block metatag %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description"
+content="Learn about Thara Trinkets, a trusted jewellery boutique in Erode specializing in bridal jewellery, rental jewellery and elegant imitation jewellery collections.">
+
+<link rel="canonical" href="https://www.tharatrinkets.com/about">
+
+<meta name="keywords"
+    content="Thara Trinkets, fancy jewellery erode, bridal jewellery erode, rental jewellery tamil nadu, imitation jewellery shop erode, wedding jewellery rental erode, artificial jewellery online india">
+
+<meta name="author" content="Thara Trinkets">
+
+<meta name="robots" content="index, follow">
+<meta name="googlebot"
+    content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+<!-- ================= MOBILE ================= -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ================= THEME COLOR ================= -->
+<meta name="theme-color" content="#EDD1A4">
+<meta name="msapplication-TileColor" content="#EDD1A4">
+
+<!-- ================= CANONICAL ================= -->
+<link rel="canonical" href="https://www.tharatrinkets.com/">
+
+<!-- ================= FAVICON ================= -->
+<link rel="apple-touch-icon" sizes="180x180" href="{% static  "fonts/favicon_io/apple-touch-icon.png"  %}">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static  "fonts/favicon_io/favicon-32x32.png"  %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static  "fonts/favicon_io/favicon-16x16.png"  %}">
+<link rel="manifest" href="{% static  "fonts/favicon_io/site.webmanifest" %}">
+<link rel="shortcut icon" href="{% static  "fonts/favicon_io/favicon.ico" type="image/x-icon" %}">
+
+<!-- ================= OPEN GRAPH ================= -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Thara Trinkets | Bridal & Fancy Jewellery in Erode">
+<meta property="og:description"
+    content="Explore bridal jewellery, fancy jewellery and rental wedding collections at Thara Trinkets, Erode. Perfect jewellery for every occasion.">
+<meta property="og:title" content="About Thara Trinkets">
+<meta property="og:url" content="https://www.tharatrinkets.com/about">
+
+<meta property="og:site_name" content="Thara Trinkets">
+
+<!-- ================= TWITTER CARD ================= -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Thara Trinkets | Jewellery Store Erode">
+<meta name="twitter:description"
+    content="Premium bridal, imitation & rental jewellery collections in Erode, Tamil Nadu.">
+<meta name="twitter:image" content="https://www.tharatrinkets.com/assets/images/og-image.jpg">
+
+<!-- ================= STRUCTURED DATA ================= -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "JewelryStore",
+ "name": "Thara Trinkets",
+ "url": "https://www.tharatrinkets.com/",
+ "image": "https://www.tharatrinkets.com/assets/images/logo.png",
+ "address": {
+   "@type": "PostalAddress",
+   "addressLocality": "Erode",
+   "addressRegion": "Tamil Nadu",
+   "addressCountry": "IN"
+ },
+ "priceRange": "₹₹",
+ "areaServed": "Tamil Nadu",
+ "makesOffer": {
+   "@type": "Offer",
+   "itemOffered": "Bridal Jewellery Rental & Fancy Jewellery"
+ }
+}
+ 
+</script>
+{% endblock metatag %}
+{% block index %}
+
+
+<div class="main-content main-content-about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-trail breadcrumbs">
+                    <ul class="trail-items breadcrumb">
+                        <li class="trail-item trail-begin">
+                            <a href="index.html">Home</a>
+                        </li>
+                        <li class="trail-item trail-end active">
+                            About Us
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="content-area content-about col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="site-main">
+                    <h3 class="custom_blog_title">About Us</h3>
+                    <div class="page-main-content">
+                                               <!-- ABOUT US SECTION -->
+<section class="about-page">
+
+    <!-- Banner -->
+    <div class="about-banner">
+        <div class="about-banner-content">
+            <h2>Thoughtfully Crafted Trinkets, Just for You</h2>
+            <p>
+                At Thara Trinkets, every piece is designed with care, inspired by timeless beauty
+                and crafted to add a subtle charm to your everyday moments.
+            </p>
+            <a href="{% url "home" %}" class="btn-shop">SHOP NOW</a>
+        </div>
+    </div>
+
+    <!-- About Text -->
+    <div class="about-content">
+        <h3>About Thara Trinkets</h3>
+        <p>
+            Thara Trinkets is a celebration of elegance, simplicity, and meaningful design.
+            We believe that accessories are more than just adornments — they are expressions
+            of individuality and emotion.
+        </p>
+        <p>
+            Each trinket in our collection is thoughtfully curated to reflect modern tastes
+            while staying rooted in subtle tradition. From everyday wear to special moments,
+            our pieces are designed to complement your style effortlessly.
+        </p>
+        <p>
+            We focus on quality craftsmanship, refined details, and a timeless appeal that
+            allows every piece to be cherished for years to come.
+        </p>
+    </div>
+
+
+</section>
+<style>
+    /* ABOUT PAGE */
+.about-page {
+    padding: 10px 0;
+    font-family: 'Poppins', sans-serif;
+    color: #444;
+}
+
+/* Banner */
+.about-banner {
+    background: #f2f2f2;
+    height: 460px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 80px;
+}
+
+.about-banner-content {
+    max-width: 420px;
+}
+
+.about-banner-content h2 {
+    font-size: 34px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 15px;
+}
+
+.about-banner-content p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.btn-shop {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: #c49a6c;
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-shop:hover {
+    background-color: #b3885c;
+}
+
+/* About Text */
+.about-content {
+    max-width: 900px;
+    margin: 70px auto;
+    text-align: center;
+}
+
+.about-content h3 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #111;
+}
+
+.about-content p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+/* Features */
+.about-features {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1100px;
+    margin: 80px auto 40px;
+    gap: 40px;
+}
+
+.feature-box {
+    text-align: center;
+    flex: 1;
+}
+
+.feature-box i {
+    font-size: 38px;
+    color: #c49a6c;
+    margin-bottom: 15px;
+}
+
+.feature-box h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.feature-box p {
+    font-size: 14px;
+    color: #777;
+    line-height: 1.6;
+}
+
+/* Closing Tagline */
+.about-tagline {
+    text-align: center;
+    font-size: 16px;
+    color: #c49a6c;
+    margin-top: 60px;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .about-banner {
+        justify-content: center;
+        text-align: center;
+        padding: 40px;
+    }
+
+    .about-features {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+</style>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-4 col-sm-4">
+                                <div class="ysera-iconbox  layout1">
+                                    <div class="iconbox-inner">
+                                        <div class="icon-item">
+                                            <span class="placeholder-text">01</span>
+                                            <span class="icon flaticon-rocket-ship"></span>
+                                        </div>
+                                        <div class="content">
+                                            <h4 class="title">
+                                                In Free Delivery
+                                            </h4>
+                                            <div class="text">
+                                                Free Delivery on all order from In with price more than Rs.1500
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-lg-offset-1">
+                                <div class="ysera-iconbox  layout1">
+                                    <div class="iconbox-inner">
+                                        <div class="icon-item">
+                                            <span class="placeholder-text">02</span>
+                                            <span class="icon flaticon-return"></span>
+                                        </div>
+                                        <div class="content">
+                                            <h4 class="title">
+                                                Money Guarantee
+                                            </h4>
+                                            <div class="text">
+                                                15 Days money back guarantee no question asked!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-lg-offset-1">
+                                <div class="ysera-iconbox  layout1">
+                                    <div class="iconbox-inner">
+                                        <div class="icon-item">
+                                            <span class="placeholder-text">03</span>
+                                            <span class="icon flaticon-padlock"></span>
+                                        </div>
+                                        <div class="content">
+                                            <h4 class="title">
+                                                Online Support 24/7
+                                            </h4>
+                                            <div class="text">
+                                                We’re here to support to you 24/7. Let’s shopping now!
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                         
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock index %}
