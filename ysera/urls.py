@@ -14,7 +14,7 @@ urlpatterns = [
         path('myaccount',viewaccount.account_detail,name="myaccount"),
         path('edit',viewaccount.edit_profile,name="edit"),
         path("blog/pageno<int:page>",viewblog.blog1,name="blog"),
-        path('cart/update/<int:cart_item_id>/', viewcart.update_cart_quantity, name='add_to_cart'),
+        path('cart/update/<int:cart_item_id>/<int:type>', viewcart.update_cart_quantity, name='update_cart_quantity'),
 path('checkout/cart/', viewcheckout.cart_checkout, name='cart_checkout'),
 
     path('place-cod-order-cart/', viewcheckout.place_cod_order, name='place_cod_order1'),

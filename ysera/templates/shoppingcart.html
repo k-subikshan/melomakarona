@@ -157,12 +157,27 @@
                                                         <img src="{{c.image_url}}" alt="">
                                                     </td>
                                                     <td class="product-name">
-                                                        <a href="#" class="title">{{c.p_name}}</a>
+                                                        <a href="{% url 'add to wishlist' product_slug=c.slug %}" class="title">{{c.p_name}}</a>
                                                     </td>
                                                 
-                                                    <td class="product-quantity" data-title="Quantity">
-                                                      <p>{{c.quantity_in_cart}}</p>
+                                                      <td class="product-quantity" data-title="Quantity">
+                                                        <div class="quantity">
+    <div class="control">
+        <a href="#" class="btn-number qtyminusc"
+           data-id="{{ c.cart_item_id }}">-</a>
+
+        <input type="text"
+               value="{{ c.quantity_in_cart }}"
+               class="input-qty qty"
+               readonly>
+
+        <a href="#" class="btn-number qtyplusc"
+           data-id="{{ c.cart_item_id }}">+</a>
+    </div>
+</div>
+
                                                     </td>
+                                                
                                                     <td class="product-price">Rs.{{c.price}}</td>
                                                 </tr>
                                                 {% endfor %}
@@ -226,38 +241,23 @@
                                                         <img src="{{r.image_url}}" alt="">
                                                     </td>
                                                     <td class="product-name">
-                                                        <a href="#" class="title">{{r.p_name}}</a>
+                                                        <a href="{% url 'add to wishlist' product_slug=r.slug %}" class="title">{{r.p_name}}</a>
                                                         <span class="attributes-select"> Days to Rent</span>
-                                                    <td class="product-quantity" data-title="Quantity">
-                                                      
-                                                   <form method="POST" action="{% url 'add to rental' r.slug %}">
-                                                        {% csrf_token %}
+                                                      <td class="product-quantity" data-title="Quantity">
+                                                                                                                <div class="quantity">
+    <div class="control">
+        <a href="#" class="btn-number qtyminus"
+           data-id="{{ r.cart_item_id }}">-</a>
 
-                                                        <div class="quantity">
-                                                            <div class="control">
+        <input type="text"
+               value="{{ r.quantity_in_cart }}"
+               class="input-qty qty"
+               readonly>
 
-                                                                <a class="btn-number qtyminus quantity-minus" href="javascript:void(0)">-</a>
-
-                                                                <input
-                                                                    type="text"
-                                                                    name="quantity"
-                                                                    data-step="1"
-                                                                    data-min="1"
-                                                                    value="{{ r.quantity_in_cart }}"
-                                                                    title="Qty"
-                                                                    class="input-qty qty"
-                                                                    size="4"
-                                                                >
-
-                                                                <a class="btn-number qtyplus quantity-plus" href="javascript:void(0)">+</a>
-
-                                                            </div>
-                                                        </div>
-
-                                                        <button type="submit" class="add-btn">Update</button>
-                                                    </form>
-
-
+        <a href="#" class="btn-number qtyplus"
+           data-id="{{ r.cart_item_id }}">+</a>
+    </div>
+</div>
                                                     </td>
                                                 <td><h5 {% if r.status == 'pending' %}style="color:blue" {% elif r.status == "cancelled" %}style="color:red"{% else %}style="color:green"{% endif %}>{{r.status}}</h5>
                                                     </td>
@@ -308,6 +308,60 @@
             });
         });
     </script>
+    <script>
+document.querySelectorAll(".qtyplus").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        updateQuantity(this.dataset.id, "increase");
+    });
+});
+
+document.querySelectorAll(".qtyminus").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        updateQuantity(this.dataset.id, "decrease");
+    });
+});
+document.querySelectorAll(".qtyplusc").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        updateQuantityc(this.dataset.id, "increase");
+    });
+});
+
+document.querySelectorAll(".qtyminusc").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        updateQuantityc(this.dataset.id, "decrease");
+    });
+});
+
+function updateQuantity(id, action) {
+
+    fetch(`/cart/update/${id}/1`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `action=${action}`
+    })
+    .then(() => location.reload());
+}
+function updateQuantityc(id, action) {
+
+    fetch(`/cart/update/${id}/0`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `action=${action}`
+    })
+    .then(() => location.reload());
+}
+</script>
+
 
 
 {% endblock index %}

@@ -93,7 +93,7 @@ def add_to_rental(request, product_id):
     return redirect(request.META.get("HTTP_REFERER", "home"))
 from django.shortcuts import get_object_or_404, redirect
 
-def update_cart_quantity(request, cart_item_id):
+def update_cart_quantity(request, cart_item_id,type):
     if not request.user.is_authenticated:
         return redirect("login")
 
@@ -101,17 +101,18 @@ def update_cart_quantity(request, cart_item_id):
         CartItem,
         id=cart_item_id,
         cart__user=request.user,
-        carttype="0"
+        carttype=type
+        
     )
 
     if request.method == "POST":
         action = request.POST.get("action")
+        quantity = cart_item.quantity
 
         if action == "increase":
-            cart_item.quantity_in_cart += 1
-
-        elif action == "decrease" and cart_item.quantity_in_cart > 1:
-            cart_item.quantity_in_cart -= 1
+            cart_item.quantity = quantity + 1
+        elif action == "decrease" and quantity > 1:
+            cart_item.quantity = quantity - 1
 
         cart_item.save()
 
