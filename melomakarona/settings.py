@@ -133,11 +133,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 JAZZMIN_SETTINGS = {
-    "site_title": "Aurum Jewels Admin",
-    "site_header": "Aurum Jewels",
-    "site_brand": "Aurum Jewels",
+    "site_title": "Tharatrinket Jewels Admin",
+    "site_header": "Tharatrinket Jewels",
+    "site_brand": "Tharatrinket Jewels",
     "welcome_sign": "Luxury Jewellery Management",
-    "copyright": "© 2026 Aurum Jewels",
+    "copyright": "© 2026 Tharatrinket Jewels",
 
     # 🎨 Luxury Colors
     "theme": "luxury",
