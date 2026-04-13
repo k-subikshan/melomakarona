@@ -297,3 +297,11 @@ class Wishlist(models.Model):
 class WishItem(models.Model):
     wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+from django.core.exceptions import ValidationError
+
+def validate_image(file):
+    if file.size > 16 * 1024 * 1024:
+        raise ValidationError("Max file size is 16MB")
+
+class MyModel(models.Model):
+    image = models.ImageField(upload_to='images/', validators=[validate_image])

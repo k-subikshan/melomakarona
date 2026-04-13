@@ -376,3 +376,5 @@ def get_admin_urls(urls):
     return wrapper
 
 site.get_urls = get_admin_urls(site.get_urls())
+DATA_UPLOAD_MAX_MEMORY_SIZE = 16777216   # 16 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 16777216   # 16 MB
