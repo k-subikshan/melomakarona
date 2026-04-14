@@ -37,7 +37,7 @@ class CategoryAdmin(admin.ModelAdmin):
 # ================= PRODUCT IMAGE INLINE =================
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
-    extra = 1
+    extra = 0
     readonly_fields = ("image_preview",)
     fields = ("image", "priority", "image_preview")
 
