@@ -1,440 +1,1178 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{product.p_name}}{% endblock title %}
+{% block title %}{{product.p_name}} | Thara Trinkets{% endblock title %}
+
 {% block metatag %}
-<meta name="description"
-content="Buy or rent Product Name from Thara Trinkets. Premium bridal and fancy jewellery collection available in Erode, Tamil Nadu.">
-
-<link rel="canonical" href="https://www.tharatrinkets.com/product/product-slug">
-
-<meta name="keywords"
-    content="Thara Trinkets, fancy jewellery erode, bridal jewellery erode, rental jewellery tamil nadu, imitation jewellery shop erode, wedding jewellery rental erode, artificial jewellery online india">
-
+<meta name="description" content="Buy or rent {{product.p_name}} from Thara Trinkets. Premium bridal and fancy jewellery collection available in Erode, Tamil Nadu.">
+<link rel="canonical" href="https://www.tharatrinkets.com/product/{{product.slug}}">
+<meta name="keywords" content="Thara Trinkets, fancy jewellery erode, bridal jewellery erode, rental jewellery tamil nadu, imitation jewellery shop erode, wedding jewellery rental erode, artificial jewellery online india">
 <meta name="author" content="Thara Trinkets">
-
 <meta name="robots" content="index, follow">
-<meta name="googlebot"
-    content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-
-<!-- ================= MOBILE ================= -->
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- ================= THEME COLOR ================= -->
-<meta name="theme-color" content="#EDD1A4">
-<meta name="msapplication-TileColor" content="#EDD1A4">
-
-<!-- ================= CANONICAL ================= -->
-<link rel="canonical" href="https://www.tharatrinkets.com/">
-
-<!-- ================= FAVICON ================= -->
-<link rel="apple-touch-icon" sizes="180x180" href="{% static  "fonts/favicon_io/apple-touch-icon.png"  %}">
-<link rel="icon" type="image/png" sizes="32x32" href="{% static  "fonts/favicon_io/favicon-32x32.png"  %}">
-<link rel="icon" type="image/png" sizes="16x16" href="{% static  "fonts/favicon_io/favicon-16x16.png"  %}">
-<link rel="manifest" href="{% static  "fonts/favicon_io/site.webmanifest" %}">
-<link rel="shortcut icon" href="{% static  "fonts/favicon_io/favicon.ico" type="image/x-icon" %}">
-
-<!-- ================= OPEN GRAPH ================= -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="Thara Trinkets | Bridal & Fancy Jewellery in Erode">
-<meta property="og:description"
-    content="Explore bridal jewellery, fancy jewellery and rental wedding collections at Thara Trinkets, Erode. Perfect jewellery for every occasion.">
+<meta name="theme-color" content="#C9964A">
+<meta property="og:type" content="product">
+<meta property="og:title" content="{{product.p_name}} | Thara Trinkets">
+<meta property="og:description" content="{{product.desc}}">
+<meta property="og:image" content="{{product.image_url}}">
 <meta property="og:site_name" content="Thara Trinkets">
-
-<!-- ================= TWITTER CARD ================= -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Thara Trinkets | Jewellery Store Erode">
-<meta name="twitter:description"
-    content="Premium bridal, imitation & rental jewellery collections in Erode, Tamil Nadu.">
-<meta name="twitter:image" content="https://www.tharatrinkets.com/assets/images/og-image.jpg">
+<meta name="twitter:title" content="{{product.p_name}} | Thara Trinkets">
+<meta name="twitter:image" content="{{product.image_url}}">
 
-<!-- ================= STRUCTURED DATA ================= -->
 <script type="application/ld+json">
 {
- "@context": "https://schema.org",
- "@type": "JewelryStore",
- "name": "Thara Trinkets",
- "url": "https://www.tharatrinkets.com/",
- "image": "https://www.tharatrinkets.com/assets/images/logo.png",
- "address": {
-   "@type": "PostalAddress",
-   "addressLocality": "Erode",
-   "addressRegion": "Tamil Nadu",
-   "addressCountry": "IN"
- },
- "priceRange": "₹₹",
- "areaServed": "Tamil Nadu",
- "makesOffer": {
-   "@type": "Offer",
-   "itemOffered": "Bridal Jewellery Rental & Fancy Jewellery"
- }
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "{{product.p_name}}",
+  "image": "{{product.image_url}}",
+  "description": "{{product.desc}}",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "INR",
+    "price": "{{product.price}}",
+    "availability": "{% if product.stock_status == 'in stock' %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}"
+  }
 }
 </script>
+
+<style>
+  /* =========================================================
+     THARA TRINKETS — PRODUCT DETAIL PAGE
+     Aesthetic: Refined Indian Luxury · Warm Gold & Ivory
+  ========================================================= */
+
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap');
+
+  :root {
+    --gold:        #C9964A;
+    --gold-light:  #E8C47A;
+    --gold-pale:   #F5E8CC;
+    --ivory:       #FAF6EF;
+    --ink:         #1A1208;
+    --ink-soft:    #4A3F2F;
+    --ink-muted:   #8C7B65;
+    --border:      #E2D5BC;
+    --success:     #4A7C59;
+    --danger:      #A0391A;
+    --radius:      4px;
+    --shadow-sm:   0 2px 12px rgba(26,18,8,.07);
+    --shadow-md:   0 6px 28px rgba(26,18,8,.12);
+    --transition:  all .25s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ---- Base Reset ---- */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--ivory);
+    color: var(--ink);
+  }
+
+  /* ---- Breadcrumb ---- */
+  .tt-breadcrumb {
+    padding: 16px 0 8px;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .tt-breadcrumb a { color: var(--ink-muted); text-decoration: none; transition: var(--transition); }
+  .tt-breadcrumb a:hover { color: var(--gold); }
+  .tt-breadcrumb span { margin: 0 8px; opacity: .5; }
+  .tt-breadcrumb .current { color: var(--ink-soft); }
+
+  /* ---- Product Layout ---- */
+  .tt-product-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    padding: 32px 0 64px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .tt-product-wrap { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* ---- Gallery ---- */
+  .tt-gallery { position: sticky; top: 24px; }
+
+  .tt-main-image-wrap {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-in;
+  }
+
+  .tt-main-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 24px;
+    transition: transform .4s ease, opacity .3s ease;
+    display: block;
+  }
+
+  .tt-main-image-wrap:hover img { transform: scale(1.04); }
+
+  /* Zoom overlay button */
+  .tt-zoom-btn {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: rgba(255,255,255,.9);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .tt-zoom-btn:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+
+  /* Placeholder when image missing */
+  .tt-img-placeholder {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: var(--gold-pale);
+    color: var(--ink-muted);
+    font-size: 13px;
+    gap: 12px;
+  }
+  .tt-img-placeholder svg { opacity: .4; }
+
+  /* Thumbnails */
+  .tt-thumbnails {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tt-thumb-item {
+    width: 72px; height: 72px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition);
+    background: #fff;
+    flex-shrink: 0;
+  }
+
+  .tt-thumb-item img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 4px;
+    transition: transform .3s ease;
+  }
+
+  .tt-thumb-item:hover,
+  .tt-thumb-item.active {
+    border-color: var(--gold);
+  }
+
+  .tt-thumb-item:hover img { transform: scale(1.05); }
+
+  /* ---- Product Info ---- */
+  .tt-product-info { padding: 8px 0; }
+
+  .tt-product-category {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .tt-product-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 16px;
+    letter-spacing: -.01em;
+  }
+
+  .tt-availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+  .tt-availability .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .tt-availability.instock { color: var(--success); }
+  .tt-availability.instock .dot { background: var(--success); }
+  .tt-availability.outstock { color: var(--danger); }
+  .tt-availability.outstock .dot { background: var(--danger); }
+
+  .tt-price-wrap {
+    margin-bottom: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .tt-price-current {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -.01em;
+  }
+
+  .tt-price-del {
+    font-size: 16px;
+    color: var(--ink-muted);
+    text-decoration: line-through;
+  }
+
+  .tt-price-save {
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--gold-pale);
+    color: var(--gold);
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: .03em;
+  }
+
+  /* Divider */
+  .tt-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* Points list */
+  .tt-points {
+    list-style: none;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tt-points li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  .tt-points li::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  /* ---- Action Buttons ---- */
+  .tt-action-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .tt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+    text-decoration: none;
+  }
+
+  .tt-btn-primary {
+    background: var(--ink);
+    color: #fff;
+    flex: 1;
+  }
+  .tt-btn-primary:hover { background: var(--ink-soft); color: #fff; }
+
+  .tt-btn-outline {
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--border);
+  }
+  .tt-btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .tt-btn-gold {
+    background: var(--gold);
+    color: #fff;
+    flex: 1;
+  }
+  .tt-btn-gold:hover { background: #b3822e; color: #fff; }
+
+  .tt-btn:disabled,
+  .tt-btn[disabled] {
+    opacity: .45;
+    cursor: not-allowed;
+  }
+
+  /* Quantity */
+  .tt-qty-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .tt-qty-label {
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    min-width: 60px;
+  }
+
+  .tt-qty-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .tt-qty-btn {
+    width: 36px; height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--ink-soft);
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .tt-qty-btn:hover { background: var(--gold-pale); color: var(--gold); }
+
+  .tt-qty-input {
+    width: 48px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    padding: 6px 0;
+    -moz-appearance: textfield;
+  }
+  .tt-qty-input::-webkit-outer-spin-button,
+  .tt-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  /* Wishlist / Size row */
+  .tt-meta-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .tt-meta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: var(--transition);
+  }
+  .tt-meta-link:hover { color: var(--gold); }
+  .tt-meta-link svg { flex-shrink: 0; }
+
+  /* ---- Rental Section ---- */
+  .tt-rental-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-top: 24px;
+  }
+
+  .tt-rental-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .tt-rental-icon {
+    width: 32px; height: 32px;
+    background: var(--gold-pale);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .tt-rental-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .tt-pincode-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .tt-pincode-input {
+    flex: 1;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--ivory);
+    outline: none;
+    transition: var(--transition);
+    -moz-appearance: textfield;
+  }
+  .tt-pincode-input::-webkit-outer-spin-button,
+  .tt-pincode-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .tt-pincode-input:focus { border-color: var(--gold); background: #fff; }
+
+  .tt-check-btn {
+    height: 42px;
+    padding: 0 18px;
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+  }
+  .tt-check-btn:hover:not(:disabled) { background: #b3822e; }
+  .tt-check-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  .tt-pincode-msg {
+    font-size: 13px;
+    min-height: 20px;
+    transition: var(--transition);
+  }
+  .tt-pincode-msg.success { color: var(--success); }
+  .tt-pincode-msg.error   { color: var(--danger); }
+
+  .tt-rent-action { margin-top: 12px; display: none; }
+
+  /* ---- Tabs ---- */
+  .tt-tabs { margin-top: 56px; }
+
+  .tt-tab-nav {
+    display: flex;
+    gap: 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .tt-tab-nav button {
+    padding: 12px 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .tt-tab-nav button.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .tt-tab-panel { display: none; }
+  .tt-tab-panel.active { display: block; }
+
+  .tt-tab-panel p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+
+  /* ---- Related Products ---- */
+  .tt-related { margin-top: 64px; padding-bottom: 64px; }
+
+  .tt-section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .tt-section-title::after {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 2px;
+    background: var(--gold);
+    margin-top: 10px;
+  }
+
+  .tt-related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 24px;
+  }
+
+  .tt-product-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: var(--transition);
+  }
+
+  .tt-product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+
+  .tt-card-thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: var(--ivory);
+  }
+
+  .tt-card-thumb img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+    padding: 16px;
+    transition: transform .4s ease;
+  }
+
+  .tt-product-card:hover .tt-card-thumb img { transform: scale(1.06); }
+
+  .tt-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(26,18,8,.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transition: var(--transition);
+  }
+
+  .tt-product-card:hover .tt-card-overlay { opacity: 1; }
+
+  .tt-card-overlay a {
+    background: #fff;
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: var(--transition);
+    width: 80%;
+    text-align: center;
+  }
+
+  .tt-card-overlay a:hover { background: var(--gold); color: #fff; }
+
+  .tt-card-body {
+    padding: 14px 16px;
+  }
+
+  .tt-card-name {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tt-card-name a { color: inherit; text-decoration: none; }
+  .tt-card-name a:hover { color: var(--gold); }
+
+  .tt-card-price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .tt-card-price ins {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .tt-card-price del {
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
+
+  /* New badge */
+  .tt-badge-new {
+    position: absolute;
+    top: 10px; left: 10px;
+    background: var(--gold);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+    z-index: 1;
+  }
+
+  /* Out of stock tag */
+  .tt-oos-notice {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 16px;
+    background: #FDF1ED;
+    border: 1px solid #EEC9BC;
+    border-radius: var(--radius);
+    color: var(--danger);
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  /* Zoom Modal */
+  .tt-zoom-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,8,.85);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+
+  .tt-zoom-modal.open { display: flex; }
+
+  .tt-zoom-modal-inner {
+    position: relative;
+    max-width: 80vw;
+    max-height: 80vh;
+  }
+
+  .tt-zoom-modal-inner img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--radius);
+  }
+
+  .tt-zoom-close {
+    position: absolute;
+    top: -40px; right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .tt-product-title { font-size: 26px; }
+    .tt-price-current { font-size: 24px; }
+    .tt-pincode-row { flex-direction: column; }
+    .tt-check-btn { width: 100%; }
+    .tt-action-row { flex-direction: column; }
+    .tt-btn { width: 100%; }
+  }
+</style>
 {% endblock metatag %}
+
 {% block index %}
-    <div class="main-content main-content-details single no-sidebar">
-        {% if  product %}
-        <div class="container">
-            
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb-trail breadcrumbs">
-                        <ul class="trail-items breadcrumb">
-                            <li class="trail-item trail-begin">
-                                <a href="{% url "home" %}">Home</a>
-                            </li>
-                            <li class="trail-item">
-                                <a href="#">{{product.category}}</a>
-                            </li>
-                            <li class="trail-item trail-end active">
-                                {{product.p_name}}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-          
-            <div class="row">
-                <div class="content-area content-details full-width col-lg-9 col-md-8 col-sm-12 col-xs-12">
-                    <div class="site-main">
-                        <div class="details-product">
-                            <div class="details-thumd">
-                                <div class="image-preview-container image-thick-box image_preview_container">
-                                    <img id="img_zoom" data-zoom-image="{{product.image_url}}"
-                                        src="{{product.image_url}}" alt="img">
-                                    <a href="#" class="btn-zoom open_qv"><i class="fa fa-search"
-                                            aria-hidden="true"></i></a>
-                                </div>
-                                <div class="product-preview image-small product_preview">
-                                    <div id="thumbnails" class="thumbnails_carousel owl-carousel" data-nav="true"
-                                        data-autoplay="false" data-dots="false" data-loop="false" data-margin="10"
-                                        data-responsive='{"0":{"items":3},"480":{"items":3},"600":{"items":3},"1000":{"items":3}}'>
-                                        <a href="#" data-image="{{product.image_url}}"
-                                            data-zoom-image="{{product.image_url}}" class="active">
-                                            <img src="{{product.image_url}}"
-                                                data-large-image="{{product.image_url}}" alt="img">
-                                        </a>
-                                        {% if product_other_image %}
-                                        {% for images_other in  product_other_image %}
-                             
-                                        <a href="#" data-image="{{images_other.image.url}}"
-                                            data-zoom-image="{{images_other.image.url}}">
-                                            <img src="{{images_other.image.url}}"
-                                                data-large-image="{{images_other.image.url}}" alt="img">
-                                        </a>
-                                        {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="details-infor">
-                                <h1 class="product-title">
-                                    {{product.p_name}}
-                                </h1>
+{% if product %}
+<div class="container">
 
-                                <div class="availability">
-                                    availability:
-                                    <a href="#" id="stock">{{product.stock_status}}</a>
-                    
-                                </div>
-                                <div class="price">
-                                    <span>Rs.{{product.price}}</span>
-                                </div>
-                                <div class="product-details-description">
-                                    <ul>
-                                        <li>{{product.point1}}</li>
-                                        <li>{{product.point2}}
-                                        </li>
-                                        
-                                    </ul>
-                                </div>
+  <!-- Breadcrumb -->
+  <nav class="tt-breadcrumb">
+    <a href="{% url 'home' %}">Home</a>
+    <span>›</span>
+    <a href="#">{{ product.category }}</a>
+    <span>›</span>
+    <span class="current">{{ product.p_name }}</span>
+  </nav>
 
-                                <div class="group-button">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button">
-                                            <a href="{% url 'add to wishlist' product_slug=product.slug %}">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="size-chart-wrapp">
-                                        <div class="btn-size-chart">
-                                            <a id="size_chart" href="{% static "images/size-chart.jpg" %}" class="fancybox">View
-                                                Size Chart</a>
-                                        </div>
-                                    </div>
-                                    {% if product.stock_status == "out of stock" or product.availablity == '0' %}
-                                    <p style="color:red">not avaialable</p>
-                                    {% else %}
-                                    <form method="POST" id="productForm">
-                                    {% csrf_token %}
-                                    <div class="quantity-add-to-cart">
-                                        <div class="quantity">
-                                            <div class="control">
-                                                <a class="btn-number qtyminus quantity-minus" href="#">-</a>
-                                                <input type="number" data-step="1" data-min="0" value="1" title="Qty"
-                                                    class="input-qty qty" name="quantity" size="4">
-                                                <a href="#" class="btn-number qtyplus quantity-plus">+</a>
-                                            </div>
-                                        </div>
-                                        <button class="single_add_to_cart_button button" type="submit" formaction="{% url 'add to cart' product_id=product.slug %}" >Add to cart</button>
-                                    </div>
-                                    </form>
-                                    {% endif %}
-                                    <div class="rental-section">
-                                        <!-- Pincode Check -->
-                                        <div class="pincode-check-container">
-                                            <h4 class="rental-title">Rent this item</h4>
-                                            <div class="pincode-input-group">
-                                                <input type="tel" id="pincode-input" class="pincode-input"
-                                                    placeholder="Enter pincode for rental" maxlength="6"
-                                                    pattern="[0-9]{6}">
-                                                <button id="check-pincode" class="button check-pincode-btn">Check
-                                                    Availability</button>
-                                            </div>
-                                            <div class="pincode-message"></div>
+  <!-- Product Main -->
+  <div class="tt-product-wrap">
 
-                                            <!-- Hidden Serviceable Pincodes (for demo) -->
-                                            <div id="serviceable-pincodes"
-                                                data-pincodes="110001,110002,400001,400002,560001,560002,700001,700002">
-                                            </div>
-                                        </div>
+    <!-- LEFT: Gallery -->
+    <div class="tt-gallery">
+      <div class="tt-main-image-wrap" id="mainImageWrap">
+        {% if product.image_url %}
+          <img
+            id="mainProductImage"
+            src="{{ product.image_url }}"
+            alt="{{ product.p_name }}"
+            onerror="this.parentElement.innerHTML='<div class=\'tt-img-placeholder\'><svg width=\'48\' height=\'48\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'currentColor\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'/></svg><span>Image not available</span></div>'"
+          >
+          <a href="#" class="tt-zoom-btn" id="zoomBtn" title="Zoom image">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+              <path d="M11 8v6M8 11h6"/>
+            </svg>
+          </a>
+        {% else %}
+          <div class="tt-img-placeholder">
+            <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span>Image not available</span>
+          </div>
+        {% endif %}
+      </div>
 
-                                        <!-- Rent Now Button (initially hidden/disabled) -->
-                                        <div class="rental-action" style="display: none;">
-                                           <a href="{% url 'add to rental' product_id=product.slug %}" <button class="button rent-now-btn"  disabled>Rent
-                                                Now</button></a>
-                                        </div>
-                                    </div>
-                            
-                                </div>
-                            </div>
-                        </div>
-                        <script>
-                            // Rental functionality
-                            document.addEventListener('DOMContentLoaded', function () {
-                                // Serviceable pincodes (in production, fetch from API)
-                                const serviceablePincodes = ['110001', '110002', '400001', '400002', '560001', '560002', '700001', '700002'];
-
-                                // Get DOM elements
-                                const pincodeInput = document.getElementById('pincode-input');
-                                const checkPincodeBtn = document.getElementById('check-pincode');
-                                const pincodeMessage = document.querySelector('.pincode-message');
-                                const rentalAction = document.querySelector('.rental-action');
-                                const rentNowBtn = document.getElementById('rent-now-btn');
-                                const rentNowBtnOriginal = rentNowBtn ? rentNowBtn.cloneNode(true) : null;
-
-                                // Validate pincode input (only numbers, max 6 digits)
-                                pincodeInput.addEventListener('input', function (e) {
-                                    // Remove non-numeric characters
-                                    this.value = this.value.replace(/[^0-9]/g, '');
-
-                                    // Limit to 6 digits
-                                    if (this.value.length > 6) {
-                                        this.value = this.value.slice(0, 6);
-                                    }
-
-                                    // Enable/disable check button based on input length
-                                    checkPincodeBtn.disabled = this.value.length !== 6;
-                                });
-
-                                // Check pincode availability
-                                checkPincodeBtn.addEventListener('click', function () {
-                                    const pincode = pincodeInput.value.trim();
-
-                                    if (pincode.length !== 6) {
-                                        showMessage('Please enter a valid 6-digit pincode', 'error');
-                                        return;
-                                    }
-
-                                    // Show loading state
-                                    showMessage('Checking availability...', '');
-                                    checkPincodeBtn.disabled = true;
-                                    checkPincodeBtn.textContent = 'Checking...';
-
-                                    // Simulate API call delay
-                                    setTimeout(() => {
-                                        checkPincodeAvailability(pincode);
-                                    }, 1000);
-                                });
-
-                                // Check pincode when Enter key is pressed
-                                pincodeInput.addEventListener('keypress', function (e) {
-                                    if (e.key === 'Enter' && this.value.length === 6) {
-                                        checkPincodeBtn.click();
-                                    }
-                                });
-
-                                // Function to check pincode availability
-                                function checkPincodeAvailability(pincode) {
-                                    // In production, replace this with actual API call
-                                    const isServiceable = serviceablePincodes.includes(pincode);
-
-                                    if (isServiceable) {
-                                        // Pincode is serviceable
-                                        showMessage('✓ Rental available at this pincode!', 'success');
-                                        enableRentalOption();
-
-                                        // Store valid pincode in localStorage for session
-                                        localStorage.setItem('validRentalPincode', pincode);
-                                    } else {
-                                        // Pincode not serviceable
-                                        showMessage('✗ Rental not available at this pincode. Please try another.', 'error');
-                                        disableRentalOption();
-
-                                        // Clear invalid pincode from storage
-                                        localStorage.removeItem('validRentalPincode');
-                                    }
-
-                                    // Reset check button
-                                    checkPincodeBtn.disabled = false;
-                                    checkPincodeBtn.textContent = 'Check Availability';
-                                }
-
-                                // Function to show messages
-                                function showMessage(text, type) {
-                                    pincodeMessage.textContent = text;
-                                    pincodeMessage.className = 'pincode-message';
-                                    if (type) {
-                                        pincodeMessage.classList.add(type);
-                                    }
-                                }
-
-                                // Function to enable rental option
-                                function enableRentalOption() {
-                                    rentalAction.style.display = 'block';
-                                    rentNowBtn.disabled = false;
-                                    rentNowBtn.textContent = 'Rent Now';
-                                }
-
-                                // Function to disable rental option
-                                function disableRentalOption() {
-                                    rentalAction.style.display = 'none';
-                                    rentNowBtn.disabled = true;
-                                }
-
-                                // Rent Now button click handler
-                                rentNowBtn.addEventListener('click', function () {
-                                    if (this.disabled) return;
-
-                                    // Show loading state
-                                    this.disabled = true;
-                                    this.textContent = 'Processing...';
-
-                                    // Get product details for rental
-                                    const productTitle = document.querySelector('.product-title').textContent.trim();
-                                    const rentalPrice = document.querySelector('.rental-price span').textContent;
-
-                                    // Simulate rental processing
-                                    setTimeout(() => {
-                                        alert(`Rental request for "${productTitle}" has been initiated!\n\nPincode: ${pincodeInput.value}\nRental Rate: ${rentalPrice}\n\nOur team will contact you within 24 hours.`);
-
-                                        // Reset button
-                                        this.disabled = false;
-                                        this.textContent = 'Rent Now';
-                                    }, 1500);
-                                });
-
-                                // Check for saved valid pincode on page load
-                                const savedPincode = localStorage.getItem('validRentalPincode');
-                                if (savedPincode && serviceablePincodes.includes(savedPincode)) {
-                                    pincodeInput.value = savedPincode;
-                                    checkPincodeAvailability(savedPincode);
-                                }
-                            });
-                        </script>
-                        <div class="tab-details-product">
-                            <ul class="tab-link">
-                                <li class="active">
-                                    <a data-toggle="tab" aria-expanded="true" href="#product-descriptions">Descriptions
-                                    </a>
-                                </li>
-                            </ul>
-                            <div class="tab-container">
-                                <div id="product-descriptions" class="tab-panel active">
-                                    <p>
-                                        Quisque quis ipsum venenatis, fermentum ante volutpat, ornare enim.
-                                        Phasellus molestie risus non aliquet cursus.
-                                        Integer
-                                        vestibulum mi lorem, id hendrerit ante lobortis non.
-                                        Nunc ante ante, lobortis non pretium non, vulputate vel nisi.
-                                        Maecenas dolor elit, fringilla nec turpis ac, auctor vulputate nulla. Phasellus
-                                        sed
-                                        laoreet velit.
-                                    </p>
-                                    <p>
-                                        Proin fringilla urna vel mattis euismod.
-                                        Etiam sodales, massa non tincidunt iaculis, mauris libero scelerisque justo, ut
-                                        rutrum lectus urna sit amet quam.
-                                        Nulla maximus vestibulum mi vitae accumsan.
-                                    </p>
-                                </div>
-
-                            </div>
-                            <div style="clear: left;"></div>
-                            <div class="related products product-grid">
-                                <h2 class="product-grid-title">You may also like</h2>
-                                <div class="owl-products owl-slick equal-container nav-center"
-                                    data-slick='{"autoplay":false, "autoplaySpeed":1000, "arrows":true, "dots":false, "infinite":true, "speed":800, "rows":1}'
-                                    data-responsive='[{"breakpoint":"2000","settings":{"slidesToShow":3}},{"breakpoint":"1200","settings":{"slidesToShow":2}},{"breakpoint":"992","settings":{"slidesToShow":2}},{"breakpoint":"480","settings":{"slidesToShow":1}}]'>
-                                    <!--category difference-->
-                                    {% if same_category_products %}
-                                    {% for  same in  same_category_products %}
-                                    <div class="product-item style-1">
-                                        <div class="product-inner equal-element">
-                                            {% if same.new == "yes" %}
-                                            <div class="product-top">
-                                                <div class="flash">
-                                                    <span class="onnew">
-                                                        <span class="text">
-                                                            new
-                                                        </span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            {% endif %}
-                                            <div class="product-thumb">
-                                                <div class="thumb-inner">
-                                                    <a href="{% url "product" p=same.slug %}">
-                                                        <img src="{{same.image_url}}" alt="img">
-                                                    </a>
-                                                    <div class="thumb-group">
-                                                        <div class="yith-wcwl-add-to-wishlist">
-                                                            <div class="yith-wcwl-add-button">
-                                                                <a href="{% url 'add to wishlist' product_slug=same.slug %}">Add to Wishlist</a>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="loop-form-add-to-cart">
-                                                            <button class="single_add_to_cart_button button">Add to cart
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="product-info">
-                                                <h5 class="product-name product_title">
-                                                    <a href="{% url "product" p=same.slug %}">{{same.p_name}}</a>
-                                                </h5>
-                                                <div class="group-info">
-
-                                                    <div class="price">
-                                                        <del>
-                                                            Rs.{{same.del_price}}
-                                                        </del>
-                                                        <ins>
-                                                            Rs.{{same.price}}
-                                                        </ins>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endfor %}
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <!-- Thumbnails -->
+      <div class="tt-thumbnails" id="thumbContainer">
+        {% if product.image_url %}
+        <div class="tt-thumb-item active" data-img="{{ product.image_url }}">
+          <img src="{{ product.image_url }}" alt="{{ product.p_name }}" onerror="this.parentElement.style.display='none'">
         </div>
+        {% endif %}
+
+        {% if product_other_image %}
+          {% for img in product_other_image %}
+          <div class="tt-thumb-item" data-img="{{ img.image.url }}">
+            <img src="{{ img.image.url }}" alt="{{ product.p_name }}" onerror="this.parentElement.style.display='none'">
+          </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- RIGHT: Product Info -->
+    <div class="tt-product-info">
+
+      <div class="tt-product-category">{{ product.category }}</div>
+
+      <h1 class="tt-product-title">{{ product.p_name }}</h1>
+
+      <!-- Availability -->
+      {% if product.stock_status == "in stock" and product.availablity != '0' %}
+        <div class="tt-availability instock">
+          <span class="dot"></span>
+          In Stock
+        </div>
+      {% else %}
+        <div class="tt-availability outstock">
+          <span class="dot"></span>
+          Out of Stock
+        </div>
+      {% endif %}
+
+      <!-- Price -->
+      <div class="tt-price-wrap">
+        <span class="tt-price-current">₹{{ product.price }}</span>
+        {% if product.del_price %}
+          <span class="tt-price-del">₹{{ product.del_price }}</span>
+          {% if product.save %}
+            <span class="tt-price-save">Save ₹{{ product.save }}</span>
           {% endif %}
+        {% endif %}
+      </div>
+
+      <div class="tt-divider"></div>
+
+      <!-- Points -->
+      {% if product.point1 or product.point2 %}
+      <ul class="tt-points">
+        {% if product.point1 %}<li>{{ product.point1 }}</li>{% endif %}
+        {% if product.point2 %}<li>{{ product.point2 }}</li>{% endif %}
+      </ul>
+      {% endif %}
+
+      <!-- Wishlist / Size Chart -->
+      <div class="tt-meta-row">
+        <a href="{% url 'add to wishlist' product_slug=product.slug %}" class="tt-meta-link">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          Add to Wishlist
+        </a>
+        <a href="{% static 'images/size-chart.jpg' %}" class="tt-meta-link" id="sizeChartLink">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 3H3v18h18V3zM3 9h18M3 15h18M9 3v18M15 3v18"/>
+          </svg>
+          View Size Chart
+        </a>
+      </div>
+
+      <div class="tt-divider"></div>
+
+      <!-- Add to Cart -->
+      {% if product.stock_status == "in stock" and product.availablity != '0' %}
+        <form method="POST" id="productForm">
+          {% csrf_token %}
+
+          <div class="tt-qty-row">
+            <span class="tt-qty-label">Qty</span>
+            <div class="tt-qty-control">
+              <button type="button" class="tt-qty-btn" id="qtyMinus">−</button>
+              <input type="number" class="tt-qty-input" id="qtyInput" name="quantity" value="1" min="1" max="99">
+              <button type="button" class="tt-qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+
+          <div class="tt-action-row">
+            <button
+              type="submit"
+              class="tt-btn tt-btn-primary"
+              formaction="{% url 'add to cart' product_id=product.slug %}"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
+              Add to Cart
+            </button>
+          </div>
+        </form>
+      {% else %}
+        <div class="tt-oos-notice">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          This item is currently unavailable
+        </div>
+      {% endif %}
+
+      <!-- Rental Section -->
+      <div class="tt-rental-card">
+        <div class="tt-rental-header">
+          <div class="tt-rental-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+          </div>
+          <span class="tt-rental-title">Rent This Item</span>
+        </div>
+
+        <div class="tt-pincode-row">
+          <input
+            type="tel"
+            id="pincodeInput"
+            class="tt-pincode-input"
+            placeholder="Enter 6-digit pincode"
+            maxlength="6"
+            inputmode="numeric"
+            pattern="[0-9]{6}"
+          >
+          <button id="checkPincodeBtn" class="tt-check-btn" disabled>Check</button>
+        </div>
+
+        <div class="tt-pincode-msg" id="pincodeMsg"></div>
+
+        <div class="tt-rent-action" id="rentAction">
+          <a href="{% url 'add to rental' product_id=product.slug %}">
+            <button class="tt-btn tt-btn-gold" id="rentNowBtn" style="width:100%">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              Rent Now
+            </button>
+          </a>
+        </div>
+      </div>
+
+    </div><!-- /.tt-product-info -->
+  </div><!-- /.tt-product-wrap -->
+
+  <!-- Tabs -->
+  <div class="tt-tabs">
+    <div class="tt-tab-nav">
+      <button class="active" data-tab="descriptions">Description</button>
+    </div>
+
+    <div class="tt-tab-panel active" id="tab-descriptions">
+      {% if product.desc %}
+        <p>{{ product.desc }}</p>
+      {% else %}
+        <p>{{ product.p_name }} — a beautifully crafted piece from Thara Trinkets' exclusive collection. Perfect for weddings, festivals, and special occasions.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Related Products -->
+  {% if same_category_products %}
+  <div class="tt-related">
+    <h2 class="tt-section-title">You May Also Like</h2>
+    <div class="tt-related-grid">
+      {% for item in same_category_products %}
+      <div class="tt-product-card">
+        <div class="tt-card-thumb">
+          {% if item.new == "yes" %}<span class="tt-badge-new">New</span>{% endif %}
+          {% if item.image_url %}
+            <img
+              src="{{ item.image_url }}"
+              alt="{{ item.p_name }}"
+              onerror="this.src='{% static "images/placeholder.jpg" %}'; this.onerror=null;"
+            >
+          {% else %}
+            <div class="tt-img-placeholder" style="height:100%">
+              <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            </div>
+          {% endif %}
+          <div class="tt-card-overlay">
+            <a href="{% url 'product' p=item.slug %}">View Product</a>
+            <a href="{% url 'add to wishlist' product_slug=item.slug %}">Add to Wishlist</a>
+          </div>
+        </div>
+        <div class="tt-card-body">
+          <div class="tt-card-name">
+            <a href="{% url 'product' p=item.slug %}">{{ item.p_name }}</a>
+          </div>
+          <div class="tt-card-price">
+            <ins>₹{{ item.price }}</ins>
+            {% if item.del_price %}<del>₹{{ item.del_price }}</del>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- Zoom Modal -->
+<div class="tt-zoom-modal" id="zoomModal">
+  <div class="tt-zoom-modal-inner">
+    <button class="tt-zoom-close" id="zoomClose">×</button>
+    <img id="zoomModalImg" src="" alt="Zoomed image">
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* =============================================
+     1. THUMBNAIL SWITCHER
+  ============================================= */
+  const mainImg   = document.getElementById('mainProductImage');
+  const thumbs    = document.querySelectorAll('.tt-thumb-item');
+  const zoomModal = document.getElementById('zoomModal');
+  const zoomClose = document.getElementById('zoomClose');
+  const zoomModalImg = document.getElementById('zoomModalImg');
+  const zoomBtn   = document.getElementById('zoomBtn');
+
+  thumbs.forEach(function(thumb) {
+    thumb.addEventListener('click', function() {
+      const newSrc = this.dataset.img;
+      if (!newSrc || !mainImg) return;
+      mainImg.style.opacity = '0';
+      setTimeout(function() {
+        mainImg.src = newSrc;
+        mainImg.style.opacity = '1';
+      }, 150);
+      thumbs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  /* =============================================
+     2. ZOOM MODAL
+  ============================================= */
+  if (zoomBtn && zoomModal && mainImg) {
+    zoomBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      zoomModalImg.src = mainImg.src;
+      zoomModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  if (zoomClose) {
+    zoomClose.addEventListener('click', function() {
+      zoomModal.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  }
+
+  if (zoomModal) {
+    zoomModal.addEventListener('click', function(e) {
+      if (e.target === zoomModal) {
+        zoomModal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+  }
+
+  /* =============================================
+     3. QUANTITY CONTROL
+  ============================================= */
+  const qtyInput = document.getElementById('qtyInput');
+  const qtyMinus = document.getElementById('qtyMinus');
+  const qtyPlus  = document.getElementById('qtyPlus');
+
+  if (qtyMinus && qtyInput) {
+    qtyMinus.addEventListener('click', function() {
+      const v = parseInt(qtyInput.value) || 1;
+      if (v > 1) qtyInput.value = v - 1;
+    });
+  }
+
+  if (qtyPlus && qtyInput) {
+    qtyPlus.addEventListener('click', function() {
+      const v = parseInt(qtyInput.value) || 1;
+      if (v < 99) qtyInput.value = v + 1;
+    });
+  }
+
+  /* =============================================
+     4. PINCODE / RENTAL CHECK
+  ============================================= */
+  // ⚠️  Replace these with your actual serviceable pincodes
+  // Ideally fetch these from your Django backend via AJAX
+  const serviceablePincodes = [
+    '638001','638002','638003','638004',  // Erode
+    '638009','638010','638011','638012',  // Erode surroundings
+    '641001','641002','641003',            // Coimbatore
+    '600001','600002','600003',            // Chennai
+    '620001','620002'                      // Trichy
+  ];
+
+  const pincodeInput    = document.getElementById('pincodeInput');
+  const checkBtn        = document.getElementById('checkPincodeBtn');
+  const pincodeMsg      = document.getElementById('pincodeMsg');
+  const rentAction      = document.getElementById('rentAction');
+
+  if (pincodeInput) {
+    // Only allow digits
+    pincodeInput.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
+      checkBtn.disabled = this.value.length !== 6;
+      pincodeMsg.textContent = '';
+      pincodeMsg.className = 'tt-pincode-msg';
+    });
+
+    pincodeInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && this.value.length === 6) checkBtn.click();
+    });
+  }
+
+  if (checkBtn) {
+    checkBtn.addEventListener('click', function() {
+      const pin = pincodeInput.value.trim();
+      if (pin.length !== 6) return;
+
+      pincodeMsg.textContent = 'Checking…';
+      pincodeMsg.className   = 'tt-pincode-msg';
+      checkBtn.disabled      = true;
+      checkBtn.textContent   = '…';
+
+      // Simulate async check — replace with fetch('/api/check-pincode/?pin='+pin)
+      setTimeout(function() {
+        if (serviceablePincodes.includes(pin)) {
+          pincodeMsg.textContent = '✓ Rental delivery available at this pincode';
+          pincodeMsg.className   = 'tt-pincode-msg success';
+          rentAction.style.display = 'block';
+          localStorage.setItem('tt_rental_pin', pin);
+        } else {
+          pincodeMsg.textContent = '✗ Rental not available at this pincode';
+          pincodeMsg.className   = 'tt-pincode-msg error';
+          rentAction.style.display = 'none';
+          localStorage.removeItem('tt_rental_pin');
+        }
+        checkBtn.disabled    = false;
+        checkBtn.textContent = 'Check';
+      }, 800);
+    });
+  }
+
+  // Restore saved pincode on reload
+  const savedPin = localStorage.getItem('tt_rental_pin');
+  if (savedPin && pincodeInput && serviceablePincodes.includes(savedPin)) {
+    pincodeInput.value = savedPin;
+    checkBtn.disabled  = false;
+    pincodeMsg.textContent = '✓ Rental delivery available at this pincode';
+    pincodeMsg.className   = 'tt-pincode-msg success';
+    rentAction.style.display = 'block';
+  }
+
+  /* =============================================
+     5. TAB SWITCHER
+  ============================================= */
+  document.querySelectorAll('.tt-tab-nav button').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tt-tab-nav button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tt-tab-panel').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      const target = document.getElementById('tab-' + this.dataset.tab);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  /* =============================================
+     6. TRANSITION ON MAIN IMAGE
+  ============================================= */
+  if (mainImg) {
+    mainImg.style.transition = 'opacity .15s ease, transform .4s ease';
+  }
+
+});
+</script>
+
+{% endif %}
 {% endblock index %}
