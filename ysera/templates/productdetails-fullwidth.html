@@ -1113,36 +1113,48 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
 if (checkBtn) {
-  checkBtn.addEventListener('click', function() {
+  checkBtn.addEventListener('click', function () {
 
-    const pin = String(pincodeInput.value)
-      .replace(/\D/g, '')
+    const pin = (pincodeInput.value || '')
+      .replace(/\D/g, '')   // remove non-digits
       .trim();
 
-    if (pin.length !== 6) return;
+    console.log("PIN:", pin);
+
+    // ❗ Handle invalid input properly
+    if (pin.length !== 6) {
+      pincodeMsg.textContent = 'Enter valid 6-digit pincode';
+      pincodeMsg.className = 'tt-pincode-msg error';
+      rentAction.style.display = 'none';
+      return;
+    }
 
     pincodeMsg.textContent = 'Checking...';
-    pincodeMsg.className   = 'tt-pincode-msg';
-    checkBtn.disabled      = true;
-    checkBtn.textContent   = '...';
+    pincodeMsg.className = 'tt-pincode-msg';
+    checkBtn.disabled = true;
+    checkBtn.textContent = '...';
 
-    console.log("Entered PIN:", pin);
+    setTimeout(function () {
 
-    setTimeout(function() {
+      // 🔥 Fix: ensure exact match
+      if (serviceablePincodes.includes(pin.toString())) {
 
-      if (serviceablePincodes.includes(pin)) {
         pincodeMsg.textContent = '✓ Rental delivery available';
-        pincodeMsg.className   = 'tt-pincode-msg success';
+        pincodeMsg.className = 'tt-pincode-msg success';
         rentAction.style.display = 'block';
+
         localStorage.setItem('tt_rental_pin', pin);
+
       } else {
+
         pincodeMsg.textContent = '✗ Not available in this area';
-        pincodeMsg.className   = 'tt-pincode-msg error';
+        pincodeMsg.className = 'tt-pincode-msg error';
         rentAction.style.display = 'none';
+
         localStorage.removeItem('tt_rental_pin');
       }
 
-      checkBtn.disabled    = false;
+      checkBtn.disabled = false;
       checkBtn.textContent = 'Check';
 
     }, 500);
