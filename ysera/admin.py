@@ -38,8 +38,9 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 0
+    can_delete = True
+    fields = ("image", "priority", "image_preview", "DELETE")  # ✅ ADD THIS
     readonly_fields = ("image_preview",)
-    fields = ("image", "priority", "image_preview")
 
     def image_preview(self, obj):
         if obj.image:
