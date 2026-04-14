@@ -78,30 +78,51 @@
                     <div class="slider-owl owl-slick equal-container nav-center"
                         data-slick='{"autoplay":true, "autoplaySpeed":9000, "arrows":true, "dots":false, "infinite":true, "speed":1000, "rows":1}'
                         data-responsive='[{"breakpoint":"2000","settings":{"slidesToShow":1}}]'>
-                        {% if offers_1 %}
-                        {% for offer_1 in offers_1  %}
-                        <!-- Slide 1 FIRST OFFER-->
-                        <div class="slider-item style1">
-                            <div class="slider-inner equal-element">
+                       {% if offers_1 %}
+{% for offer_1 in offers_1 %}
 
-                                <img class="slider-bg-img" src="{{ offer_1.image.url }}" alt="{{ offer_1.title }}">
+<div class="slider-item style1">
+    <div class="slider-inner equal-element">
 
-                                <div class="slider-infor">
-                                    <h5 class="title-small">{% if offer_1.title %}{{ offer_1.title }}{% endif %}</h5>
-                                    <h3 class="title-big">
-                                        <br/>{{ offer_1.descripton }}
-                                    </h3>
-                                    <div class="price">
-                                        Price from:
-                                        <span class="number-price">{{ offer_1.offers }}</span>
-                                    </div>
-                                    <a href="{% url "search" s="0" page="1" %}?q={{offer_1.offer_applies_to}}" class="button btn-shop-the-look bgroud-style">Shop now</a>
-                                </div>
+        <!-- ✅ ALWAYS SHOW IMAGE -->
+        <img class="slider-bg-img" src="{{ offer_1.image.url }}" alt="{{ offer_1.title }}">
 
-                            </div>
-                        </div>
-                        {% endfor %}
-                        {% endif %}
+        <!-- ✅ SHOW TEXT ONLY IF EXISTS -->
+        {% if offer_1.title or offer_1.description or offer_1.offers %}
+        <div class="slider-infor">
+
+            {% if offer_1.title %}
+            <h5 class="title-small">{{ offer_1.title }}</h5>
+            {% endif %}
+
+            {% if offer_1.description %}
+            <h3 class="title-big">
+                <br/>{{ offer_1.description }}
+            </h3>
+            {% endif %}
+
+            {% if offer_1.offers %}
+            <div class="price">
+                Price from:
+                <span class="number-price">{{ offer_1.offers }}</span>
+            </div>
+            {% endif %}
+
+            {% if offer_1.offer_applies_to %}
+            <a href="{% url "search" s="0" page="1" %}?q={{offer_1.offer_applies_to}}"
+               class="button btn-shop-the-look bgroud-style">
+               Shop now
+            </a>
+            {% endif %}
+
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endfor %}
+{% endif %}
                     </div>
                 </div>
             </div>
