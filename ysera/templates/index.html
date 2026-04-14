@@ -87,7 +87,7 @@
                                 <img class="slider-bg-img" src="{{ offer_1.image.url }}" alt="{{ offer_1.title }}">
 
                                 <div class="slider-infor">
-                                    <h5 class="title-small">{{ offer_1.title }}</h5>
+                                    <h5 class="title-small">{% if offer_1.title %}{{ offer_1.title }}{% endif %}</h5>
                                     <h3 class="title-big">
                                         <br/>{{ offer_1.descripton }}
                                     </h3>
