@@ -2,19 +2,14 @@ from django.shortcuts import render, get_object_or_404
 from .models import Product, ProductImage, Cart, CartItem
 
 
+# Helper function to get product data including first image + sizes
 def get_product_data1(products):
     product_list = []
     for product in products:
-        # Try priority='first', then fallback to any image that actually HAS a file
-        product_image = ProductImage.objects.filter(
-            p_id=product, priority='first'
-        ).exclude(image='').exclude(image=None).first()
-
+        # Try to get 'first' priority image, fallback to any image
+        product_image = ProductImage.objects.filter(p_id=product, priority='first').first()
         if not product_image:
-            # Fallback: get any image that actually has a file uploaded
-            product_image = ProductImage.objects.filter(
-                p_id=product
-            ).exclude(image='').exclude(image=None).first()
+            product_image = ProductImage.objects.filter(p_id=product).first()
 
         image_url = (
             product_image.image.url
@@ -40,7 +35,7 @@ def get_product_data1(products):
             'where_to_display': product.where_to_display,
             'slug': product.slug,
             'image_url': image_url,
-            'availablity': product.availablity,
+            'availablity': product.availablity,  # ✅ fixed missing key
         }
         product_list.append(product_dict)
     return product_list
@@ -48,28 +43,13 @@ def get_product_data1(products):
 
 def product_detail(request, p):
     # ---------------- SPECIFIC PRODUCT ----------------
-    product = get_object_or_404(Product, slug=p)
-    main_product_data = get_product_data1([product])[0]
+    product = get_object_or_404(Product, slug=p)  # model object
+    main_product_data = get_product_data1([product])[0]  # dict
 
-    # ---------------- OTHER IMAGES ----------------
-    # Get ALL images except the one already used as main image
-    # This way thumbnails always show something
-    main_image_url = main_product_data.get('image_url')
-
+    # ---------------- OTHER IMAGES (non-primary) ----------------
     product_other_image = ProductImage.objects.filter(
-        p_id=product.p_id
-    ).exclude(image='').exclude(image=None)
-
-    # Exclude the main image from thumbnails to avoid duplicate
-    if main_image_url:
-        # Get the image record used as main so we can exclude it from thumbnails
-        main_image_obj = ProductImage.objects.filter(
-            p_id=product
-        ).exclude(image='').exclude(image=None).first()
-        if main_image_obj:
-            product_other_image = product_other_image.exclude(
-                pk=main_image_obj.pk
-            )
+        p_id=product.p_id, priority='No'
+    )
 
     # ---------------- SAME BRAND PRODUCTS ----------------
     same_brand_products = Product.objects.filter(
@@ -97,7 +77,7 @@ def product_detail(request, p):
         log = '1'
     else:
         cart, created = Cart.objects.get_or_create(user=request.user)
-        cart_count = CartItem.objects.filter(cart=cart).count()
+        cart_count = CartItem.objects.filter(cart=cart).count()  # ✅ fixed: added ()
 
     # ---------------- CONTEXT ----------------
     context = {
