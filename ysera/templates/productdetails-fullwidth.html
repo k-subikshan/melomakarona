@@ -1112,35 +1112,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  if (checkBtn) {
-    checkBtn.addEventListener('click', function() {
-      const pin = pincodeInput.value.trim();
-      if (pin.length !== 6) return;
+if (checkBtn) {
+  checkBtn.addEventListener('click', function() {
 
-      pincodeMsg.textContent = 'Checking…';
-      pincodeMsg.className   = 'tt-pincode-msg';
-      checkBtn.disabled      = true;
-      checkBtn.textContent   = '…';
+    const pin = String(pincodeInput.value)
+      .replace(/\D/g, '')
+      .trim();
 
-      // Simulate async check — replace with fetch('/api/check-pincode/?pin='+pin)
-      setTimeout(function() {
-        if (serviceablePincodes.includes(pin)) {
-          pincodeMsg.textContent = '✓ Rental delivery available at this pincode';
-          pincodeMsg.className   = 'tt-pincode-msg success';
-          rentAction.style.display = 'block';
-          localStorage.setItem('tt_rental_pin', pin);
-        } else {
-          pincodeMsg.textContent = '✗ Rental not available at this pincode';
-          pincodeMsg.className   = 'tt-pincode-msg error';
-          rentAction.style.display = 'none';
-          localStorage.removeItem('tt_rental_pin');
-        }
-        checkBtn.disabled    = false;
-        checkBtn.textContent = 'Check';
-      }, 800);
-    });
-  }
+    if (pin.length !== 6) return;
 
+    pincodeMsg.textContent = 'Checking...';
+    pincodeMsg.className   = 'tt-pincode-msg';
+    checkBtn.disabled      = true;
+    checkBtn.textContent   = '...';
+
+    console.log("Entered PIN:", pin);
+
+    setTimeout(function() {
+
+      if (serviceablePincodes.includes(pin)) {
+        pincodeMsg.textContent = '✓ Rental delivery available';
+        pincodeMsg.className   = 'tt-pincode-msg success';
+        rentAction.style.display = 'block';
+        localStorage.setItem('tt_rental_pin', pin);
+      } else {
+        pincodeMsg.textContent = '✗ Not available in this area';
+        pincodeMsg.className   = 'tt-pincode-msg error';
+        rentAction.style.display = 'none';
+        localStorage.removeItem('tt_rental_pin');
+      }
+
+      checkBtn.disabled    = false;
+      checkBtn.textContent = 'Check';
+
+    }, 500);
+  });
+}
   // Restore saved pincode on reload
   const savedPin = localStorage.getItem('tt_rental_pin');
   if (savedPin && pincodeInput && serviceablePincodes.includes(savedPin)) {
