@@ -25,11 +25,11 @@
 <link rel="canonical" href="https://www.tharatrinkets.com/">
 
 <!-- ================= FAVICON ================= -->
-<link rel="apple-touch-icon" sizes="180x180" href="{% static  "fonts/favicon_io/apple-touch-icon.png"  %}">
-<link rel="icon" type="image/png" sizes="32x32" href="{% static  "fonts/favicon_io/favicon-32x32.png"  %}">
-<link rel="icon" type="image/png" sizes="16x16" href="{% static  "fonts/favicon_io/favicon-16x16.png"  %}">
-<link rel="manifest" href="{% static  "fonts/favicon_io/site.webmanifest" %}">
-<link rel="shortcut icon" href="{% static  "fonts/favicon_io/favicon.ico" type="image/x-icon" %}">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon_io/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon_io/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon_io/favicon-16x16.png">
+<link rel="manifest" href="assets/favicon_io/site.webmanifest">
+<link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
 
 <!-- ================= OPEN GRAPH ================= -->
 <meta property="og:type" content="website">
@@ -78,16 +78,14 @@
                     <div class="slider-owl owl-slick equal-container nav-center"
                         data-slick='{"autoplay":true, "autoplaySpeed":9000, "arrows":true, "dots":false, "infinite":true, "speed":1000, "rows":1}'
                         data-responsive='[{"breakpoint":"2000","settings":{"slidesToShow":1}}]'>
-                        <p>{{offers_1}} {{offers_2}}</p>
                         {% if offers_1 %}
-                        
                         {% for offer_1 in offers_1  %}
                         <!-- Slide 1 FIRST OFFER-->
                         <div class="slider-item style1">
                             <div class="slider-inner equal-element">
 
                                 <img class="slider-bg-img" src="{{ offer_1.image.url }}" alt="{{ offer_1.title }}">
-                                
+
                                 <div class="slider-infor">
                                     <h5 class="title-small">{{ offer_1.title }}</h5>
                                     <h3 class="title-big">
@@ -99,7 +97,6 @@
                                     </div>
                                     <a href="{% url "search" s="0" page="1" %}?q={{offer_1.offer_applies_to}}" class="button btn-shop-the-look bgroud-style">Shop now</a>
                                 </div>
-                                
 
                             </div>
                         </div>
@@ -219,15 +216,13 @@
                         <div class="banner">
                             <div class="item-banner style9" style="background-image: url({{offer_2.image.url}});">
                                 <div class="inner" style="background-image: url({{offer_2.image.url}});">
-                                       
+                                    
                                     <div class="banner-content">
-                                        {% comment  %}
                                         <h4 class="ysera-subtitle">{{ offer_2.title }}</h4>
                                         <h3 class="title"><br />{{ offer_2.descripton}}</h3>
                                         <div class="code"> Use promo Code: <span class="nummer-code">{{ offer_2.offers}}</span> </div>
                                         <a href="{% url "search" s="0" page="1" %}?q={{offer_2.offer_applies_to}}" class="button btn-shop-now">Shop now</a>
                                     </div>
-                                
                                 </div>
                             </div>
                         </div>
@@ -527,7 +522,7 @@
                 </h3>
                 <div class="ysera-product style3">
                     <div class="mobile-scroll">
-                        <ul class="row list-products auto-clear equal-container product-grid">
+                        <ul class="row list-products auto-clear equal-container product-grid">\
                             <!--bridal sets-->
                             {% if bridalsets %}
                             {% for bridalset  in bridalsets %}
@@ -607,14 +602,12 @@
                         <div class="banner">
                             <div class="item-banner style10"  style="background-image: url({{offer_4.image.url}});">
                                 <div class="inner" style="background-image: url({{offer_4.image.url}});">
-                                      <div class="banner-content">
-                                        
+                                    <div class="banner-content">
                                         <h4 class="ysera-subtitle">{{offer_4.title}} </h4>
                                         <h3 class="title">{{offer_4.descripton}}</h3>
                                         <div class="description">
                                             {{offer_4.offers}}
                                         </div>
-                                        
                                     </div>
                                 </div>
                             </div>
@@ -629,8 +622,7 @@
                         <div class="banner">
                             <div class="item-banner style11" style="background-image: url({{offer_5.image.url}});">
                                 <div class="inner" style="background-image: url({{offer_5.image.url}});">
-                                      <div class="banner-content">
-                                        
+                                    <div class="banner-content">
                                         <h4 class="ysera-subtitle">{{offer_5.title}}</h4>
                                         <h3 class="title">{{offer_5.descripton}} </h3>
                                         <div class="description">
