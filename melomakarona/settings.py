@@ -178,8 +178,8 @@ SESSION_COOKIE_SECURE = True
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-RAZORPAY_KEY_ID = "rzp_test_SDgcKGRjkg9kGi"
-RAZORPAY_KEY_SECRET = "Bq1NHixGJDzI3xELwiCpcHDY"
+RAZORPAY_KEY_ID = "rzp_live_SdO7rarlwx0W2A"
+RAZORPAY_KEY_SECRET = "VGNSycpLdj0Qs3FTTnySM5PV"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
