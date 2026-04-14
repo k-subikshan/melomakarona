@@ -861,6 +861,33 @@
       <div class="tt-divider"></div>
 
       <!-- Add to Cart -->
+       {% if product.available == '2' %}
+        <form method="POST" id="productForm">
+          {% csrf_token %}
+
+          <div class="tt-qty-row">
+            <span class="tt-qty-label">Qty</span>
+            <div class="tt-qty-control">
+              <button type="button" class="tt-qty-btn" id="qtyMinus">−</button>
+              <input type="number" class="tt-qty-input" id="qtyInput" name="quantity" value="1" min="1" max="99">
+              <button type="button" class="tt-qty-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+
+          <div class="tt-action-row">
+            <button
+              type="submit"
+              class="tt-btn tt-btn-primary"
+              formaction="{% url 'add to cart' product_id=product.slug %}"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+              </svg>
+              Add to Cart
+            </button>
+          </div>
+        </form>
+        {% endif %}
       {% if product.stock_status == "in stock" and product.availablity != '0' or product.available == '2' %}
         <form method="POST" id="productForm">
           {% csrf_token %}
