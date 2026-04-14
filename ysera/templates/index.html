@@ -206,33 +206,7 @@
                 transition: 0.25s ease;
             }
         </style>
-        <div class="banner-video-wrapp rows-space-40 type2">
-            <div class="container">
-                <div class="row no-gutters two-grid-mobile">
-                    <!-- offer_2 -->
-                    {% if offers_2 %}
-                    {% for offer_2 in offers_2  %}
-                    <div class="col-6 col-sm-6 col-md-6 col-lg-6">
-                        <div class="banner">
-                            <div class="item-banner style9" style="background-image: url({{offer_2.image.url}});">
-                                <div class="inner" style="background-image: url({{offer_2.image.url}});">
-                                    
-                                    <div class="banner-content">
-                                        <h4 class="ysera-subtitle"></h4>
-                                        <h3 class="title"></h3>
-                                        <div class="code">  <span class="nummer-code"></span> </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                    
-                </div>
-            </div>
-        </div>
+   
 
 
         <div class="ysera-tabs  default rows-space-40">
@@ -438,32 +412,7 @@
                 </div>
             </div>
         </div>
-        {% if offers_3 %}
-        {% for offer_3 in offers_3  %}
-        <div class="banner-wrapp rows-space-60">
-            <div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="banner">
-                            <div class="item-banner style6">
-                                <div class="inner">
-                                    <div class="container">
-                                        <div class="banner-content">
-                                            <h4 class="ysera-subtitle"></h4>
-                                            <h3 class="title"><span></span>
-                                            </h3>
-                                           
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        {% endif %}
+       
         <style>
             @media(max-width:768px) {
 
@@ -591,54 +540,7 @@
                 </div>
             </div>
         </div>
-        <div class="banner-wrapp rows-space-30">
-            <div class="container">
-                <div class="row">
-                    <!--offer 4-->
-                    {% if offers_4 %}
-                    {% for offer_4 in offers_4 %}
-
-                    <div class="col-lg-5 col-md-5 col-sm-12">
-                        <div class="banner">
-                            <div class="item-banner style10"  style="background-image: url({{offer_4.image.url}});">
-                                <div class="inner" style="background-image: url({{offer_4.image.url}});">
-                                    <div class="banner-content">
-                                        <h4 class="ysera-subtitle"></h4>
-                                        <h3 class="title"></h3>
-                                        <div class="description">
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                    <!--offer 5-->
-                    {% if offers_5 %}
-                    {% for offer_5 in offers_5 %}
-                    <div class="col-lg-7 col-md-7 col-sm-12">
-                        <div class="banner">
-                            <div class="item-banner style11" style="background-image: url({{offer_5.image.url}});">
-                                <div class="inner" style="background-image: url({{offer_5.image.url}});">
-                                    <div class="banner-content">
-                                        <h4 class="ysera-subtitle"></h4>
-                                        <h3 class="title"></h3>
-                                        <div class="description">
-                                           
-                                        </div>
-                                       
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+      
         <div class="ysera-blog-wraap">
             <div class="container">
                 <h3 class="custommenu-title-blog">
