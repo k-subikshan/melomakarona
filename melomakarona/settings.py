@@ -136,7 +136,7 @@ JAZZMIN_SETTINGS = {
     "site_title": "Tharatrinket Jewels Admin",
     "site_header": "Tharatrinket Jewels",
     "site_brand": "Tharatrinket Jewels",
-    "welcome_sign": "Luxury Jewellery Management",
+    "welcome_sign": "Tharatrinket Management",
     "copyright": "© 2026 Tharatrinket Jewels",
 
     # 🎨 Luxury Colors
