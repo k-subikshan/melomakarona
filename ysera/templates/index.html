@@ -524,7 +524,7 @@
                 </h3>
                 <div class="ysera-product style3">
                     <div class="mobile-scroll">
-                        <ul class="row list-products auto-clear equal-container product-grid">\
+                        <ul class="row list-products auto-clear equal-container product-grid">
                             <!--bridal sets-->
                             {% if bridalsets %}
                             {% for bridalset  in bridalsets %}
@@ -610,7 +610,7 @@
                                         <div class="description">
                                             {{offer_4.offers}}
                                         </div>
-                                    </div>-->
+                                    </div>{% endcomment %}
                                 </div>
                             </div>
                         </div>
@@ -631,7 +631,7 @@
                                             {{offer_5.offers}}
                                         </div>
                                         <a href="{% url "search" s="0" page="1" %}?q={{offer_s.offer_applies_to}}" class="button btn-shopping-us">Shop now</a>
-                                    </div>-->
+                                    </div>{% endcomment %}
                                 </div>
                             </div>
                         </div>
