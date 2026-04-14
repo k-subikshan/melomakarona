@@ -85,7 +85,7 @@
                             <div class="slider-inner equal-element">
 
                                 <img class="slider-bg-img" src="{{ offer_1.image.url }}" alt="{{ offer_1.title }}">
-
+                                <!-- remove this line if you don't want the image as background 
                                 <div class="slider-infor">
                                     <h5 class="title-small">{{ offer_1.title }}</h5>
                                     <h3 class="title-big">
@@ -96,7 +96,8 @@
                                         <span class="number-price">{{ offer_1.offers }}</span>
                                     </div>
                                     <a href="{% url "search" s="0" page="1" %}?q={{offer_1.offer_applies_to}}" class="button btn-shop-the-look bgroud-style">Shop now</a>
-                                </div>
+                                </div>-->
+                                
 
                             </div>
                         </div>
@@ -216,13 +217,14 @@
                         <div class="banner">
                             <div class="item-banner style9" style="background-image: url({{offer_2.image.url}});">
                                 <div class="inner" style="background-image: url({{offer_2.image.url}});">
-                                    
+                                       <!-- remove this line if you don't want the image as background 
                                     <div class="banner-content">
                                         <h4 class="ysera-subtitle">{{ offer_2.title }}</h4>
                                         <h3 class="title"><br />{{ offer_2.descripton}}</h3>
                                         <div class="code"> Use promo Code: <span class="nummer-code">{{ offer_2.offers}}</span> </div>
                                         <a href="{% url "search" s="0" page="1" %}?q={{offer_2.offer_applies_to}}" class="button btn-shop-now">Shop now</a>
                                     </div>
+                                -->
                                 </div>
                             </div>
                         </div>
@@ -602,13 +604,13 @@
                         <div class="banner">
                             <div class="item-banner style10"  style="background-image: url({{offer_4.image.url}});">
                                 <div class="inner" style="background-image: url({{offer_4.image.url}});">
-                                    <div class="banner-content">
+                                       <!-- remove this line if you don't want the image as background <div class="banner-content">
                                         <h4 class="ysera-subtitle">{{offer_4.title}} </h4>
                                         <h3 class="title">{{offer_4.descripton}}</h3>
                                         <div class="description">
                                             {{offer_4.offers}}
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                         </div>
@@ -622,14 +624,14 @@
                         <div class="banner">
                             <div class="item-banner style11" style="background-image: url({{offer_5.image.url}});">
                                 <div class="inner" style="background-image: url({{offer_5.image.url}});">
-                                    <div class="banner-content">
+                                      <!-- remove this line if you don't want the image as background  <div class="banner-content">
                                         <h4 class="ysera-subtitle">{{offer_5.title}}</h4>
                                         <h3 class="title">{{offer_5.descripton}} </h3>
                                         <div class="description">
                                             {{offer_5.offers}}
                                         </div>
                                         <a href="{% url "search" s="0" page="1" %}?q={{offer_s.offer_applies_to}}" class="button btn-shopping-us">Shop now</a>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                         </div>
