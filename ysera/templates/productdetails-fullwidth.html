@@ -861,7 +861,7 @@
       <div class="tt-divider"></div>
 
       <!-- Add to Cart -->
-      {% if product.stock_status == "in stock" and product.availablity != '0' %}
+      {% if product.stock_status == "in stock" and product.availablity != '0' or product.available == '2' %}
         <form method="POST" id="productForm">
           {% csrf_token %}
 
