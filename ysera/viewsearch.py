@@ -2,17 +2,19 @@ from django.shortcuts import render
 from django.db.models import Case, When, Value, IntegerField, Count
 from rapidfuzz import fuzz
 import re, unicodedata
+from urllib.parse import unquote
+
 from .models import Cart, CartItem, OfferImage, Product
 from .viewhome import get_product_data1
 from django.core.paginator import Paginator
 
 
 def search(request, s, page):
-    # --- DETERMINE QUERY ---
+    # --- DETERMINE QUERY (FIXED + ISSUE) ---
     if s == "0":
-        query = request.GET.get("q", "").strip()
+        query = unquote(request.GET.get("q", "")).strip()
     elif s != "100":
-        query = s.strip()
+        query = unquote(s).strip()
     else:
         query = ""
 
@@ -40,26 +42,25 @@ def search(request, s, page):
         def score_product(p):
             name = normalize(p.p_name)
             category = normalize(p.category.c_name)
-            combined = f"{name} {category}"
 
             name_ratio = fuzz.token_sort_ratio(query_norm, name)
             partial_ratio = fuzz.partial_ratio(query_norm, name)
             token_set = fuzz.token_set_ratio(query_norm, name)
 
-            combined_ratio = max(partial_ratio, token_set)
+            score = max(name_ratio, partial_ratio, token_set)
 
-            return max(name_ratio, combined_ratio), name_ratio, token_set
+            return score, name_ratio, token_set
 
         strong_results = []
 
         for p in Product.objects.all():
             score, name_ratio, token_set = score_product(p)
 
-            # ✅ SMART + STRICT MATCH
+            # ✅ SMART MATCH (FIXED YOUR ISSUE)
             if (
-                name_ratio >= 85
-                or token_set >= 80
-                or (score >= 80 and len(query_norm) > 3)
+                name_ratio >= 80
+                or token_set >= 75
+                or (score >= 75 and len(query_norm) > 3)
             ):
                 strong_results.append(p)
 
@@ -79,13 +80,10 @@ def search(request, s, page):
             filtered_products.query.clear_ordering(force=True)
 
             results = get_product_data1(filtered_products)
-
         else:
-            # ✅ STRICT NO RESULTS
-            results = []
+            results = []  # STRICT NO RESULT
 
     else:
-        # No query → no results
         results = []
 
     # --- APPLY FILTERS ---
