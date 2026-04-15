@@ -30,7 +30,12 @@ ALLOWED_HOSTS = [
     "www.tharatrinket.com","*"
 ]
 
-
+# settings.py
+CACHES = {
+ 'default': {
+   'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+ }
+}
 
 # Application definition
 
@@ -46,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.gzip.GZipMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

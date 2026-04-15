@@ -154,7 +154,7 @@
                                                 <tr class="cart_item">
                                                     <td class="product-remove"><a href="{% url 'remove_from_cart' item_id=c.p_id type='0' %}" class="remove"></a></td>
                                                     <td class="product-thumbnail">
-                                                        <img src="{{c.image_url}}" alt="">
+                                                        <img  loading="lazy"src="{{c.image_url}}" alt="">
                                                     </td>
                                                     <td class="product-name">
                                                         <a href="{% url 'add to wishlist' product_slug=c.slug %}" class="title">{{c.p_name}}</a>
@@ -238,7 +238,7 @@
                                                 <tr class="cart_item">
                                                     <td class="product-remove"><a href="{% url 'remove_from_cart' item_id=r.p_id type='1' %}" class="remove"></a></td>
                                                     <td class="product-thumbnail">
-                                                        <img src="{{r.image_url}}" alt="">
+                                                        <img  loading="lazy"src="{{r.image_url}}" alt="">
                                                     </td>
                                                     <td class="product-name">
                                                         <a href="{% url 'add to wishlist' product_slug=r.slug %}" class="title">{{r.p_name}}</a>
