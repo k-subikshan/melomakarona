@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 
 
 def search(request, s, page):
-    # --- DETERMINE QUERY (FIXED + ISSUE) ---
+    # --- QUERY FIX ---
     if s == "0":
         query = unquote(request.GET.get("q", "")).strip()
     elif s != "100":
@@ -34,59 +34,80 @@ def search(request, s, page):
         text = re.sub(r"\s+", " ", text).strip()
         return text
 
-    # --- SEARCH ---
+    # --- SEARCH LOGIC ---
     if query:
         query_norm = normalize(query)
         request.session['search_query'] = query
 
-        def score_product(p):
+        matched = []
+
+        for p in Product.objects.select_related('category').all():
             name = normalize(p.p_name)
             category = normalize(p.category.c_name)
+            desc = normalize(p.desc)
 
+            # --- FUZZY SCORES ---
             name_ratio = fuzz.token_sort_ratio(query_norm, name)
             partial_ratio = fuzz.partial_ratio(query_norm, name)
             token_set = fuzz.token_set_ratio(query_norm, name)
 
-            score = max(name_ratio, partial_ratio, token_set)
+            # --- PRIORITY (LOWER = BETTER) ---
+            priority = 100
 
-            return score, name_ratio, token_set
+            # 1️⃣ CATEGORY EXACT
+            if query_norm == category:
+                priority = 1
 
-        strong_results = []
+            # 2️⃣ CATEGORY PARTIAL
+            elif query_norm in category:
+                priority = 2
 
-        for p in Product.objects.all():
-            score, name_ratio, token_set = score_product(p)
+            # 3️⃣ NAME EXACT
+            elif query_norm == name:
+                priority = 3
 
-            # ✅ SMART MATCH (FIXED YOUR ISSUE)
-            if (
-                name_ratio >= 80
-                or token_set >= 75
-                or (score >= 75 and len(query_norm) > 3)
-            ):
-                strong_results.append(p)
+            # 4️⃣ STRONG MATCH (80+)
+            elif name_ratio >= 80 or token_set >= 80:
+                priority = 4
 
-        matched_ids = [p.p_id for p in strong_results]
+            # 5️⃣ MEDIUM MATCH (70+)
+            elif name_ratio >= 70 or partial_ratio >= 70 or token_set >= 70:
+                priority = 5
 
-        if matched_ids:
+            # 6️⃣ DESCRIPTION MATCH
+            elif query_norm in desc:
+                priority = 6
+
+            # ADD VALID RESULTS
+            if priority < 100:
+                matched.append((p.p_id, priority))
+
+        # --- NO RESULTS ---
+        if not matched:
+            results = []
+
+        else:
+            # SORT BY PRIORITY
+            matched.sort(key=lambda x: x[1])
+            ordered_ids = [pid for pid, _ in matched]
+
             preserve_order = Case(
-                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
+                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(ordered_ids)],
                 output_field=IntegerField(),
             )
 
             filtered_products = (
-                Product.objects.filter(p_id__in=matched_ids)
+                Product.objects.filter(p_id__in=ordered_ids)
                 .annotate(_order=preserve_order)
                 .order_by("_order")
             )
-            filtered_products.query.clear_ordering(force=True)
 
             results = get_product_data1(filtered_products)
-        else:
-            results = []  # STRICT NO RESULT
 
     else:
         results = []
 
-    # --- APPLY FILTERS ---
+    # --- FILTERS ---
     filtered_products = Product.objects.filter(p_id__in=[r["p_id"] for r in results])
 
     if category_filter:
@@ -96,12 +117,11 @@ def search(request, s, page):
         filtered_products = filtered_products.filter(stock_status=stock_filter)
 
     if size_filter:
-        filtered_products = filtered_products.filter(size__size=size_filter)
+        filtered_products = filtered_products.filter(size=size_filter)
 
-    # --- SORTING ---
+    # --- SORT ---
     sort_mapping = {
         'manual': None,
-        'best-selling': '-where',
         'title-ascending': 'p_name',
         'title-descending': '-p_name',
         'price-ascending': 'price',
@@ -113,28 +133,19 @@ def search(request, s, page):
     if sort_mapping.get(sort_by):
         filtered_products = filtered_products.order_by(sort_mapping[sort_by])
 
-    # Convert again after filters
+    # CONVERT AGAIN
     results = get_product_data1(filtered_products)
 
     # --- PAGINATION ---
     paginator = Paginator(results, 10)
     page_product = paginator.get_page(page)
 
-    # --- EXTRA DATA ---
+    # --- CATEGORY COUNT ---
     category_with_counts = (
         Product.objects.values("category")
         .annotate(total=Count("p_id"))
         .order_by("category")
     )
-
-    stock_counts = (
-        Product.objects.values("category__c_name")
-        .annotate(total=Count("p_id"))
-        .order_by("category__c_name")
-    )
-
-    selected_brands = request.GET.getlist("brand")
-    selected_sizes = request.GET.getlist("size")
 
     # --- CART ---
     if not request.user.is_authenticated:
@@ -158,9 +169,6 @@ def search(request, s, page):
         'nextpage': page_product.next_page_number() if page_product.has_next() else None,
         'sort_by': sort_by,
         "category_list": category_with_counts,
-        "stock_counts": stock_counts,
-        "selected_size": selected_sizes,
-        "selected_brands": selected_brands,
         "cart": cart_count,
         "log": log,
         "offers": offers,
