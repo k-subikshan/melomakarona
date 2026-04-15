@@ -1,16 +1,14 @@
-from django.shortcuts import render
-from django.db.models import Count
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.db.models import Case, When, Value, IntegerField, Count, Q
 from rapidfuzz import fuzz
 import re, unicodedata
+from .models import Cart, CartItem, OfferImage, Product, Category, UserProfile
+from .viewhome import get_product_data1
 from django.core.paginator import Paginator
 
-from .models import Cart, CartItem, OfferImage, Product, Category
-from .viewhome import get_product_data1
-
-
-def search(request, s, page):
-
-    # ---------------- QUERY ----------------
+def search(request, s,page):
+    # --- DETERMINE QUERY INPUT ---
     if s == "0":
         query = request.GET.get("q", "").strip()
     elif s != "100":
@@ -18,104 +16,127 @@ def search(request, s, page):
     else:
         query = ""
 
-    request.session['search_query'] = query
-
     sort_by = request.GET.get("SortBy", "manual")
     category_filter = request.GET.get("category")
     brand_filter = request.GET.get("brand")
     stock_filter = request.GET.get("stock")
     size_filter = request.GET.get("size")
 
-    # ---------------- NORMALIZER ----------------
+    results, same_category_products, same_main_category_diff_products = [], [], []
+
+    # --- NORMALIZER -----------------------------------------------------
     def normalize(text):
         text = str(text or "").lower()
+        text = text.replace("&", "and").replace("–", "-").replace("—", "-").replace("\xa0", " ")
         text = unicodedata.normalize("NFKD", text)
         text = re.sub(r"[^a-z0-9]+", " ", text)
-        return re.sub(r"\s+", " ", text).strip()
+        text = re.sub(r"\s+", " ", text).strip()
+        return text
 
-    # ---------------- SCORING ----------------
-    def score_block(qwords, text):
-        t = normalize(text)
-        score = 0
-
-        for w in qwords:
-            if re.search(rf"\b{re.escape(w)}\b", t):
-                score += 400
-            elif w in t:
-                score += 150
-
-            score += fuzz.partial_ratio(w, t) * 0.5
-
-        if all(w in t for w in qwords):
-            score += 300
-
-        return score
-
-    # ---------------- SEARCH LOGIC ----------------
     if query:
         query_norm = normalize(query)
-        qwords = query_norm.split()
+        request.session['search_query'] = query
 
-        scored = []
+
+        # --- SCORING -----------------------------------------------------
+        def score_product(p):
+            name = normalize(p.p_name)
+            category = normalize(p.category.c_name)
+            combined = f"{name}  {category}"
+
+            name_ratio = fuzz.token_sort_ratio(query_norm, name)
+            
+            combined_ratio = fuzz.partial_ratio(query_norm, combined)
+
+            return max(name_ratio,  combined_ratio), name_ratio, 
+
+        # --- CLASSIFY RESULTS --------------------------------------------
+        result1, result2, result3 = [], [], []
 
         for p in Product.objects.all():
-            text = f"{p.p_name} {p.brand_name} {p.category.c_name}"
+            score, name_ratio = score_product(p)
 
-            score = score_block(qwords, text)
+            if name_ratio >= 90 or score >= 90:
+                result1.append(p)
+            elif score >= 75:
+                result3.append(p)
 
-            # 🔥 BOOSTS
-            if normalize(p.p_name) == query_norm:
-                score += 1500
-            if normalize(p.brand_name) == query_norm:
-                score += 1200
-            if normalize(p.category.c_name) == query_norm:
-                score += 1000
+        # --- ORDER RESULTS -----------------------------------------------
+        def order_key(p):
+            n = normalize(p.p_name)
+            b = normalize(p.brand_name)
+            return 0 if n == query_norm else (1 if b == query_norm else 2)
 
-            scored.append((score, p))
+        result1.sort(key=order_key)
+        result2.sort(key=order_key)
+        result3.sort(key=order_key)
 
-        scored.sort(reverse=True, key=lambda x: x[0])
-        ranked_products = [p for score, p in scored]
+        combined_results = result1 + result2 + result3
+        matched_ids = [p.p_id for p in combined_results]
 
-        # fallback
-        if not ranked_products or scored[0][0] < 100:
-            ranked_products = list(Product.objects.all())[:20]
+        if matched_ids:
+            preserve_order = Case(
+                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
+                output_field=IntegerField(),
+            )
 
+            filtered_products = (
+                Product.objects.filter(p_id__in=matched_ids)
+                .annotate(_order=preserve_order)
+                .order_by("_order")
+            )
+            filtered_products.query.clear_ordering(force=True)
+            results = get_product_data1(filtered_products)
+        else:
+            results = []
     else:
-        ranked_products = list(Product.objects.all())
+        # Default: all products if no query
+        filtered_products = Product.objects.all()
+        results = get_product_data1(filtered_products)
 
-    # ---------------- APPLY FILTERS ----------------
-    filtered_products = Product.objects.filter(p_id__in=[p.p_id for p in ranked_products])
+    # --- APPLY FILTERS ---
+    filtered_products = Product.objects.filter(p_id__in=[r["p_id"] for r in results])
 
     if category_filter:
         filtered_products = filtered_products.filter(category__c_name__iexact=category_filter)
 
-    if brand_filter:
-        filtered_products = filtered_products.filter(brand_name__iexact=brand_filter)
-
-    if stock_filter:
-        filtered_products = filtered_products.filter(stock_status__iexact=stock_filter)
+    if stock_filter in ["in stock", "out of stock"]:
+        filtered_products = filtered_products.filter(stock_status=stock_filter)
 
     if size_filter:
         filtered_products = filtered_products.filter(size__size=size_filter)
 
-    # ---------------- SPECIAL SEARCH (s=100) ----------------
-    if '100' in s:
-        u = s.split(" ")
+    if sort_by == "In Stock":
+        filtered_products = filtered_products.filter(stock_status="In stock")
+    elif sort_by == "Out of Stock":
+        filtered_products = filtered_products.filter(stock_status="Out of stock")
+    if('100' in s):
+        u=s.split(" ")
+        if(u[1]=="size"):
+            # Fetch all products you want to check
+            products = Product.objects.all()
 
-        if len(u) >= 3:
-            if u[1] == "size":
-                size_val = u[2]
-                filtered_products = [
-                    p for p in Product.objects.all()
-                    if size_val in [s.size for s in p.size_set.all()]
-                ]
-            else:
-                filtered_products = filtered_products.filter(brand_name__iexact=u[2])
+# Size you want to filter
+            size_to_filter = u[2]  # e.g., "M"
 
-    # ---------------- SORTING ----------------
+# Filter in Python
+            filtered_products = [
+    p for p in products 
+    if size_to_filter in [s.size for s in p.size_set.all()]
+]
+
+
+
+
+
+        else:
+            filtered_products = filtered_products.filter(brand_name__iexact=u[2])
+
+    u=s.split(" ")
+    # --- SORTING ---
     sort_mapping = {
         'manual': None,
-        'best-selling': '-where',
+        'best-selling': '-where',   # uses your Product.where field
         'title-ascending': 'p_name',
         'title-descending': '-p_name',
         'price-ascending': 'price',
@@ -123,74 +144,80 @@ def search(request, s, page):
         'created-descending': '-p_id',
         'created-ascending': 'p_id',
     }
-
     if sort_mapping.get(sort_by):
         filtered_products = filtered_products.order_by(sort_mapping[sort_by])
 
-    # ---------------- CONVERT ----------------
+    # Convert final products back to dicts
     results = get_product_data1(filtered_products)
+    
+    t_category = Product.objects.values_list("category", flat=True).distinct()
 
-    # ---------------- PAGINATION ----------------
-    paginator = Paginator(results, 20)
-    page_obj = paginator.get_page(page)
 
-    # ---------------- FILTER COUNTS ----------------
+
+    
     category_with_counts = (
-        Product.objects.values("category")
-        .annotate(total=Count("p_id"))
-        .order_by("category")
-    )
+    Product.objects.values("category")
+    .annotate(total=Count("p_id")).order_by("category")
+)
+   
 
     brands_with_counts = (
-        Product.objects.values("brand_name")
-        .annotate(total=Count("p_id"))
-        .order_by("brand_name")
-    )
-
+    Product.objects.values("brand_name")
+    .annotate(total=Count("p_id"))
+    .order_by("brand_name")
+)
     stock_counts = (
-        Product.objects.values("stock_status")
-        .annotate(total=Count("p_id"))
-        .order_by("stock_status")
-    )
-
+    Product.objects.values("category__c_name")
+    .annotate(total=Count("p_id"))
+    .order_by("category__c_name")
+)
     selected_brands = request.GET.getlist("brand")
     selected_sizes = request.GET.getlist("size")
-
-    # ---------------- CART ----------------
-    cart_products = []
-    price = 0
-    log = "0"
-
+    products = []
+    price=0
+    log='0'
     if not request.user.is_authenticated:
-        log = "1"
+        log='1'
     else:
-        cart, _ = Cart.objects.get_or_create(user=request.user)
-        for item in CartItem.objects.filter(cart=cart):
-            prod = item.product
-            price += item.quantity * prod.price
-            cart_products.append(prod)
-
-    # ---------------- OFFERS ----------------
-    offers = OfferImage.objects.filter(active=True, where_to_display='6')
-
-    # ---------------- FINAL CONTEXT ----------------
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        products = CartItem.objects.filter(cart=cart).count
+    page_product1=Paginator(results,10)
+    page_product=page_product1.get_page(page)
+    total_page=page_product1.page_range
+    ifprev=page_product.has_previous()
+    ifnext=page_product.has_next()
+    prevpage=page_product.previous_page_number
+    nextpage=page_product.next_page_number
+    if (query == None):
+        query = request.session.get('search_query', '')
+    offers= OfferImage.objects.filter(active=True,where_to_display='6')
     context = {
         'query': query,
-        'results': page_obj,
-        'page_range': paginator.page_range,
-        'currentpage': page,
+        'page_range':total_page,
+        's':s,
+        "offers":offers,
+        'ifprev':ifprev,
+        "ifnext":ifnext,
+        "nextpage":nextpage,
+        "prevpage":prevpage,
+        'results': page_product,
+        'currentpage':page,
+        'same_category_products': same_category_products,
+        'same_main_category_diff_products': same_main_category_diff_products,
         'sort_by': sort_by,
-        'category_list': category_with_counts,
-        'brand_list': brands_with_counts,
-        'stock_counts': stock_counts,
-        'selected_brands': selected_brands,
-        'selected_size': selected_sizes,
-        'cart': cart_products,
-        'price': price,
-        'log': log,
-        'offers': offers,
-        'is_logged_in': request.user.is_authenticated,
-        'user': request.user if request.user.is_authenticated else None,
+        "category_list":category_with_counts,
+        "stock_counts":stock_counts,
+        "selected_size":selected_sizes,
+        "selected_brands":selected_brands,
+        'h':filtered_products,
+        "cart":products,
+        "price":price,
+        "log":log,
+        "is_logged_in": request.user.is_authenticated,
+        "user": request.user if request.user.is_authenticated else None,
+        
+
+
     }
 
     return render(request, 'shop.html', context)
