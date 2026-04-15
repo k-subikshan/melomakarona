@@ -25,7 +25,7 @@ def search(request, s, page):
 
     results = []
 
-    # --- NORMALIZER ---
+    # --- NORMALIZE FUNCTION ---
     def normalize(text):
         text = str(text or "").lower()
         text = text.replace("&", "and").replace("–", "-").replace("—", "-").replace("\xa0", " ")
@@ -46,33 +46,40 @@ def search(request, s, page):
             category = normalize(p.category.c_name)
             desc = normalize(p.desc)
 
-            # FUZZY SCORES
+            # --- FUZZY SCORES ---
             name_ratio = fuzz.token_sort_ratio(query_norm, name)
             partial_ratio = fuzz.partial_ratio(query_norm, name)
             token_set = fuzz.token_set_ratio(query_norm, name)
 
             score = max(name_ratio, partial_ratio, token_set)
 
-            # ✅ FIXED MATCH CONDITION (IMPORTANT)
+            # --- FINAL MATCH CONDITION (FIXED) ---
             if (
                 name_ratio >= 80
                 or token_set >= 75
 
-                # ✅ 70+ SUPPORT
+                # ✅ 70+ MATCH
                 or name_ratio >= 70
                 or partial_ratio >= 70
 
+                # ✅ MULTI-WORD MATCH (MAIN FIX)
+                or any(word in name for word in query_norm.split())
+
                 # ✅ CATEGORY MATCH
-                or query_norm in category
+                or any(word in category for word in query_norm.split())
 
                 # ✅ DESCRIPTION MATCH
-                or query_norm in desc
+                or any(word in desc for word in query_norm.split())
             ):
                 strong_results.append(p)
 
         matched_ids = [p.p_id for p in strong_results]
 
-        if matched_ids:
+        # --- NO RESULT ---
+        if not matched_ids:
+            results = []
+
+        else:
             preserve_order = Case(
                 *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
                 output_field=IntegerField(),
@@ -87,8 +94,6 @@ def search(request, s, page):
             filtered_products.query.clear_ordering(force=True)
 
             results = get_product_data1(filtered_products)
-        else:
-            results = []  # NO RESULT
 
     else:
         results = []
@@ -119,6 +124,7 @@ def search(request, s, page):
     if sort_mapping.get(sort_by):
         filtered_products = filtered_products.order_by(sort_mapping[sort_by])
 
+    # FINAL CONVERT
     results = get_product_data1(filtered_products)
 
     # --- PAGINATION ---
