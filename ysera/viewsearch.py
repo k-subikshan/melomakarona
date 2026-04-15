@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 
 
 def search(request, s, page):
-    # --- QUERY FIX ---
+    # --- QUERY ---
     if s == "0":
         query = unquote(request.GET.get("q", "")).strip()
     elif s != "100":
@@ -34,75 +34,61 @@ def search(request, s, page):
         text = re.sub(r"\s+", " ", text).strip()
         return text
 
-    # --- SEARCH LOGIC ---
+    # --- SEARCH ---
     if query:
         query_norm = normalize(query)
         request.session['search_query'] = query
 
-        matched = []
+        strong_results = []
 
         for p in Product.objects.select_related('category').all():
             name = normalize(p.p_name)
             category = normalize(p.category.c_name)
             desc = normalize(p.desc)
 
-            # --- FUZZY SCORES ---
+            # FUZZY SCORES
             name_ratio = fuzz.token_sort_ratio(query_norm, name)
             partial_ratio = fuzz.partial_ratio(query_norm, name)
             token_set = fuzz.token_set_ratio(query_norm, name)
 
-            # --- PRIORITY (LOWER = BETTER) ---
-            priority = 100
+            score = max(name_ratio, partial_ratio, token_set)
 
-            # 1️⃣ CATEGORY EXACT
-            if query_norm == category:
-                priority = 1
+            # ✅ FIXED MATCH CONDITION (IMPORTANT)
+            if (
+                name_ratio >= 80
+                or token_set >= 75
 
-            # 2️⃣ CATEGORY PARTIAL
-            elif query_norm in category:
-                priority = 2
+                # ✅ 70+ SUPPORT
+                or name_ratio >= 70
+                or partial_ratio >= 70
 
-            # 3️⃣ NAME EXACT
-            elif query_norm == name:
-                priority = 3
+                # ✅ CATEGORY MATCH
+                or query_norm in category
 
-            # 4️⃣ STRONG MATCH (80+)
-            elif name_ratio >= 80 or token_set >= 80:
-                priority = 4
+                # ✅ DESCRIPTION MATCH
+                or query_norm in desc
+            ):
+                strong_results.append(p)
 
-            # 5️⃣ MEDIUM MATCH (70+)
-            elif name_ratio >= 70 or partial_ratio >= 70 or token_set >= 70:
-                priority = 5
+        matched_ids = [p.p_id for p in strong_results]
 
-            # 6️⃣ DESCRIPTION MATCH
-            elif query_norm in desc:
-                priority = 6
-
-            # ADD VALID RESULTS
-            if priority < 100:
-                matched.append((p.p_id, priority))
-
-        # --- NO RESULTS ---
-        if not matched:
-            results = []
-
-        else:
-            # SORT BY PRIORITY
-            matched.sort(key=lambda x: x[1])
-            ordered_ids = [pid for pid, _ in matched]
-
+        if matched_ids:
             preserve_order = Case(
-                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(ordered_ids)],
+                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
                 output_field=IntegerField(),
             )
 
             filtered_products = (
-                Product.objects.filter(p_id__in=ordered_ids)
+                Product.objects.filter(p_id__in=matched_ids)
                 .annotate(_order=preserve_order)
                 .order_by("_order")
             )
 
+            filtered_products.query.clear_ordering(force=True)
+
             results = get_product_data1(filtered_products)
+        else:
+            results = []  # NO RESULT
 
     else:
         results = []
@@ -133,7 +119,6 @@ def search(request, s, page):
     if sort_mapping.get(sort_by):
         filtered_products = filtered_products.order_by(sort_mapping[sort_by])
 
-    # CONVERT AGAIN
     results = get_product_data1(filtered_products)
 
     # --- PAGINATION ---
