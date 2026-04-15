@@ -19,6 +19,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{{product.p_name}} | Thara Trinkets">
 <meta name="twitter:image" content="{{product.image_url}}">
+<meta property="og:title" content="{{ product.p_name }}">
+<meta property="og:description" content="{{ product.description|truncatewords:20 }}">
+<meta property="og:image" content="{{ product.image.url }}">
+<meta property="og:url" content="https://tharatrinket.com{{ request.path }}">
+<meta property="og:type" content="product">
 
 <script type="application/ld+json">
 {
@@ -820,6 +825,19 @@
           Out of Stock
         </div>
       {% endif %}
+      <div class="tt-product-share">
+
+  <span>Share:</span>
+
+  <!-- WhatsApp -->
+  <a href="https://wa.me/?text={{ product.slug }} - https://tharatrinket.com{{ request.path }}" target="_blank">
+    WhatsApp
+  </a>
+
+  <!-- Copy Link -->
+  <button onclick="copyLink()">Copy Link</button>
+
+</div>
 
       <!-- Price -->
       <div class="tt-price-wrap">
@@ -1191,6 +1209,12 @@ if (checkBtn) {
   }
 
 });
+function copyLink() {
+    const url = "https://tharatrinket.com" + window.location.pathname;
+    navigator.clipboard.writeText(url).then(() => {
+        alert("Product link copied!");
+    });
+}
 </script>
 
 {% endif %}
