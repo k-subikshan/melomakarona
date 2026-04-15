@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 
 
 def search(request, s, page):
-    # --- DETERMINE QUERY INPUT ---
+    # --- DETERMINE QUERY ---
     if s == "0":
         query = request.GET.get("q", "").strip()
     elif s != "100":
@@ -32,7 +32,7 @@ def search(request, s, page):
         text = re.sub(r"\s+", " ", text).strip()
         return text
 
-    # --- SEARCH LOGIC ---
+    # --- SEARCH ---
     if query:
         query_norm = normalize(query)
         request.session['search_query'] = query
@@ -43,17 +43,24 @@ def search(request, s, page):
             combined = f"{name} {category}"
 
             name_ratio = fuzz.token_sort_ratio(query_norm, name)
-            combined_ratio = fuzz.partial_ratio(query_norm, combined)
+            partial_ratio = fuzz.partial_ratio(query_norm, name)
+            token_set = fuzz.token_set_ratio(query_norm, name)
 
-            return max(name_ratio, combined_ratio), name_ratio
+            combined_ratio = max(partial_ratio, token_set)
+
+            return max(name_ratio, combined_ratio), name_ratio, token_set
 
         strong_results = []
 
         for p in Product.objects.all():
-            score, name_ratio = score_product(p)
+            score, name_ratio, token_set = score_product(p)
 
-            # ✅ STRICT MATCH (NO LOW QUALITY RESULTS)
-            if name_ratio >= 90 or (score >= 85 and len(query_norm) > 3):
+            # ✅ SMART + STRICT MATCH
+            if (
+                name_ratio >= 85
+                or token_set >= 80
+                or (score >= 80 and len(query_norm) > 3)
+            ):
                 strong_results.append(p)
 
         matched_ids = [p.p_id for p in strong_results]
@@ -74,11 +81,11 @@ def search(request, s, page):
             results = get_product_data1(filtered_products)
 
         else:
-            # ✅ NO RESULTS (STRICT)
+            # ✅ STRICT NO RESULTS
             results = []
 
     else:
-        # Optional: show nothing instead of all products
+        # No query → no results
         results = []
 
     # --- APPLY FILTERS ---
