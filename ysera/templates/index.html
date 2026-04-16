@@ -499,7 +499,7 @@
                                                 <img  loading="lazy"src="{{bridalset.image_url}}" alt="{{bridalset.p_name}}">
                                             </a>
                                         </div>
-                                        <a href="#" class="button quick-wiew-button" tabindex="0"></a>
+                                        <a href="{% url "product" p=bridalset.slug %}" class="button quick-wiew-button" tabindex="0"></a>
                                     </div>
                                     <div class="product-info">
                                         <h5 class="product-name product_title">
@@ -520,7 +520,7 @@
                                                     <a href="#" class="btn-number qtyplus quantity-plus">+</a>
                                                 </div>
                                             </div>
-                                            <button class="add_to_cart_button button" tabindex="0">Shop now</button>
+                                            <a href="{% url "product" p=bridalset.slug %}"><button class="add_to_cart_button button" tabindex="0">Shop now</button></a>
                                         </div>
                                     </div>
                                 </div>
