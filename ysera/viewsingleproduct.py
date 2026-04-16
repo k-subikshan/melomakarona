@@ -66,15 +66,11 @@ def product_detail(request, p):
 
     # ── Same-brand products ───────────────────
 # ── Same-brand products (limit 5) ────────────────
-    same_brand_products = get_product_data1(
-        Product.objects.filter(brand_name=product_obj.brand_name)
-                    .exclude(p_id=product_obj.p_id)[:2]
-    )
-
+    same_brand_products =[]
     # ── Same-category products (limit 5) ────────────────
     same_category_products = get_product_data1(
         Product.objects.filter(category=product_obj.category)
-                    .exclude(p_id=product_obj.p_id)[:3]
+                    .exclude(p_id=product_obj.p_id)[:5]
 )
 
     # ── Cart count ────────────────────────────
