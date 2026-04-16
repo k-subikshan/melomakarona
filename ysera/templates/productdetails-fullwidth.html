@@ -913,7 +913,7 @@
           This item is currently unavailable
         </div>
       {% endif %}
-
+      {% if product.stock_status == "in stock" and product.availablity == '1'  %}
       <!-- Rental Section -->
       <div class="tt-rental-card">
         <div class="tt-rental-header">
@@ -951,7 +951,7 @@
           </a>
         </div>
       </div>
-
+      {% endif %}
     </div><!-- /.tt-product-info -->
   </div><!-- /.tt-product-wrap -->
 
