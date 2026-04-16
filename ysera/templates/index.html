@@ -488,19 +488,32 @@
                                                 </span>
                                             </div>
                                             {% endif %}
+                                            <div class="yith-wcwl-add-to-wishlist">
+                                                <div class="yith-wcwl-add-button">
+                                                    <a href="#" tabindex="0">Add to Wishlist</a>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="thumb-inner">
                                             <a href="{% url "product" p=bridalset.slug %}" tabindex="0">
                                                 <img  loading="lazy"src="{{bridalset.image_url}}" alt="{{bridalset.p_name}}">
                                             </a>
                                         </div>
-                                      
+                                        <a href="#" class="button quick-wiew-button" tabindex="0">Quick View</a>
                                     </div>
                                     <div class="product-info">
                                         <h5 class="product-name product_title">
                                             <a href="{% url "product" p=bridalset.slug %}" tabindex="0">{{bridalset.p_name}}</a>
                                         </h5>
-                                       
+                                        <div class="group-info">
+                                            <div class="stars-rating">
+                                                <div class="star-rating">
+                                                    <span class="star-3"></span>
+                                                </div>
+                                                <div class="count-star">
+                                                    (3)
+                                                </div>
+                                            </div>
                                             <div class="price">
                                                 <span>Rs.{{bridalset.price}}</span>
                                             </div>
@@ -514,7 +527,7 @@
                                                     <a href="#" class="btn-number qtyplus quantity-plus">+</a>
                                                 </div>
                                             </div>
-                                           <a href="{% url "product" p=bridalset.slug %}"><button class="add_to_cart_button button" tabindex="0">Shop now</button></a>
+                                            <button class="add_to_cart_button button" tabindex="0">Shop now</button>
                                         </div>
                                     </div>
                                 </div>
