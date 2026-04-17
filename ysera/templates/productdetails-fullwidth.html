@@ -835,13 +835,17 @@
   </a>
 
   <!-- Copy Link -->
-  <button onclick="copyLink()">Copy Link</button>
+  <a href="#" onclick="copyLink(event)">Copy Link</a>
 
 </div>
 
       <!-- Price -->
       <div class="tt-price-wrap">
+        {% if  product.stock_status == "in stock" and product.availablity == '1'  %}
+          <span class="tt-price-current">Rent starts at ₹300</span>
+        {% else %}
         <span class="tt-price-current">₹{{ product.price }}</span>
+        {% endif %}
         {% if product.del_price %}
           <span class="tt-price-del">₹{{ product.del_price }}</span>
           {% if product.save %}
