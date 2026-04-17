@@ -154,10 +154,12 @@
                                                 <tr class="cart_item">
                                                     <td class="product-remove"><a href="{% url 'remove_from_cart' item_id=c.p_id type='0' %}" class="remove"></a></td>
                                                     <td class="product-thumbnail">
-                                                        <img  loading="lazy"src="{{c.image_url}}" alt="">
+                                                        <a href="{% url 'product' c.slug %}">
+                                                            <img  loading="lazy"src="{{c.image_url}}" alt="">
+                                                        </a>
                                                     </td>
                                                     <td class="product-name">
-                                                        <a href="{% url 'add to wishlist' product_slug=c.slug %}" class="title">{{c.p_name}}</a>
+                                                        <a href="{% url 'product' c.slug %}" class="title">{{c.p_name}}</a>
                                                     </td>
                                                 
                                                       <td class="product-quantity" data-title="Quantity">
@@ -238,10 +240,12 @@
                                                 <tr class="cart_item">
                                                     <td class="product-remove"><a href="{% url 'remove_from_cart' item_id=r.p_id type='1' %}" class="remove"></a></td>
                                                     <td class="product-thumbnail">
-                                                        <img  loading="lazy"src="{{r.image_url}}" alt="">
+                                                       <a href="{% url 'product' r.slug %}">
+                                                         <img  loading="lazy"src="{{r.image_url}}" alt="">
+                                                       </a>
                                                     </td>
                                                     <td class="product-name">
-                                                        <a href="{% url 'add to wishlist' product_slug=r.slug %}" class="title">{{r.p_name}}</a>
+                                                        <a href="{% url 'product' r.slug %}" class="title">{{r.p_name}}</a>
                                                         <span class="attributes-select"> Days to Rent</span>
                                                       <td class="product-quantity" data-title="Quantity">
                                                                                                                 <div class="quantity">
