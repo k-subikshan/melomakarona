@@ -1,6 +1,5 @@
 from django.urls import path
-from . import viewhome,viewsingleproduct,viewsearch,viewlogin,viewcart,viewaccount,viewblog,viewcheckout,viewwishlist,viewforgotpass,viewaboutandcontact
-
+from . import viewhome,viewsingleproduct,viewsearch,viewlogin,viewcart,viewaccount,viewblog,viewcheckout,viewwishlist,viewforgotpass,viewaboutandcontact,emailview
 urlpatterns = [
     path("",viewhome.home,name="home"),
     path("product/<slug:p>",viewsingleproduct.product_detail,name="product"),
@@ -33,4 +32,5 @@ path('verify-order-otp-cart/', viewcheckout.verify_order_otp, name='verify_order
            path('reset-password/', viewforgotpass.reset_password, name='reset_password'),
             path('verify-otp/', viewforgotpass.verify_otp, name='verify_otp'),
             path('about',viewaboutandcontact.about,name="about"),
-            path('contact',viewaboutandcontact.contact,name="contact"),]
+            path('contact',viewaboutandcontact.contact,name="contact"),
+            path('rental-enquiry/', emailview.rental_cart_enquiry, name='rental_cart_enquiry'),]
