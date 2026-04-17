@@ -13,7 +13,74 @@ from django.contrib import messages
 from django.shortcuts import redirect
 import logging
 logger = logging.getLogger(__name__)
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
 
+def send_order_email(user, order):
+    items_html = ""
+    total = 0
+
+    for item in order.items.all():
+        items_html += f"""
+        <tr>
+            <td>{item.product.p_name}</td>
+            <td>{item.quantity}</td>
+            <td>₹{item.price}</td>
+        </tr>
+        """
+        total += item.subtotal()
+
+    html_content = f"""
+    <html>
+    <body style="font-family:Poppins,Arial;background:#f6f6f6;padding:20px;">
+        <div style="max-width:600px;margin:auto;background:#fff;border-radius:10px;overflow:hidden;">
+            
+            <div style="background:#000;color:#fff;padding:20px;text-align:center;">
+                <h2>🎉 Order Confirmed</h2>
+            </div>
+
+            <div style="padding:20px;">
+                <p>Hi <b>{user.username}</b>,</p>
+                <p>Your order has been placed successfully ✅</p>
+
+                <h3>Order Details</h3>
+
+                <table width="100%" cellpadding="10" cellspacing="0" style="border-collapse:collapse;">
+                    <tr style="background:#000;color:#fff;">
+                        <th align="left">Product</th>
+                        <th align="left">Qty</th>
+                        <th align="left">Price</th>
+                    </tr>
+                    {items_html}
+                </table>
+
+                <p style="margin-top:15px;"><b>Total: ₹{round(total,2)}</b></p>
+
+                <p><b>Payment Method:</b> {order.payment_method.upper()}</p>
+                <p><b>Delivery Address:</b> {order.address}</p>
+
+                <br>
+                <p>We’ll notify you when your order is shipped 🚚</p>
+            </div>
+
+            <div style="background:#f1f1f1;padding:10px;text-align:center;font-size:12px;">
+                Tharatrinket • Thank you for shopping with us 💖
+            </div>
+
+        </div>
+    </body>
+    </html>
+    """
+
+    email = EmailMultiAlternatives(
+        subject="Your Order is Confirmed 🛍️",
+        body="Order placed successfully",
+        from_email=settings.EMAIL_HOST_USER,
+        to=[user.email],
+    )
+
+    email.attach_alternative(html_content, "text/html")
+    email.send()
 def check_userprofile_complete(request):
     
     user = request.user
@@ -341,6 +408,7 @@ def place_cod_order(request):
             quantity=item.quantity,
             price=unit_price
         )
+    send_order_email(request.user, order)
 
 
     # Clear the cart
@@ -553,7 +621,7 @@ def payment_success_cart(request):
                     quantity=item.quantity,
                     price=unit_price  # save final per-unit price
                 )
-
+        send_order_email(request.user, order)
     
         # ✅ Cleanup
         cart_items.delete()
