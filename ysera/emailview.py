@@ -26,7 +26,7 @@ def rental_cart_enquiry(request):
         <tr>
             <td>{item.product.p_name}</td>
             <td>{item.quantity}</td>
-            <td>₹{item.product.rentalprice}</td>
+            <td>₹{item.product.price}</td>
         </tr>
         """
         total_items += item.quantity
@@ -34,34 +34,118 @@ def rental_cart_enquiry(request):
     subject = f"Rental Enquiry from {user.username}"
 
     html_content = f"""
-    <h2>🛍️ Rental Cart Enquiry</h2>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+    body {{
+        font-family: 'Poppins', Arial, sans-serif;
+        background-color: #f6f6f6;
+        padding: 20px;
+    }}
+    .container {{
+        max-width: 600px;
+        margin: auto;
+        background: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }}
+    .header {{
+        background: linear-gradient(135deg, #000000, #333333);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }}
+    .header h2 {{
+        margin: 0;
+        letter-spacing: 1px;
+    }}
+    .content {{
+        padding: 20px;
+    }}
+    .info {{
+        margin-bottom: 20px;
+    }}
+    .info p {{
+        margin: 5px 0;
+        font-size: 14px;
+    }}
+    table {{
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }}
+    th {{
+        background: #000;
+        color: #fff;
+        padding: 10px;
+        text-align: left;
+        font-size: 14px;
+    }}
+    td {{
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+    }}
+    tr:nth-child(even) {{
+        background: #f9f9f9;
+    }}
+    .total {{
+        margin-top: 15px;
+        font-weight: bold;
+        font-size: 15px;
+    }}
+    .footer {{
+        background: #f1f1f1;
+        padding: 15px;
+        text-align: center;
+        font-size: 12px;
+        color: #777;
+    }}
+</style>
+</head>
 
-    <p><strong>Customer Name:</strong> {user.username}</p>
-    <p><strong>Email:</strong> {user.email}</p>
+<body>
 
-    <hr>
+<div class="container">
 
-    <h3>📦 Requested Rental Products</h3>
+    <div class="header">
+        <h2>🛍️ Rental Enquiry</h2>
+    </div>
 
-    <table border="1" cellpadding="10" cellspacing="0">
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Rental Price</th>
-        </tr>
-        {product_list}
-    </table>
+    <div class="content">
 
-    <br>
-    <p><strong>Total Items:</strong> {total_items}</p>
+        <div class="info">
+            <p><strong>Customer Name:</strong> {user.username}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+        </div>
 
-    <hr>
+        <h3>Requested Products</h3>
 
-    <p>Customer is interested in renting these products. Please follow up.</p>
+        <table>
+            <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+            </tr>
+            {product_list}
+        </table>
 
-    <p style="color:gray;">Sent from Tharatrinket Website</p>
-    """
+        <p class="total">Total Items: {total_items}</p>
 
+    </div>
+
+    <div class="footer">
+        Sent from Tharatrinket Website • Rental Enquiry System
+    </div>
+
+</div>
+
+</body>
+</html>
+"""
     email = EmailMultiAlternatives(
         subject,
         "",
