@@ -814,7 +814,7 @@
       <h1 class="tt-product-title">{{ product.p_name }}</h1>
 
       <!-- Availability -->
-      {% if product.stock_status == "in stock" and product.availablity != '1' %}
+      {% if product.stock_status == "in stock" %}
         <div class="tt-availability instock">
           <span class="dot"></span>
           In Stock
