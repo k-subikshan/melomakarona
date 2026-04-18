@@ -21,7 +21,7 @@ class Typecategory(models.Model):
 
     def __str__(self):
         return self.name
-class subcategory(models.Model):
+class Subcategory(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -52,8 +52,8 @@ class Product(models.Model):
 
     save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    type_category = models.ForeignKey(Typecategory, on_delete=models.CASCADE)
-    subcategory =  models.ForeignKey(subcategory, on_delete=models.CASCADE)
+    type_category = models.ForeignKey(Typecategory, on_delete=models.CASCADE,related_name="products")
+    subcategory =  models.ForeignKey(Subcategory, on_delete=models.CASCADE,related_name="products")
     delivery_times=models.IntegerField(default=1)
 
     new_choice=[
