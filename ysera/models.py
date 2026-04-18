@@ -52,6 +52,8 @@ class Product(models.Model):
 
     save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    type_category = models.ForeignKey(Typecategory, on_delete=models.CASCADE, null=True, blank=True)
+    sub_category = models.ForeignKey(Subcategory, on_delete=models.CASCADE, null=True, blank=True)
     delivery_times=models.IntegerField(default=1)
 
     new_choice=[
