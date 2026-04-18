@@ -311,3 +311,16 @@ def validate_image(file):
 
 class MyModel(models.Model):
     image = models.ImageField(upload_to='images/', validators=[validate_image])
+from django.contrib import admin
+from .models import Typecategory, Subcategory
+
+@admin.register(Typecategory)
+class TypeCategoryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    search_fields = ['name']
+
+
+@admin.register(Subcategory)
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    search_fields = ['name']

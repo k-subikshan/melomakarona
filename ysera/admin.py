@@ -55,6 +55,7 @@ class ProductAdmin(admin.ModelAdmin):
         "p_id",
         "p_name",
         "category",
+        ""
         "price",
         "rentalprice",
         "availablity",
