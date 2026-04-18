@@ -9,14 +9,6 @@ class Category(models.Model):
     c_name = models.CharField(max_length=100, default="")
     slug = models.SlugField(unique=True, blank=True, null=True, default="")
 
-    parent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='subcategories'
-    )
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.c_name) + f"-{self.c_id or '0'}"
@@ -50,7 +42,9 @@ class Product(models.Model):
 
     save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-
+    shop_by_type = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    shop_by_collection = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    shop_by_category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
     delivery_times=models.IntegerField(default=1)
 
     new_choice=[
@@ -200,15 +194,12 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} by {self.user.username} ({self.payment_method})"
 
-
-
 # ---------------- ORDER ITEM ----------------
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)  # Store price at purchase time
-
     def __str__(self):
         return f"{self.quantity} x {self.product.p_name} (Order #{self.order.id})"
 
