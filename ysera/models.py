@@ -16,6 +16,16 @@ class Category(models.Model):
 
     def __str__(self):
         return self.c_name
+class Typecategory(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+class subcategory(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 class Product(models.Model):
     p_id = models.AutoField(primary_key=True)
     p_name = models.CharField(max_length=1000, default="")
@@ -42,9 +52,8 @@ class Product(models.Model):
 
     save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    shop_by_type = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    shop_by_collection = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    shop_by_category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
+    type_category = models.ForeignKey(Typecategory, on_delete=models.CASCADE, default=1)
+    subcategory =  models.ForeignKey(Typecategory, on_delete=models.CASCADE, default=1)
     delivery_times=models.IntegerField(default=1)
 
     new_choice=[
