@@ -64,16 +64,16 @@ class ProductAdmin(admin.ModelAdmin):
         "where_to_display",
 
     )
-    list_filter = ("category", "stock_status", "where_to_display", "new")
+    list_filter = ("category", "stock_status", "where_to_display", "new", "type_category", "sub_category", "availablity","category__c_name")
     search_fields = ("p_name", "brand_name", "desc")
     prepopulated_fields = {"slug": ("p_name",)}
-    autocomplete_fields = ("category",)
+    autocomplete_fields = ("category", "type_category", "sub_category")
     inlines = [ProductImageInline]
     readonly_fields = ("image_preview",)
 
     fieldsets = (
         ("💎 Basic Details", {
-            "fields": ("p_name", "brand_name", "category", "desc", "slug"),
+            "fields": ("p_name", "brand_name", "category","type_category","sub_category", "desc", "slug"),
         }),
         ("✨ Pricing", {
             "fields": ("price", "rentalprice","del_price","availablity", "save_upto"),
