@@ -44,7 +44,8 @@ def get_product_data1(products):
             'where_to_display': product.where_to_display,
             'slug':           product.slug,
             'image_url':      image_url,                     # ← guaranteed str or None
-            'availablity':    str(product.availablity),      # ← coerce to str for template comparison
+            'availablity':    str(product.availablity),  
+            'group_id':product.group_id    # ← coerce to str for template comparison
         }
         product_list.append(product_dict)
     return product_list
@@ -84,6 +85,7 @@ def product_detail(request, p):
 
     # ── Current canonical URL ─────────────────
     current_url = request.build_absolute_uri()
+    productrelated=Product.objects.filter(group_id=product_obj.group_id)
 
     context = {
         'product':               product,
@@ -95,6 +97,7 @@ def product_detail(request, p):
         'is_logged_in':          request.user.is_authenticated,
         'user':                  request.user if request.user.is_authenticated else None,
         'current_url':           current_url,
+        'product_group':productrelated
     }
     return render(request, 'productdetails-fullwidth.html', context)
 

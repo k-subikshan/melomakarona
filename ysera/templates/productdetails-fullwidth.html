@@ -879,7 +879,10 @@
           View Size Chart
         </a>
       </div>
-
+      <div>
+        {% for group in product_group %}
+        <a href="{% url "product" group.slug %}">{{group.sizeorcolor}}</a>
+        {% endfor %}</div>
       <div class="tt-divider"></div>
 
       <!-- Add to Cart -->

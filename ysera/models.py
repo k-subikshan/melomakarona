@@ -42,6 +42,13 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     del_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     rentalprice=models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    group_id=models.IntegerField(default=1)
+    var=[
+        ('0','color'),
+        ('1','size')
+    ]
+    variety=models.CharField(choices=var, max_length=50,default='0')
+    sizeorcolor=models.CharField( max_length=50,default="null")
     CHOICES = [
         ('0', 'buy'),
         ('1', 'rental'),
@@ -144,7 +151,6 @@ class Cart(models.Model):
 
     def total_price(self):
         return sum(item.subtotal() for item in self.items.all())
-
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
