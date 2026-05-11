@@ -16,12 +16,17 @@ class Category(models.Model):
 
     def __str__(self):
         return self.c_name
-class Typecategory(models.Model):
+class Type(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
-class Subcategory(models.Model):
+class Occasion(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+class Collection(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
@@ -52,8 +57,9 @@ class Product(models.Model):
 
     save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    type_category = models.ForeignKey(Typecategory, on_delete=models.CASCADE, null=True, blank=True)
-    sub_category = models.ForeignKey(Subcategory, on_delete=models.CASCADE, null=True, blank=True)
+    shop_by_type = models.ForeignKey(Type, on_delete=models.CASCADE, null=True, blank=True)
+    shop_by_collection = models.ForeignKey(Collection, on_delete=models.CASCADE, null=True, blank=True)
+    shop_by_occasion = models.ForeignKey(Occasion, on_delete=models.CASCADE, null=True, blank=True)
     delivery_times=models.IntegerField(default=1)
 
     new_choice=[
