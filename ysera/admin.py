@@ -74,7 +74,7 @@ class ProductAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ("💎 Basic Details", {
-            "fields": ("p_name", "brand_name", "category","shop_by_type","shop_by_collection", "desc", "slug"),
+            "fields": ("p_name", "brand_name", "category","shop_by_type","shop_by_collection","shop_by_occasion", "desc", "slug"),
         }),
         ("✨ Pricing", {
             "fields": ("price", "rentalprice","del_price","availablity", "save_upto"),
