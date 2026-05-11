@@ -320,15 +320,20 @@ def validate_image(file):
 class MyModel(models.Model):
     image = models.ImageField(upload_to='images/', validators=[validate_image])
 from django.contrib import admin
-from .models import Typecategory, Subcategory
+from .models import Type,  Occasion, Collection
 
-@admin.register(Typecategory)
-class TypeCategoryAdmin(admin.ModelAdmin):
+@admin.register(Type)
+class TypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
     search_fields = ['name']
 
-
-@admin.register(Subcategory)
-class SubCategoryAdmin(admin.ModelAdmin):
+@admin.register(Occasion)
+class OccasionAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
     search_fields = ['name']
+
+@admin.register(Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+    search_fields = ['name']
+

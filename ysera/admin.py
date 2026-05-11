@@ -55,8 +55,9 @@ class ProductAdmin(admin.ModelAdmin):
         "p_id",
         "p_name",
         "category",
-        "type_category",
-        "sub_category",
+        "shop_by_type",
+        "shop_by_collection",
+        "shop_by_occasion",
         "price",
         "rentalprice",
         "availablity",
@@ -64,16 +65,16 @@ class ProductAdmin(admin.ModelAdmin):
         "where_to_display",
 
     )
-    list_filter = ("category", "stock_status", "where_to_display", "new", "type_category", "sub_category", "availablity","category__c_name")
+    list_filter = ("category", "stock_status", "where_to_display", "new", "shop_by_type", "shop_by_collection", "shop_by_occasion", "availablity","category__c_name")
     search_fields = ("p_name", "brand_name", "desc")
     prepopulated_fields = {"slug": ("p_name",)}
-    autocomplete_fields = ("category", "type_category", "sub_category")
+    autocomplete_fields = ("category", "shop_by_type", "shop_by_collection", "shop_by_occasion")
     inlines = [ProductImageInline]
     readonly_fields = ("image_preview",)
 
     fieldsets = (
         ("💎 Basic Details", {
-            "fields": ("p_name", "brand_name", "category","type_category","sub_category", "desc", "slug"),
+            "fields": ("p_name", "brand_name", "category","shop_by_type","shop_by_collection", "desc", "slug"),
         }),
         ("✨ Pricing", {
             "fields": ("price", "rentalprice","del_price","availablity", "save_upto"),
