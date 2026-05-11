@@ -1,223 +1,534 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.db.models import Case, When, Value, IntegerField, Count, Q
+from django.shortcuts import render
+from django.db.models import (
+    Q,
+    Case,
+    When,
+    Value,
+    IntegerField,
+    Count
+)
+
 from rapidfuzz import fuzz
-import re, unicodedata
-from .models import Cart, CartItem, OfferImage, Product, Category, UserProfile
-from .viewhome import get_product_data1
 from django.core.paginator import Paginator
 
-def search(request, s,page):
-    # --- DETERMINE QUERY INPUT ---
-    if s == "0":
-        query = request.GET.get("q", "").strip()
-    elif s != "100":
+import re
+import unicodedata
+
+from .models import (
+    Cart,
+    CartItem,
+    OfferImage,
+    Product,
+    Category,
+    UserProfile
+)
+
+from .viewhome import get_product_data1
+
+
+def search(request, s, page):
+
+    # =====================================================
+    # QUERY
+    # =====================================================
+
+    # =====================================================
+    # QUERY
+    # =====================================================
+
+    query = request.GET.get(
+        "q",
+        ""
+    ).strip()
+
+    # fallback from URL
+    if not query and s not in ["0", "100"]:
+
         query = s.strip()
-    else:
-        query = ""
 
     sort_by = request.GET.get("SortBy", "manual")
+
     category_filter = request.GET.get("category")
+
     brand_filter = request.GET.get("brand")
+
     stock_filter = request.GET.get("stock")
+
     size_filter = request.GET.get("size")
 
-    results, same_category_products, same_main_category_diff_products = [], [], []
+    results = []
 
-    # --- NORMALIZER -----------------------------------------------------
+    same_category_products = []
+
+    same_main_category_diff_products = []
+
+    # =====================================================
+    # NORMALIZE
+    # =====================================================
+
     def normalize(text):
+
         text = str(text or "").lower()
-        text = text.replace("&", "and").replace("–", "-").replace("—", "-").replace("\xa0", " ")
-        text = unicodedata.normalize("NFKD", text)
-        text = re.sub(r"[^a-z0-9]+", " ", text)
-        text = re.sub(r"\s+", " ", text).strip()
+
+        replacements = {
+
+            "maatal": "maattal",
+            "matal": "maattal",
+            "mattal": "maattal",
+
+            "&": "and",
+        }
+
+        for old, new in replacements.items():
+
+            text = text.replace(old, new)
+
+        text = unicodedata.normalize(
+            "NFKD",
+            text
+        )
+
+        text = re.sub(
+            r"[^a-z0-9\s]+",
+            "",
+            text
+        )
+
+        text = re.sub(
+            r"\s+",
+            " ",
+            text
+        ).strip()
+
         return text
 
+    # =====================================================
+    # SEARCH
+    # =====================================================
+# =====================================================
+# SEARCH
+# =====================================================
+
     if query:
+
         query_norm = normalize(query)
-        request.session['search_query'] = query
 
+        request.session["search_query"] = query
 
-        # --- SCORING -----------------------------------------------------
-        def score_product(p):
-            name = normalize(p.p_name)
-            category = normalize(p.category.c_name)
-            combined = f"{name}  {category}"
+        query_words = query.lower().split()
 
-            name_ratio = fuzz.token_sort_ratio(query_norm, name)
-            
-            combined_ratio = fuzz.partial_ratio(query_norm, combined)
+        # =================================================
+        # DATABASE FILTER
+        # =================================================
 
-            return max(name_ratio,  combined_ratio), name_ratio, 
+        db_query = Q()
 
-        # --- CLASSIFY RESULTS --------------------------------------------
-        result1, result2, result3 = [], [], []
+        for word in query_words:
 
-        for p in Product.objects.all():
-            score, name_ratio = score_product(p)
+            db_query |= Q(
+                p_name__icontains=word
+            )
 
-            if name_ratio >= 90 or score >= 90:
-                result1.append(p)
-            elif score >= 75:
-                result3.append(p)
+        products = Product.objects.filter(
+            db_query
+        ).distinct()
 
-        # --- ORDER RESULTS -----------------------------------------------
-        def order_key(p):
-            n = normalize(p.p_name)
-            b = normalize(p.brand_name)
-            return 0 if n == query_norm else (1 if b == query_norm else 2)
+        ranked_products = []
 
-        result1.sort(key=order_key)
-        result2.sort(key=order_key)
-        result3.sort(key=order_key)
+        # =================================================
+        # RANK PRODUCTS
+        # =================================================
 
-        combined_results = result1 + result2 + result3
-        matched_ids = [p.p_id for p in combined_results]
+        for product in products:
+
+            original_name = product.p_name.lower()
+
+            normalized_name = normalize(
+                product.p_name
+            )
+
+            score = 0
+
+            # =============================================
+            # 1. PERFECT EXACT MATCH
+            # =============================================
+
+            if query.lower() == original_name:
+
+                score += 1000
+
+            # =============================================
+            # 2. NORMALIZED EXACT MATCH
+            # =============================================
+
+            elif query_norm == normalized_name:
+
+                score += 950
+
+            # =============================================
+            # 3. STARTS WITH
+            # =============================================
+
+            elif original_name.startswith(
+                query.lower()
+            ):
+
+                score += 900
+
+            # =============================================
+            # 4. QUERY INSIDE PRODUCT NAME
+            # =============================================
+
+            elif query.lower() in original_name:
+
+                score += 800
+
+            # =============================================
+            # 5. WORD MATCHING
+            # =============================================
+
+            matched_words = 0
+
+            for word in query_words:
+
+                if word in original_name:
+
+                    matched_words += 1
+
+            score += matched_words * 100
+
+            # =============================================
+            # 6. FUZZY MATCH
+            # =============================================
+
+            fuzzy_score = fuzz.token_set_ratio(
+                query.lower(),
+                original_name
+            )
+
+            # =================================================
+            # STRICTER FUZZY FOR SINGLE WORDS
+            # =================================================
+
+            if len(query_words) == 1:
+
+                score += fuzzy_score * 0.2
+
+            else:
+
+                score += fuzzy_score * 0.5
+
+            # =============================================
+            # MINIMUM THRESHOLD
+            # =============================================
+
+            if score >= 600:
+
+                ranked_products.append(
+                    (product, score)
+                )
+
+        # =================================================
+        # SORT RESULTS
+        # =================================================
+
+        ranked_products.sort(
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        matched_ids = [
+            p[0].p_id
+            for p in ranked_products
+        ]
+
+        # =================================================
+        # KEEP ORDER
+        # =================================================
 
         if matched_ids:
+
             preserve_order = Case(
-                *[When(p_id=pid, then=Value(pos)) for pos, pid in enumerate(matched_ids)],
+
+                *[
+                    When(
+                        p_id=pid,
+                        then=Value(pos)
+                    )
+
+                    for pos, pid in enumerate(
+                        matched_ids
+                    )
+                ],
+
                 output_field=IntegerField(),
             )
 
             filtered_products = (
-                Product.objects.filter(p_id__in=matched_ids)
-                .annotate(_order=preserve_order)
+
+                Product.objects
+
+                .filter(
+                    p_id__in=matched_ids
+                )
+
+                .annotate(
+                    _order=preserve_order
+                )
+
                 .order_by("_order")
             )
-            filtered_products.query.clear_ordering(force=True)
-            results = get_product_data1(filtered_products)
-        else:
-            results = []
-    else:
-        # Default: all products if no query
-        filtered_products = Product.objects.all()
-        results = get_product_data1(filtered_products)
 
-    # --- APPLY FILTERS ---
-    filtered_products = Product.objects.filter(p_id__in=[r["p_id"] for r in results])
+            results = get_product_data1(
+                filtered_products
+            )
+
+        else:
+
+            results = []
+
+    else:
+
+        filtered_products = []
+
+        results = get_product_data1(
+            filtered_products
+        )
+
+    # =====================================================
+    # APPLY FILTERS
+    # =====================================================
+
+    filtered_products = Product.objects.filter(
+        p_id__in=[r["p_id"] for r in results]
+    )
 
     if category_filter:
-        filtered_products = filtered_products.filter(category__c_name__iexact=category_filter)
 
-    if stock_filter in ["in stock", "out of stock"]:
-        filtered_products = filtered_products.filter(stock_status=stock_filter)
+        filtered_products = filtered_products.filter(
+            category__c_name__iexact=
+            category_filter
+        )
+
+    if brand_filter:
+
+        filtered_products = filtered_products.filter(
+            brand_name__iexact=
+            brand_filter
+        )
+
+    if stock_filter:
+
+        filtered_products = filtered_products.filter(
+            stock_status__iexact=
+            stock_filter
+        )
 
     if size_filter:
-        filtered_products = filtered_products.filter(size__size=size_filter)
 
-    if sort_by == "In Stock":
-        filtered_products = filtered_products.filter(stock_status="In stock")
-    elif sort_by == "Out of Stock":
-        filtered_products = filtered_products.filter(stock_status="Out of stock")
-    if('100' in s):
-        u=s.split(" ")
-        if(u[1]=="size"):
-            # Fetch all products you want to check
-            products = Product.objects.all()
+        filtered_products = filtered_products.filter(
+            size__size__iexact=
+            size_filter
+        )
 
-# Size you want to filter
-            size_to_filter = u[2]  # e.g., "M"
+    # =====================================================
+    # SORTING
+    # =====================================================
 
-# Filter in Python
-            filtered_products = [
-    p for p in products 
-    if size_to_filter in [s.size for s in p.size_set.all()]
-]
-
-
-
-
-
-        else:
-            filtered_products = filtered_products.filter(brand_name__iexact=u[2])
-
-    u=s.split(" ")
-    # --- SORTING ---
     sort_mapping = {
+
         'manual': None,
-        'best-selling': '-where',   # uses your Product.where field
+
+        'best-selling': '-where',
+
         'title-ascending': 'p_name',
+
         'title-descending': '-p_name',
+
         'price-ascending': 'price',
+
         'price-descending': '-price',
+
         'created-descending': '-p_id',
+
         'created-ascending': 'p_id',
     }
+
     if sort_mapping.get(sort_by):
-        filtered_products = filtered_products.order_by(sort_mapping[sort_by])
 
-    # Convert final products back to dicts
-    results = get_product_data1(filtered_products)
-    
-    t_category = Product.objects.values_list("category", flat=True).distinct()
+        filtered_products = filtered_products.order_by(
+            sort_mapping[sort_by]
+        )
 
+    # =====================================================
+    # FINAL RESULTS
+    # =====================================================
 
+    results = get_product_data1(
+        filtered_products
+    )
 
-    
+    # =====================================================
+    # COUNTS
+    # =====================================================
+
     category_with_counts = (
-    Product.objects.values("category")
-    .annotate(total=Count("p_id")).order_by("category")
-)
-   
 
-    brands_with_counts = (
-    Product.objects.values("brand_name")
-    .annotate(total=Count("p_id"))
-    .order_by("brand_name")
-)
+        Product.objects
+
+        .values("category")
+
+        .annotate(
+            total=Count("p_id")
+        )
+
+        .order_by("category")
+    )
+
     stock_counts = (
-    Product.objects.values("category__c_name")
-    .annotate(total=Count("p_id"))
-    .order_by("category__c_name")
-)
-    selected_brands = request.GET.getlist("brand")
-    selected_sizes = request.GET.getlist("size")
+
+        Product.objects
+
+        .values("category__c_name")
+
+        .annotate(
+            total=Count("p_id")
+        )
+
+        .order_by("category__c_name")
+    )
+
+    selected_brands = request.GET.getlist(
+        "brand"
+    )
+
+    selected_sizes = request.GET.getlist(
+        "size"
+    )
+
+    # =====================================================
+    # CART
+    # =====================================================
+
     products = []
-    price=0
-    log='0'
+
+    price = 0
+
+    log = "0"
+
     if not request.user.is_authenticated:
-        log='1'
+
+        log = "1"
+
     else:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        products = CartItem.objects.filter(cart=cart).count
-    page_product1=Paginator(results,10)
-    page_product=page_product1.get_page(page)
-    total_page=page_product1.page_range
-    ifprev=page_product.has_previous()
-    ifnext=page_product.has_next()
-    prevpage=page_product.previous_page_number
-    nextpage=page_product.next_page_number
-    if (query == None):
-        query = request.session.get('search_query', '')
-    offers= OfferImage.objects.filter(active=True,where_to_display='6')
+
+        cart, created = Cart.objects.get_or_create(
+            user=request.user
+        )
+
+        products = CartItem.objects.filter(
+            cart=cart
+        ).count()
+
+    # =====================================================
+    # PAGINATION
+    # =====================================================
+
+    paginator = Paginator(results, 10)
+
+    page_product = paginator.get_page(page)
+
+    total_page = paginator.page_range
+
+    ifprev = page_product.has_previous()
+
+    ifnext = page_product.has_next()
+
+    prevpage = (
+        page_product.previous_page_number()
+        if ifprev else None
+    )
+
+    nextpage = (
+        page_product.next_page_number()
+        if ifnext else None
+    )
+
+    # =====================================================
+    # OFFERS
+    # =====================================================
+
+    offers = OfferImage.objects.filter(
+        active=True,
+        where_to_display='6'
+    )
+
+    # =====================================================
+    # CONTEXT
+    # =====================================================
+
     context = {
+
         'query': query,
-        'page_range':total_page,
-        's':s,
-        "offers":offers,
-        'ifprev':ifprev,
-        "ifnext":ifnext,
-        "nextpage":nextpage,
-        "prevpage":prevpage,
+
+        'page_range': total_page,
+
+        's': s,
+
+        "offers": offers,
+
+        'ifprev': ifprev,
+
+        "ifnext": ifnext,
+
+        "nextpage": nextpage,
+
+        "prevpage": prevpage,
+
         'results': page_product,
-        'currentpage':page,
-        'same_category_products': same_category_products,
-        'same_main_category_diff_products': same_main_category_diff_products,
+
+        'currentpage': page,
+
+        'same_category_products':
+            same_category_products,
+
+        'same_main_category_diff_products':
+            same_main_category_diff_products,
+
         'sort_by': sort_by,
-        "category_list":category_with_counts,
-        "stock_counts":stock_counts,
-        "selected_size":selected_sizes,
-        "selected_brands":selected_brands,
-        'h':filtered_products,
-        "cart":products,
-        "price":price,
-        "log":log,
-        "is_logged_in": request.user.is_authenticated,
-        "user": request.user if request.user.is_authenticated else None,
-        
+        'result':results,
 
+        "category_list":
+            category_with_counts,
 
+        "stock_counts":
+            stock_counts,
+
+        "selected_size":
+            selected_sizes,
+
+        "selected_brands":
+            selected_brands,
+
+        'h': filtered_products,
+
+        "cart": products,
+
+        "price": price,
+
+        "log": log,
+
+        "is_logged_in":
+            request.user.is_authenticated,
+
+        "user":
+            request.user
+            if request.user.is_authenticated
+            else None,
     }
 
-    return render(request, 'shop.html', context)
+    return render(
+        request,
+        'shop.html',
+        context
+    )
