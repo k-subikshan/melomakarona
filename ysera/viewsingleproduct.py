@@ -85,7 +85,9 @@ def product_detail(request, p):
 
     # ── Current canonical URL ─────────────────
     current_url = request.build_absolute_uri()
-    productrelated=Product.objects.filter(group_id=product_obj.group_id)
+    productrelated=[]
+    if product_obj.group_id != 0:
+      productrelated=Product.objects.filter(group_id=product_obj.group_id)
 
     context = {
         'product':               product,
