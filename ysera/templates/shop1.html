@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{query}}{% endblock title %}
+{% block metatag %}
+<link rel="apple-touch-icon" sizes="180x180" href="{% static  "fonts/favicon_io/apple-touch-icon.png"  %}">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static  "fonts/favicon_io/favicon-32x32.png"  %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static  "fonts/favicon_io/favicon-16x16.png"  %}">
+<link rel="manifest" href="{% static  "fonts/favicon_io/site.webmanifest" %}">
+<link rel="shortcut icon" href="{% static  "fonts/favicon_io/favicon.ico" type="image/x-icon" %}">{% endblock metatag %}
+{% block index %}
+<style>
+    /* Mobile Double Grid */
+@media (max-width: 767px) {
+    .list-products.product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+    
+    .list-products.product-grid .product-item {
+        width: 50%;
+        padding-left: 8px;
+        padding-right: 8px;
+        margin-bottom: 20px;
+        float: none;
+    }
+    
+    .list-products.product-grid .product-inner {
+        width: 100%;
+    }
+    
+    /* Clearfix for the grid */
+    .list-products.product-grid::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
+/* For very small mobile devices (optional) */
+@media (max-width: 480px) {
+    .list-products.product-grid {
+        margin-left: -5px;
+        margin-right: -5px;
+    }
+    
+    .list-products.product-grid .product-item {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+</style>
+<style>
+.no-result {
+    text-align: center;
+    font-family: 'Playfair Display', serif; /* luxury feel */
+    font-size: 26px;
+    font-weight: 500;
+    color: #b89b5e; /* elegant gold */
+    opacity: 0;
+    transform: translateY(20px);
+    animation: reveal 1.6s ease-out forwards, shimmer 3s ease-in-out infinite;
+}
+
+/* Fade + Float */
+@keyframes reveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Soft gold shimmer */
+@keyframes shimmer {
+    0%, 100% {
+        text-shadow: 0 0 0 rgba(184,155,94,0);
+    }
+    50% {
+        text-shadow: 0 0 12px rgba(184,155,94,0.35);
+    }
+}
+</style>
+
+<div class="main-content main-content-product no-sidebar">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-trail breadcrumbs">
+                    <ul class="trail-items breadcrumb">
+                        <li class="trail-item trail-begin">
+                            <a href="{% url "home" %}">Home</a>
+                        </li>
+                        <li class="trail-item trail-end active">
+                            {{query}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="content-area shop-grid-content full-width col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <div class="site-main">
+                    <div class="banner-shop banner-slider owl-slick equal-container"
+                         data-slick='{"autoplay":true, "autoplaySpeed":10000, "arrows":false, "dots":true, "infinite":true, "speed":800, "rows":1}'>
+                        {% for offer in offers %}
+                        <div class="item-banner style1" >
+                            <div class="inner equal-element" style="background-image:url({{offer.image.url}})">
+                                {% comment %}<div class="banner-content style1">
+                                    <h4 class="ysera-subtitle">{{offer.descripton}}</h4>
+                                    <h3 class="title">{{offer.title}}<br/> {{offer.offers}}</h3>
+                                    {% if offer.Type == 'price' %}
+                                    <span class="when-code">Price at <span class="code">{{offer.offers}}</span></span>
+                                    {% else %}
+
+                                    <span class="when-code">When Use Code: <span class="code">{{offer.offers}}</span></span>
+                                    {% endif %}
+                                    <button class="button button-now">shop now</button>
+                                </div>{% endcomment %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <h3 class="custom_blog_title">
+                        Grid Products
+                    </h3>
+                    <div class="shop-top-control">
+                        
+                        <form class="filter-choice select-form" action="{% url "searchbycategory" s='0' h=h w=w d=d page=currentpage %}" method="get">
+                            <span class="title">Sort by</span>
+                            <select title="sort-by" name="SortBy" id="SortBy" data-placeholder="Mannual" class="chosen-select" onchange="this.form.submit()">
+                                <option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Filter</option>
+                                <option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: high to low</option>
+                                <option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Sort by popularity</option>
+                                <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Sort by newness</option>
+                    
+                            </select>
+                        </form>
+                        
+                    </div>
+                    <ul class="row list-products auto-clear equal-container product-grid">
+                    {% if results %}
+                    {% for result in results %}
+                        <li class="product-item product-type-variable col-lg-3 col-md-4 col-sm-6 col-xs-12 col-ts-6 style-1">
+                            <div class="product-inner equal-element">
+                                <div class="product-top">
+                                </div>
+                                <div class="product-thumb">
+                                    <div class="thumb-inner">
+                                        <a href="{% url "product" p=result.slug %}">
+                                            <img  loading="lazy"src="{{result.image_url}}" alt="img">
+                                        </a>
+                                        <div class="thumb-group">
+                                            <div class="yith-wcwl-add-to-wishlist">
+                                                <div class="yith-wcwl-add-button">
+                                                    <a href="{% url 'add to wishlist' product_slug=result.slug %}">Add to Wishlist</a>
+                                                </div>
+                                            </div>
+                                          
+                                            <div class="loop-form-add-to-cart">
+                                                <button class="single_add_to_cart_button button">Add to cart
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h5 class="product-name product_title">
+                                        <a href="{% url "product" p=result.slug %}">{{result.p_name}}</a>
+                                    </h5>
+                                    <div class="group-info">
+                                        
+                                        <div class="price">
+                                            <del>
+                                                {{result.del_price}}
+                                            </del>
+                                            <ins>
+                                                {{result.price}}
+                                            </ins>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    {% else %}
+<h3 class="no-result">No Result Found</h3>
+
+
+
+
+                    {% endif %}
+                    </ul>
+                    <div class="pagination clearfix style2">
+                        <div class="nav-link">
+                            {% if ifprev %}
+                            <a href="{% url "searchbycategory" s=s h=h w=w d=d page=prevpage %}" class="page-numbers"><i class="icon fa fa-angle-left"
+                                                                aria-hidden="true" style="color:red"></i></a>
+                            {% else %}
+                            <a href="javascript:void(0);" onclick="noPreviousPage()" class="page-numbers"><i class="icon fa fa-angle-left"
+                                                                aria-hidden="true" ></i></a>
+                            
+                            {% endif %}
+                            {% for i in page_range %}
+                            {% if i == currentpage %}
+                            <a href="{% url "searchbycategory" s=s h=h w=w d=d page=i %}" class="page-numbers current" >{{i}}</a>
+                            {% else %}
+                            <a href="{% url "searchbycategory" s=s h=h w=w d=d page=i %}" class="page-numbers" >{{i}}</a>
+                            {% endif %}
+                            {% endfor %}
+                            {% if ifnext %}
+                            <a href="{% url "searchbycategory" s=s h=h w=w d=d page=nextpage %}" class="page-numbers"><i class="icon fa fa-angle-right"
+                                                                aria-hidden="true" style="color:red"></i></a>
+                            {% else %}
+                            <a href="javascript:void(0);" onclick="noNextPage()" class="page-numbers"><i class="icon fa fa-angle-right"
+                                                                aria-hidden="true"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<script>
+    function noPreviousPage() {
+        alert("No more previous pages available.");
+    }
+    function noNextPage() {
+        alert("No more next pages available.");
+    }
+</script>
+{% endblock index %}

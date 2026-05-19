@@ -1,4 +1,6 @@
 from django.urls import path
+
+from ysera import viewcategory
 from . import viewhome,viewsingleproduct,viewsearch,viewlogin,viewcart,viewaccount,viewblog,viewcheckout,viewwishlist,viewforgotpass,viewaboutandcontact,emailview
 urlpatterns = [
     path("",viewhome.home,name="home"),
@@ -33,4 +35,5 @@ path('verify-order-otp-cart/', viewcheckout.verify_order_otp, name='verify_order
             path('verify-otp/', viewforgotpass.verify_otp, name='verify_otp'),
             path('about',viewaboutandcontact.about,name="about"),
             path('contact',viewaboutandcontact.contact,name="contact"),
-            path('rental-enquiry/', emailview.rental_cart_enquiry, name='rental_cart_enquiry'),]
+            path('rental-enquiry/', emailview.rental_cart_enquiry, name='rental_cart_enquiry'),
+            path("searchbycatgory/<str:s>/<str:h>/<str:w>/<str:d>/pageeno<int:page>",viewcategory.searchbycategory,name="searchbycategory"),]
