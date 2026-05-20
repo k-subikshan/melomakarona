@@ -4,6 +4,11 @@ from django.contrib.auth.models import User
 # Create your models here.
 from django.utils import timezone
 import random
+from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
+import os
+import glob
 class Category(models.Model):
     c_id = models.AutoField(primary_key=True)
     c_name = models.CharField(max_length=100, default="")
@@ -122,23 +127,73 @@ class Product(models.Model):
 class ProductImage(models.Model):
     img_id = models.AutoField(primary_key=True)
     p_id = models.ForeignKey(Product, on_delete=models.CASCADE, default=1)
-    image = models.ImageField(upload_to='images', blank=True, null=True, default="")
+
+    image = models.ImageField(
+        upload_to='images/',
+        blank=True,
+        null=True,
+        default=""
+    )
+
     CHOICES = [
         ('first', 'first'),
         ('No', 'No'),
-        
     ]
-    priority= models.CharField(
+
+    priority = models.CharField(
         max_length=10,
         choices=CHOICES,
         default='none'
     )
-    slug = models.SlugField( blank=True, null=True, default="")
+
+    slug = models.SlugField(blank=True, null=True, default="")
 
     def save(self, *args, **kwargs):
+
         if not self.slug:
             self.slug = f"img-{self.img_id or '0'}-{slugify(self.p_id.desc[:20])}"
+
+        # Save first
         super().save(*args, **kwargs)
+
+        # Convert to WEBP
+        if self.image and not self.image.name.endswith('.webp'):
+
+            img = Image.open(self.image.path)
+
+            # PNG support
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+
+            # New filename
+            webp_filename = os.path.splitext(self.image.name)[0] + '.webp'
+
+            buffer = BytesIO()
+
+            # Save WEBP
+            img.save(buffer, format='WEBP', quality=85)
+
+            # Replace image
+            self.image.save(
+                webp_filename,
+                ContentFile(buffer.getvalue()),
+                save=False
+            )
+
+            buffer.close()
+
+            # Save webp path in database
+            super().save(update_fields=['image'])
+
+            # Delete old image files
+            base_path = os.path.splitext(self.image.path)[0]
+
+            for file in glob.glob(base_path + '.*'):
+                if not file.endswith('.webp'):
+                    try:
+                        os.remove(file)
+                    except:
+                        pass
 
     def __str__(self):
         return f"Image for {self.p_id}"
