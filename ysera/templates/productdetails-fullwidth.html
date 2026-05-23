@@ -880,8 +880,9 @@
         </a>
       </div>
       <div>
+        <h4>Size:</h4>
         {% for group in product_group %}
-        <a href="{% url "product" group.slug %}">{{group.sizeorcolor}}</a>
+        <a href="{% url "product" group.slug %}"><button>{{group.sizeorcolor}}</button></a>
         {% endfor %}</div>
       <div class="tt-divider"></div>
 
