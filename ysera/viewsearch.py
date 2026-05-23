@@ -108,8 +108,12 @@ def search(request, s, page):
 # =====================================================
 # SEARCH
 # =====================================================
-
-    if query:
+    if query == "others":
+        products = Product.objects.exclude(
+            Q(p_name__icontains="bangels") |
+            Q(p_name__icontains="bracelets")
+        )
+    elif query:
 
         query_norm = normalize(query)
 
