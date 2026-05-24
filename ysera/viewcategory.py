@@ -20,14 +20,16 @@ def searchbycategory(request, s, h, w, d, page):
     # CATEGORY FILTER
     # =====================================================
     if h=="Others":
-        products = Product.objects.exclude(
+        products = Product.objects.all().exclude(
             category__c_name__in=[
                 "EARRING",
-                "Necklace",
+                "NECKLACE",
                 "RING",
                 "Bangles",
+                
             ]
         ).distinct()
+    
     elif w == "shop_by_type":
 
         products = Product.objects.filter(
