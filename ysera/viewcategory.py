@@ -19,8 +19,16 @@ def searchbycategory(request, s, h, w, d, page):
     # =====================================================
     # CATEGORY FILTER
     # =====================================================
-
-    if w == "shop_by_type":
+    if h=="Others":
+        products = Product.objects.exclude(
+            category__c_name__in=[
+                "EARRING",
+                "Necklace",
+                "RING",
+                "Bangles",
+            ]
+        ).distinct()
+    elif w == "shop_by_type":
 
         products = Product.objects.filter(
             category__c_name__iexact=h,
@@ -41,7 +49,7 @@ def searchbycategory(request, s, h, w, d, page):
             category__c_name__iexact=h,
             shop_by_collection__name__iexact=d
         )
-    elif h=="Others":
+    if h=="Others":
         products = Product.objects.exclude(
             category__c_name__in=[
                 "EARRING",
