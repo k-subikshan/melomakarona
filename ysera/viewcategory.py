@@ -41,7 +41,17 @@ def searchbycategory(request, s, h, w, d, page):
             category__c_name__iexact=h,
             shop_by_collection__name__iexact=d
         )
-
+    elif h=="Others":
+        products = Product.objects.exclude(
+            category__c_name__in=[
+                "EARRING",
+                "NECKLACE",
+                "RING",
+                "Bangles",
+                "MANGALSUTRA",
+                "PENDANT"
+            ]
+        ).distinct()
     else:
 
         products = Product.objects.filter(
@@ -395,3 +405,6 @@ def searchbycategory(request, s, h, w, d, page):
         'shop1.html',
         context
     )
+
+
+  
