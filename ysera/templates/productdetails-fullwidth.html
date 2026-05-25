@@ -792,14 +792,14 @@
       <div class="tt-thumbnails" id="thumbContainer">
         {% if product.image_url %}
         <div class="tt-thumb-item active" data-img="{{ product.image_url }}">
-          <img  loading="lazy"src="{{ product.image_url }}" alt="{{ product.p_name }}" onerror="this.parentElement.style.display='none'">
+          <img  loading="lazy"loading="lazy"src="{{ product.image_url }}" alt="{{ product.p_name }}" onerror="this.parentElement.style.display='none'">
         </div>
         {% endif %}
 
         {% if product_other_image %}
           {% for img in product_other_image %}
           <div class="tt-thumb-item" data-img="{{ img.image.url }}">
-            <img  loading="lazy"src="{{ img.image.url }}" alt="{{ product.p_name }}" onerror="this.parentElement.style.display='none'">
+            <img  loading="lazy"loading="lazy"src="{{ img.image.url }}" alt="{{ product.p_name }}" onerror="this.parentElement.style.display='none'">
           </div>
           {% endfor %}
         {% endif %}
@@ -1066,7 +1066,7 @@
 <div class="tt-zoom-modal" id="zoomModal">
   <div class="tt-zoom-modal-inner">
     <button class="tt-zoom-close" id="zoomClose">×</button>
-    <img  loading="lazy"id="zoomModalImg" src="" alt="Zoomed image">
+    <img  loading="lazy"loading="lazy"id="zoomModalImg" src="" alt="Zoomed image">
   </div>
 </div>
 
