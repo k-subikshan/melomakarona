@@ -33,25 +33,25 @@ def searchbycategory(request, s, h, w, d, page):
     elif w == "shop_by_type":
 
         products = Product.objects.filter(
-            category__c_name__iexact=h,
-            shop_by_type__name__iexact=d
+            category__c_name=h,
+            shop_by_type__name=d
             
         )
 
     elif w == "shop_by_occasion":
 
         products = Product.objects.filter(
-            category__c_name__iexact=h,
-            shop_by_occasion__name__iexact=d
+            category__c_name=h,
+            shop_by_occasion__name=d
         )
 
     elif w == "shop_by_collection":
 
         products = Product.objects.filter(
-            category__c_name__iexact=h,
-            shop_by_collection__name__iexact=d
+            category__c_name=h,
+            shop_by_collection__name=d
         )
-    if h=="Others":
+    elif h=="Others":
         products = Product.objects.exclude(
             category__c_name__in=[
                 "EARRING",
