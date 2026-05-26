@@ -23,6 +23,8 @@ def searchbycategory(request, s, h, w, d, page):
         products = Product.objects.filter(   
             category__c_name__iexact=h
         ).distinct()
+    elif w=="category":
+        products= Product.objects.filter(category__c_name=h)
     
     elif w == "shop_by_type":
 
@@ -288,7 +290,7 @@ def searchbycategory(request, s, h, w, d, page):
 
     paginator = Paginator(
         results,
-        10
+        12
     )
 
     page_product = paginator.get_page(

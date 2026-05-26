@@ -438,7 +438,7 @@ def search(request, s, page):
     # PAGINATION
     # =====================================================
 
-    paginator = Paginator(results, 10)
+    paginator = Paginator(results, 12)
 
     page_product = paginator.get_page(page)
 
