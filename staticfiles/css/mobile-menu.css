@@ -48,7 +48,6 @@
     left: 0;
     border: none;
     border-right: 1px solid #eee;
-    
 }
 .ysera-menu-panels-actions-wrap .ysera-menu-current-panel-title {
     display: block;
@@ -83,6 +82,18 @@
 .ysera-menu-panel > ul > li.active > a {
     color: #000;
 }
+
+/* FIX: Shrink link width so it doesn't bleed into the arrow's tap zone */
+.ysera-menu-panel li > a.ysera-item-title,
+.ysera-menu-panel li > a.ysera-menu-item-title {
+    position: relative;
+    z-index: 11;
+    display: block;
+    width: calc(100% - 50px); /* stays out of the 50px arrow zone */
+    padding-right: 0;
+}
+
+/* FIX: Arrow sits above the link so it gets its own independent tap zone */
 .ysera-menu-next-panel {
     width: 50px;
     height: 50px;
@@ -91,7 +102,9 @@
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 10;
+    z-index: 12; /* above the link's z-index: 11 */
+    pointer-events: auto;
+    cursor: pointer;
 }
 .ysera-menu-next-panel:before {
     content: "\f105";
@@ -164,7 +177,7 @@
     -o-transition: all .3s ease;
     transition: all .3s ease;
 }
-.ysera-menu-panel.ysera-menu-panel-opened .submenu{
+.ysera-menu-panel.ysera-menu-panel-opened .submenu {
     opacity: 1;
     visibility: visible;
 }
@@ -174,13 +187,14 @@
 .ysera-menu-panels .menu-item-has-children > a::after {
     display: none;
 }
-.ysera-menu-panel.ysera-menu-panel-opened .menu-page{
+.ysera-menu-panel.ysera-menu-panel-opened .menu-page {
     background-image: none;
 }
-.ysera-menu-panel .main-menu > li > a,.ysera-menu-panel .ysera-demolink .title,
-.ysera-menu-panel .mega-menu .ysera-custommenu .widgettitle{
+.ysera-menu-panel .main-menu > li > a,
+.ysera-menu-panel .ysera-demolink .title,
+.ysera-menu-panel .mega-menu .ysera-custommenu .widgettitle {
     color: #222222 !important;
 }
-.ysera-menu-panel .mega-menu .ysera-custommenu ul li{
+.ysera-menu-panel .mega-menu .ysera-custommenu ul li {
     color: #555;
 }
