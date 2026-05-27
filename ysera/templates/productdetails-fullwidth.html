@@ -707,7 +707,51 @@
     justify-content: center;
     backdrop-filter: blur(4px);
   }
+  .tt-product-share{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
 
+.tt-product-share h5{
+    margin:0;
+    font-size:14px;
+    font-weight:600;
+}
+
+.share-btn{
+    padding:6px 14px;
+    font-size:12px;
+    border-radius:20px;
+    text-decoration:none;
+    transition:0.3s ease;
+    border:1px solid #ddd;
+    display:inline-block;
+    font-weight:500;
+}
+
+.whatsapp-btn{
+    background:#25D366;
+    color:#fff;
+    border:none;
+}
+
+.whatsapp-btn:hover{
+    background:#1ebe5d;
+    color:#fff;
+}
+
+.copy-btn{
+    background:#f5f5f5;
+    color:#333;
+}
+
+.copy-btn:hover{
+    background:#000;
+    color:#fff;
+}
   .tt-zoom-modal.open { display: flex; }
 
   .tt-zoom-modal-inner {
@@ -825,17 +869,23 @@
           Out of Stock
         </div>
       {% endif %}
-      <div class="tt-product-share">
+ <div class="tt-product-share">
 
-  <span>Share:</span>
+    <h5>Share:</h5>
 
-  <!-- WhatsApp -->
-  <a href="https://wa.me/?text={{ product.slug }} - https://tharatrinket.com{{ request.path }}" target="_blank">
-    WhatsApp
-  </a>
+    <!-- WhatsApp -->
+    <a class="share-btn whatsapp-btn"
+       href="https://wa.me/?text={{ product.slug }} - https://tharatrinket.com{{ request.path }}"
+       target="_blank">
+        WhatsApp
+    </a>
 
-  <!-- Copy Link -->
-  <a href="#" onclick="copyLink(event)">Copy Link</a>
+    <!-- Copy Link -->
+    <a class="share-btn copy-btn"
+       href="#"
+       onclick="copyLink(event)">
+        Copy Link
+    </a>
 
 </div>
 
@@ -880,10 +930,16 @@
         </a>
       </div>
       <div>
-        <h4>Size:</h4>
-        {% for group in product_group %}
-        <a href="{% url "product" group.slug %}"><button>{{group.sizeorcolor}}</button></a>
-        {% endfor %}</div>
+        {% if product_group|length > 1 %}
+    <h4>Size:</h4>
+    
+    {% for group in product_group %}
+        <a href="{% url 'product' group.slug %}">
+            <button>{{ group.sizeorcolor }}</button>
+        </a>
+    {% endfor %}
+{% endif %}
+      </div>
       <div class="tt-divider"></div>
 
       <!-- Add to Cart -->
@@ -1152,12 +1208,32 @@ document.addEventListener('DOMContentLoaded', function () {
   // ⚠️  Replace these with your actual serviceable pincodes
   // Ideally fetch these from your Django backend via AJAX
   const serviceablePincodes = [
-    '638001','638002','638003','638004',  // Erode
-    '638009','638010','638011','638012',  // Erode surroundings
-    '641001','641002','641003',            // Coimbatore
-    '600001','600002','600003',            // Chennai
-    '620001','620002'                      // Trichy
-  ];
+  // Erode
+  '638001','638002','638003','638004','638005','638007','638009','638010','638011','638012',
+  '638051','638052','638053','638054','638055','638056','638057','638058',
+  '638101','638102','638103','638104','638105','638106','638107','638108','638109','638110',
+  '638111','638112','638115','638116',
+  '638151','638152','638153','638154',
+  '638181','638182','638183',
+  '638301','638311','638312','638313','638314','638315','638316','638327',
+  '638401','638402','638451','638452','638453','638454','638455','638456','638457','638458','638459','638460','638461','638462','638466','638476',
+  '638501','638502','638503','638504','638505','638506','638512',
+  '638656','638657','638660','638661','638672','638673',
+  '638701','638702','638703','638706','638751','638752','638812',
+  '639201','639202','639204',
+  '641605','641607',
+
+  // Namakkal
+  '636113','636118','636142','636202','636301','636407',
+  '621215',
+  '637001','637003','637013','637014','637015','637017','637018','637019','637020','637021',
+  '637202','637203','637204','637205','637206','637207','637208','637209','637210','637211',
+  '637212','637213','637214',
+  '637303','637304',
+  '637401','637402','637403','637404','637405','637406','637408','637409','637410','637411','637412',
+  '637503','637505',
+  '638006','638008'
+];
 
   const pincodeInput    = document.getElementById('pincodeInput');
   const checkBtn        = document.getElementById('checkPincodeBtn');
