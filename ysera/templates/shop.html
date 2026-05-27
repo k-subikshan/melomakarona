@@ -172,9 +172,11 @@
                                     <div class="group-info">
                                         
                                         <div class="price">
+                                            {% if result.del_price %}
                                             <del>
                                                 {{result.del_price}}
                                             </del>
+                                            {% endif %}
                                             <ins>
                                                 {{result.price}}
                                             </ins>
