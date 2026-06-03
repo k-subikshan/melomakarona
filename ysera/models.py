@@ -156,22 +156,29 @@ class ProductImage(models.Model):
         # Save first
         super().save(*args, **kwargs)
 
-        # Convert to WEBP
-        if self.image and not self.image.name.endswith('.webp'):
+        if self.image:
 
             img = Image.open(self.image.path)
 
-            # PNG support
+            # Convert RGBA/P mode
             if img.mode in ('RGBA', 'P'):
                 img = img.convert('RGB')
 
-            # New filename
+            # RESIZE HERE
+            img.thumbnail((1500, 1500))
+
+            # Create webp filename
             webp_filename = os.path.splitext(self.image.name)[0] + '.webp'
 
             buffer = BytesIO()
 
-            # Save WEBP
-            img.save(buffer, format='WEBP', quality=85)
+            # Save optimized WEBP
+            img.save(
+                buffer,
+                format='WEBP',
+                quality=80,
+                optimize=True
+            )
 
             # Replace image
             self.image.save(
@@ -182,10 +189,10 @@ class ProductImage(models.Model):
 
             buffer.close()
 
-            # Save webp path in database
+            # Save updated image
             super().save(update_fields=['image'])
 
-            # Delete old image files
+            # Delete old files
             base_path = os.path.splitext(self.image.path)[0]
 
             for file in glob.glob(base_path + '.*'):
