@@ -1339,6 +1339,12 @@ function copyLink() {
         alert("Product link copied!");
     });
 }
+$(window).on('scroll', function () {
+    $('.image-overlay, .zoom-overlay, .lightbox-overlay').hide();
+
+    // or if using a plugin:
+    $('.mfp-close').trigger('click');
+});
 </script>
 
 {% endif %}
