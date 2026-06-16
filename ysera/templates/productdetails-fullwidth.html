@@ -1339,11 +1339,14 @@ function copyLink() {
         alert("Product link copied!");
     });
 }
-$(window).on('scroll', function () {
-    $('.image-overlay, .zoom-overlay, .lightbox-overlay').hide();
 
-    // or if using a plugin:
-    $('.mfp-close').trigger('click');
+window.addEventListener('scroll', function () {
+    const zoomModal = document.getElementById('zoomModal');
+
+    if (zoomModal && zoomModal.classList.contains('open')) {
+        zoomModal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
 });
 </script>
 
