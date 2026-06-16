@@ -935,15 +935,15 @@
         </a>
       </div>
       <div>
-        {% if product_group|length > 1 %}
-    <h4>Size:</h4>
-    
-    {% for group in product_group %}
-        <a href="{% url 'product' group.slug %}">
-            <button>{{ group.sizeorcolor }}</button>
-        </a>
-    {% endfor %}
-{% endif %}
+                {% if product_group|length > 1 %}
+            <h4>Size:</h4>
+            
+            {% for group in product_group %}
+                <a href="{% url 'product' group.slug %}">
+                    <button>{{ group.sizeorcolor }}</button>
+                </a>
+            {% endfor %}
+        {% endif %}
       </div>
       <div class="tt-divider"></div>
 
