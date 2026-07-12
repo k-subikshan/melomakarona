@@ -446,8 +446,10 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from .models import Cart, CartItem, Order, OrderItem, Coupon
 @csrf_exempt
-@login_required
 def create_razorpay_order_cart(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "Authentication required."}, status=401)
+
     if request.method != "POST":
         return JsonResponse({"status": "error", "message": "Invalid request method."})
 
@@ -457,7 +459,7 @@ def create_razorpay_order_cart(request):
 
     try:
         data = json.loads(request.body.decode("utf-8"))
-    except:
+    except Exception:
         return JsonResponse({"status": "error", "message": "Invalid JSON."})
 
     coupon_code = data.get("coupon", "").strip()
@@ -469,7 +471,7 @@ def create_razorpay_order_cart(request):
     except Cart.DoesNotExist:
         return JsonResponse({"status": "error", "message": "Cart not found."})
 
-    cart_items = CartItem.objects.filter(cart=cart,carttype="0")
+    cart_items = CartItem.objects.filter(cart=cart, carttype="0")
     if not cart_items.exists():
         return JsonResponse({"status": "error", "message": "Cart empty."})
 
@@ -485,11 +487,11 @@ def create_razorpay_order_cart(request):
                 total_amount -= discount
         except Coupon.DoesNotExist:
             pass
-    if(total_amount<2000):
-        total_amount+=100
-        
 
-    amount_paise = int((total_amount) * 100)
+    if total_amount < 2000:
+        total_amount += 100
+
+    amount_paise = int(total_amount * 100)
 
     try:
         client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
@@ -499,40 +501,35 @@ def create_razorpay_order_cart(request):
             'payment_capture': '1'
         })
 
+        order_id = razorpay_order["id"]
         print("✅ Razorpay order created:", razorpay_order)
 
-        # ✅ Store pending order details in session
         request.session["pending_order"] = {
-            "razorpay_order_id": razorpay_order["id"],
+            "razorpay_order_id": order_id,
             "total_amount": float(total_amount),
             "address": address,
         }
-        razorpay_order = client.order.create({
-                "amount": amount_paise,
-                "currency": "INR",
-                "payment_capture": "1",
-            })
-        order_id = razorpay_order["id"]
         request.session[f"order_{order_id}"] = {
-        "product_slug": "",
-        "quantity":"0",
-        "coupon": coupon_code,
-        "address": address
-    }
+            "product_slug": "",
+            "quantity": "0",
+            "coupon": coupon_code,
+            "address": address,
+        }
+
         PendingOrder.objects.create(
-        order_id=order_id,
-        user=request.user,
-        product_slug="assdd",
-        quantity=0,
-        coupon=coupon_code,
-        address=address
-    )
-        # ✅ Respond to frontend JS
+            order_id=order_id,
+            user=request.user,
+            product_slug="",
+            quantity=0,
+            coupon=coupon_code,
+            address=address,
+        )
+
         return JsonResponse({
             "status": "created",
             "key": settings.RAZORPAY_KEY_ID,
             "amount": amount_paise,
-            "order_id": razorpay_order["id"]
+            "order_id": order_id,
         })
 
     except Exception as e:
@@ -557,35 +554,51 @@ def payment_success_cart(request):
 
         # fetch pending order details
         pending = PendingOrder.objects.filter(order_id=razorpay_order_id).first()
-        coupon_code = pending.coupon
-
         if pending is None:
             return HttpResponse("Pending order not found", status=400)
 
-        user = pending.user          # ⭐ GET USER FROM DATABASE (NOT request.user)
-        profile = user.userprofile  
-        # create the final order
+        coupon_code = pending.coupon
+        user = pending.user
+        if user is None:
+            return HttpResponse("Pending order user missing", status=400)
+
+        try:
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            client.utility.verify_payment_signature({
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": signature,
+            })
+        except razorpay.errors.SignatureVerificationError as e:
+            logger.warning("Razorpay signature verification failed: %s", e)
+            return HttpResponse("Invalid payment signature", status=400)
+        except Exception as e:
+            logger.exception("Unexpected Razorpay verification error: %s", e)
+            return HttpResponse("Payment verification failed", status=400)
+
+        profile = getattr(user, "userprofile", None)
+        if profile is None:
+            return HttpResponse("User profile not found", status=400)
+
         order = Order.objects.create(
             user=user,
             status="paid",
             payment_id=razorpay_payment_id,
             payment_method="online",
-            address=profile.address
+            address=profile.address,
         )
 
-        cart = Cart.objects.get(user=user)
-        cart_items = cart.items.all()  # ⭐ DEFINE FIRST
-        item_count = cart_items.count()
-        cart_items = cart.items.all()
-        subtotal = sum(item.product.price * item.quantity for item in cart_items)
+        try:
+            cart = Cart.objects.get(user=user)
+        except Cart.DoesNotExist:
+            return HttpResponse("Cart not found", status=400)
 
+        cart_items = CartItem.objects.filter(cart=cart, carttype="0")
         if not cart_items.exists():
             return JsonResponse({"status": "error", "message": "Your cart is empty."})
-    
-        # Calculate total amount
-        total_amount = sum(item.product.price * item.quantity for item in cart_items)
-    
-        # Apply coupon if any
+
+        subtotal = sum(item.product.price * item.quantity for item in cart_items)
+
         discount_amount = 0
         if coupon_code:
             try:
@@ -595,33 +608,22 @@ def payment_success_cart(request):
             except Coupon.DoesNotExist:
                 pass
 
-        user=request.user
         delivery_charge = 100 if subtotal < 2000 else 0
         for item in cart_items:
-                item_total = item.product.price * item.quantity
-            
-                # proportion of cart
-                item_share = item_total / subtotal  
-            
-                # discount part for this item
-                item_discount = discount_amount * item_share  
-            
-                # delivery charge part
-                item_delivery = delivery_charge * item_share
-            
-                # final total price for this product in the order
-                final_item_total = item_total - item_discount 
-            
-                # per unit price
-                unit_price = final_item_total / item.quantity
-            
-                OrderItem.objects.create(
-                    order=order,
-                    product=item.product,
-                    quantity=item.quantity,
-                    price=unit_price  # save final per-unit price
-                )
-        send_order_email(request.user, order)
+            item_total = item.product.price * item.quantity
+            item_share = item_total / subtotal if subtotal else 0
+            item_discount = discount_amount * item_share
+            final_item_total = item_total - item_discount
+            unit_price = final_item_total / item.quantity if item.quantity else 0
+
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price=unit_price,
+            )
+
+        send_order_email(user, order)
     
         # ✅ Cleanup
         cart_items.delete()
