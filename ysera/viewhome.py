@@ -52,7 +52,7 @@ def get_product_data(products):
 
 
 # ---------------- HOME PAGE CACHE ----------------
-@cache_page(60 * 15)  # cache for 15 mins
+  # cache for 15 mins
 def home(request):
 
     # ---------------- OFFERS ----------------

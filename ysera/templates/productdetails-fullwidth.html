@@ -800,13 +800,23 @@
 <div class="container">
 
   <!-- Breadcrumb -->
-  <nav class="tt-breadcrumb">
-    <a href="{% url 'home' %}">Home</a>
-    <span>›</span>
-    <a href="#">{{ product.category }}</a>
-    <span>›</span>
-    <span class="current">{{ product.p_name }}</span>
-  </nav>
+   <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-trail breadcrumbs">
+                        <ul class="trail-items breadcrumb">
+                            <li class="trail-item trail-begin">
+                                <a href="{% url 'home' %}">Home</a>
+                            </li>
+                            <li class="trail-item">
+                                <a href="#">{{ product.category }}</a>
+                            </li>
+                            <li class="trail-item trail-end active">
+                                {{ product.p_name }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
   <!-- Product Main -->
   <div class="tt-product-wrap">
