@@ -423,7 +423,6 @@ def search(request, s, page):
     if not request.user.is_authenticated:
 
         log = "1"
-
     else:
 
         cart, created = Cart.objects.get_or_create(
