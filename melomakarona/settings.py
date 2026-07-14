@@ -179,11 +179,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.tharatrinket.com",
 ]
 
-# Use secure cookies in production, but allow local HTTP development when DEBUG is enabled.
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
