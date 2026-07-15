@@ -5,23 +5,38 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+
 @ensure_csrf_cookie
 def login_view(request):
     if request.method == "POST":
-        username = request.POST.get("username")
+        login_input = request.POST.get("username")  # username or email
         password = request.POST.get("password")
+
+        # Check if the user entered an email
+        if "@" in login_input:
+            try:
+                user_obj = User.objects.get(email__iexact=login_input)
+                username = user_obj.username
+            except User.DoesNotExist:
+                username = login_input
+        else:
+            username = login_input
 
         user = authenticate(request, username=username, password=password)
 
-        if user:
+        if user is not None:
             login(request, user)
             return redirect("home")
 
-        messages.error(request, "Invalid username or password")
+        messages.error(request, "Invalid username/email or password")
 
     return render(request, "login.html")
-
-
 def signup_view(request):
     if request.method != "POST":
         return redirect("login")
