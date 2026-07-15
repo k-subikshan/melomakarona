@@ -1,29 +1,20 @@
-"""
-Run with:
-    python manage.py shell < fix_image_paths.py
-
-Updates ProductImage.image paths from:
-    images/images/.../file.webp
-to:
-    images/file.webp
-"""
-
 from ysera.models import ProductImage
 
-count = 0
+updated = 0
 
 for img in ProductImage.objects.all():
-    if not img.image:
-        continue
+    if img.image:
+        old = img.image.name
+        new = old
 
-    old_path = img.image.name
-    filename = old_path.split("/")[-1]
-    new_path = f"images/{filename}"
+        # Keep replacing until only one "images/" remains
+        while "images/images/" in new:
+            new = new.replace("images/images/", "images/")
 
-    if old_path != new_path:
-        print(f"{old_path} -> {new_path}")
-        img.image.name = new_path
-        img.save(update_fields=["image"])
-        count += 1
+        if old != new:
+            img.image.name = new
+            img.save(update_fields=["image"])
+            updated += 1
+            print(f"{old} -> {new}")
 
-print(f"\nDone! Updated {count} image paths.")
+print(f"\nUpdated {updated} records.")
