@@ -167,8 +167,10 @@ class ProductImage(models.Model):
             # RESIZE HERE
             img.thumbnail((1500, 1500))
 
-            # Create webp filename
-            webp_filename = os.path.splitext(self.image.name)[0] + '.webp'
+            # Use basename only; upload_to='images/' is applied by Django.
+            webp_filename = os.path.basename(
+                os.path.splitext(self.image.name)[0]
+            ) + '.webp'
 
             buffer = BytesIO()
 
