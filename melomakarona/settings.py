@@ -11,7 +11,7 @@ SECRET_KEY = os.environ.get(
     "CHANGE_THIS_TO_A_NEW_SECRET_KEY"
 )
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "tharatrinket.com",
