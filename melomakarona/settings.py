@@ -6,11 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # =========================
 # SECURITY
 # =========================
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "CHANGE_THIS_TO_A_NEW_SECRET_KEY"
-)
-
+SECRET_KEY = 'django-insecure-_od7y#_-m7_a%_v_kag1tzd8v!7-08kpzaer-mb-=dnq(@a35w'
 DEBUG = True
 
 ALLOWED_HOSTS = [
@@ -169,16 +165,17 @@ EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = 'tharatrinket@gmail.com'
+EMAIL_HOST_PASSWORD = 'mvcf slqn uiov fvaa'  # Use App Password, not your Gmail password
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # =========================
 # RAZORPAY
 # =========================
-RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
-RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
+RAZORPAY_KEY_ID = "rzp_live_SdO7rarlwx0W2A"
+RAZORPAY_KEY_SECRET = "VGNSycpLdj0Qs3FTTnySM5PV"
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
