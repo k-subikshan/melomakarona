@@ -78,6 +78,12 @@ def send_order_email(user, order):
         from_email=settings.EMAIL_HOST_USER,
         to=[user.email],
     )
+    email = EmailMultiAlternatives(
+        subject="Your Order is Confirmed 🛍️",
+        body="Order placed successfully",
+        from_email="tharatrinket@gmail.com",
+        to=[user.email],
+    )
 
     email.attach_alternative(html_content, "text/html")
     email.send()
