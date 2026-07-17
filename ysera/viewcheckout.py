@@ -122,6 +122,7 @@ def check_userprofile_complete(request):
 
 
 # ------------------ CHECKOUT PAGE ------------------
+@csrf_exempt
 @login_required
 def cart_checkout(request):
     check = check_userprofile_complete(request)
@@ -131,7 +132,7 @@ def cart_checkout(request):
     # ✅ All profile fields complete — continue checkout
     ...
 
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    cart = Cart.objects.get(user=request.user)
     items = CartItem.objects.filter(cart=cart,carttype="0")
     if not items.exists():
         return redirect("cart")
@@ -146,7 +147,7 @@ def cart_checkout(request):
         "payment_capture": "1"
     })
 
-    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    profile = UserProfile.objects.get(user=request.user)
     log='0'
     if not request.user.is_authenticated:
         log='1'
@@ -497,7 +498,6 @@ def create_razorpay_order_cart(request):
             'currency': 'INR',
             'payment_capture': '1'
         })
-    
 
         print("✅ Razorpay order created:", razorpay_order)
 
