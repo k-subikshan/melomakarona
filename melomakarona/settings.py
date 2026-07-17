@@ -11,7 +11,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "tharatrinket.com",
-    "www.tharatrinket.com",
+    "www.tharatrinket.com","*"
 ]
 
 CSRF_TRUSTED_ORIGINS = [

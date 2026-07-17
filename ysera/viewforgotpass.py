@@ -7,36 +7,49 @@ from .models import PasswordResetOTP
 from .forms import ForgotPasswordForm, VerifyOTPForm, ResetPasswordForm
 import random
 
-# 1️⃣ Forgot password — send OTP
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
+import traceback
+
 def forgot_password(request):
     if request.method == "POST":
         form = ForgotPasswordForm(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email']
             try:
-                user = User.objects.get(email=email)
-                otp = str(random.randint(100000, 999999))
-                PasswordResetOTP.objects.create(user=user, otp=otp)
+                email = form.cleaned_data['email']
 
-                # Send email
+                user = User.objects.get(email=email)
+
+                otp = str(random.randint(100000, 999999))
+
+                PasswordResetOTP.objects.create(
+                    user=user,
+                    otp=otp
+                )
+
                 send_mail(
                     subject="Your Password Reset OTP",
                     message=f"Your OTP is {otp}. It is valid for 5 minutes.",
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[email],
+                    fail_silently=False,
                 )
 
-                request.session['reset_user_id'] = user.id
-                messages.success(request, "OTP sent to your email.")
-                return redirect('verify_otp')
+                request.session["reset_user_id"] = user.id
 
-            except User.DoesNotExist:
-                messages.error(request, "No account found with this email.")
+                return redirect("verify_otp")
+
+            except Exception as e:
+                print(traceback.format_exc())
+                messages.error(request, str(e))
+
     else:
         form = ForgotPasswordForm()
-    return render(request, 'forgototp.html', {'form': form})
 
-
+    return render(request, "forgototp.html", {"form": form})
 # 2️⃣ Verify OTP
 def verify_otp(request):
     user_id = request.session.get('reset_user_id')
