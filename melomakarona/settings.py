@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # =========================
 SECRET_KEY = 'django-insecure-_od7y#_-m7_a%_v_kag1tzd8v!7-08kpzaer-mb-=dnq(@a35w'
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "tharatrinket.com",
