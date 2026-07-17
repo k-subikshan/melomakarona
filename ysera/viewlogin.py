@@ -12,21 +12,34 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+
 @ensure_csrf_cookie
 def login_view(request):
     if request.method == "POST":
-        login_input = request.POST.get("username")  # username or email
+        login_input = request.POST.get("username", "").strip()
         password = request.POST.get("password")
 
-        # Check if the user entered an email
+        username = login_input
+
+        # If user entered an email
         if "@" in login_input:
-            try:
-                user_obj = User.objects.get(email__iexact=login_input)
-                username = user_obj.username
-            except User.DoesNotExist:
-                username = login_input
-        else:
-            username = login_input
+            users = User.objects.filter(email__iexact=login_input)
+
+            if users.count() == 1:
+                username = users.first().username
+
+            elif users.count() > 1:
+                messages.error(
+                    request,
+                    "Multiple accounts are associated with this email. Please log in using your username or contact support."
+                )
+                return render(request, "login.html")
 
         user = authenticate(request, username=username, password=password)
 
