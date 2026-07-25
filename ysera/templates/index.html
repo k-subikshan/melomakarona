@@ -246,24 +246,6 @@
                                             </div>
                                             {% endif %}
                                         </div>
-                                        <div class="product-top">
-                                            {% if bestseller.save %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    
-                                                    <span class="text">
-                                                        {{bestseller.save}}% Off
-                                                    </span>
-                                                    
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                                    </span>
-                                                    
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
                                         <div class="product-thumb">
                                             <div class="thumb-inner">
                                                 <a href="{% url "product" p=bestseller.slug %}">
@@ -328,17 +310,6 @@
                                             </div>
                                             {% endif %}
                                         </div>
-                                         <div class="product-top">
-                                            {% if newarrivals.save %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    <span class="text">
-                                                        {{newarrivals.save}}% 
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
                                         <div class="product-thumb">
                                             <div class="thumb-inner">
                                                 <a href="{% url "product" p=newarrivals.slug %}">
@@ -396,17 +367,6 @@
                                                 <span class="onnew">
                                                     <span class="text">
                                                         new
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="product-top">
-                                            {% if toprated.save %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    <span class="text">
-                                                       {{toprated.save}}% Off
                                                     </span>
                                                 </span>
                                             </div>
