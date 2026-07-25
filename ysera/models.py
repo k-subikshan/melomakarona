@@ -36,69 +36,76 @@ class Collection(models.Model):
 
     def __str__(self):
         return self.name
+from decimal import Decimal
+from django.utils.text import slugify
+
 class Product(models.Model):
     p_id = models.AutoField(primary_key=True)
     p_name = models.CharField(max_length=1000, default="")
     point1 = models.CharField(max_length=1000, default="")
-    point2= models.CharField(max_length=1000, default="")
+    point2 = models.CharField(max_length=1000, default="")
     brand_name = models.CharField(max_length=1000, default="")
     desc = models.TextField(default="")
-    size= models.CharField(max_length=1000, default="")
+    size = models.CharField(max_length=1000, default="")
+
+    # Selling Price
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+
+    # Original Price (Auto Calculated)
     del_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    rentalprice=models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    group_id=models.IntegerField(default=1)
-    var=[
-        ('0','color'),
-        ('1','size')
+
+    rentalprice = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    group_id = models.IntegerField(default=1)
+
+    var = [
+        ('0', 'color'),
+        ('1', 'size')
     ]
-    variety=models.CharField(choices=var, max_length=50,default='0')
-    sizeorcolor=models.CharField( max_length=50,default="null")
+    variety = models.CharField(max_length=50, choices=var, default='0')
+    sizeorcolor = models.CharField(max_length=50, default="null")
+
     CHOICES = [
         ('0', 'buy'),
         ('1', 'rental'),
-        ('2','both')
-        
+        ('2', 'both')
     ]
-    availablity=models.CharField(
+    availablity = models.CharField(max_length=10, choices=CHOICES, default='2')
 
-        max_length=10,
-        choices=CHOICES,
-        default='2'
-    )
+    # Discount Percentage
+    save_upto = models.IntegerField(default=0)
 
-    save_upto=models.IntegerField(default=1)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     shop_by_type = models.ForeignKey(Type, on_delete=models.CASCADE, null=True, blank=True)
     shop_by_collection = models.ForeignKey(Collection, on_delete=models.CASCADE, null=True, blank=True)
     shop_by_occasion = models.ForeignKey(Occasion, on_delete=models.CASCADE, null=True, blank=True)
-    delivery_times=models.IntegerField(default=1)
 
-    new_choice=[
-        ("yes","yes"),
-        ("no","no")
+    delivery_times = models.IntegerField(default=1)
+
+    new_choice = [
+        ("yes", "yes"),
+        ("no", "no")
     ]
-    new=models.CharField(
-    max_length=150,
-    choices=new_choice,
-    default='yes')
+    new = models.CharField(max_length=150, choices=new_choice, default='yes')
+
     STOCK_CHOICES = [
-    ('in stock', 'In Stock'),
-    ('out of stock', 'Out of Stock'),
-]
+        ('in stock', 'In Stock'),
+        ('out of stock', 'Out of Stock')
+    ]
 
     stock_status = models.CharField(
-    max_length=150,
-    choices=STOCK_CHOICES,
-    default='in stock'
-)
+        max_length=150,
+        choices=STOCK_CHOICES,
+        default='in stock'
+    )
+
     WHERE = [
-        ('bestseller','best seller'),
-    ('newarrivals', 'new arrivals'),
-    ('toprated','top rated'),
-    ('bridalsets','Bridal Sets')
+        ('bestseller', 'best seller'),
+        ('newarrivals', 'new arrivals'),
+        ('toprated', 'top rated'),
+        ('bridalsets', 'Bridal Sets')
     ]
-    where_in_home= models.CharField(
+
+    where_in_home = models.CharField(
         max_length=100,
         choices=WHERE,
         default='none'
@@ -107,18 +114,29 @@ class Product(models.Model):
     WHERE_TO_DISPLAY_CHOICES = [
         ('none', 'None'),
         ('home', 'Home'),
-        
     ]
+
     where_to_display = models.CharField(
         max_length=10,
         choices=WHERE_TO_DISPLAY_CHOICES,
         default='none'
     )
+
     slug = models.SlugField(unique=True, blank=True, null=True, default="")
 
     def save(self, *args, **kwargs):
+
+        # Auto calculate original price
+        if self.price and self.save_upto > 0:
+            discount = Decimal(self.save_upto) / Decimal("100")
+            self.del_price = (self.price / (Decimal("1") - discount)).quantize(Decimal("0.01"))
+        else:
+            self.del_price = self.price
+
+        # Generate slug
         if not self.slug:
             self.slug = slugify(self.desc[:50]) + f"-{self.p_id or '0'}"
+
         super().save(*args, **kwargs)
 
     def __str__(self):
