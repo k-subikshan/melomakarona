@@ -245,6 +245,27 @@
                                                 </span>
                                             </div>
                                             {% endif %}
+                                             {% if bestseller.save %}
+                                            <div class="flash">
+                                                <span class="onnew">
+                                                    
+                                                    <span class="text">
+                                                        {{bestseller.save}}% Off
+                                                    </span>
+                                                    
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="product-thumb">
+                                            <div class="thumb-inner">
+                                                <a href="{% url "product" p=bestseller.slug %}">
+                                                    <img  loading="lazy"loading="lazy"src="{{ bestseller.image_url }}" alt="{{bestseller.p_name}}">
+                                                    </span>
+                                                    
+                                                </span>
+                                            </div>
+                                            {% endif %}
                                         </div>
                                         <div class="product-thumb">
                                             <div class="thumb-inner">
@@ -309,6 +330,15 @@
                                                 </span>
                                             </div>
                                             {% endif %}
+                                            {% if newarrivals.save %}
+                                            <div class="flash">
+                                                <span class="onnew">
+                                                    <span class="text">
+                                                        {{newarrivals.save}}% Off
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            {% endif %}
                                         </div>
                                         <div class="product-thumb">
                                             <div class="thumb-inner">
@@ -367,6 +397,15 @@
                                                 <span class="onnew">
                                                     <span class="text">
                                                         new
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                              {% if toprated.save %}
+                                            <div class="flash">
+                                                <span class="onnew">
+                                                    <span class="text">
+                                                       {{toprated.save}}% Off
                                                     </span>
                                                 </span>
                                             </div>
