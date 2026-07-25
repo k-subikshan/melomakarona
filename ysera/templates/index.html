@@ -246,6 +246,24 @@
                                             </div>
                                             {% endif %}
                                         </div>
+                                        <div class="product-top">
+                                            {% if bestseller.save_upto %}
+                                            <div class="flash">
+                                                <span class="onnew">
+                                                    
+                                                    <span class="text">
+                                                        {{bestseller.save_upto}}% Off
+                                                    </span>
+                                                    
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                                    </span>
+                                                    
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
                                         <div class="product-thumb">
                                             <div class="thumb-inner">
                                                 <a href="{% url "product" p=bestseller.slug %}">
@@ -272,9 +290,12 @@
                                             <div class="group-info">
 
                                                 <div class="price">
+                                                    {% if bestseller.del_price %}
                                                     <del>
                                                         Rs.{{bestseller.del_price}}
                                                     </del>
+
+                                                    {% endif %}
                                                     <ins>
                                                         Rs.{{bestseller.price}}
                                                     </ins>
@@ -307,6 +328,17 @@
                                             </div>
                                             {% endif %}
                                         </div>
+                                         <div class="product-top">
+                                            {% if newarrivals.save_upto %}
+                                            <div class="flash">
+                                                <span class="onnew">
+                                                    <span class="text">
+                                                        {{newarrivals.save_upto}}% 
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
                                         <div class="product-thumb">
                                             <div class="thumb-inner">
                                                 <a href="{% url "product" p=newarrivals.slug %}">
@@ -332,9 +364,11 @@
                                             </h5>
                                             <div class="group-info">
                                                 <div class="price">
+                                                    {% if newarrivals.del_price %}
                                                     <del>
                                                         Rs.{{newarrivals.del_price}}
                                                     </del>
+                                                    {% endif %}
                                                     <ins>
                                                         Rs.{{newarrivals.price}}
                                                     </ins>
@@ -367,6 +401,17 @@
                                             </div>
                                             {% endif %}
                                         </div>
+                                        <div class="product-top">
+                                            {% if toprated.save_upto %}
+                                            <div class="flash">
+                                                <span class="onnew">
+                                                    <span class="text">
+                                                       {{toprated.save_upto}}% Off
+                                                    </span>
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                        </div>
                                         <div class="product-thumb">
                                             <div class="thumb-inner">
                                                 <a href="{% url "product" p=toprated.slug %}">
@@ -393,9 +438,11 @@
                                             <div class="group-info">
 
                                                 <div class="price">
+                                                    {% if toprated.del_price %}
                                                     <del>
                                                         Rs.{{toprated.del_price}}
                                                     </del>
+                                                    {% endif %}
                                                     <ins>
                                                         Rs.{{toprated.price}}
                                                     </ins>
