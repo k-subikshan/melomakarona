@@ -949,7 +949,7 @@
             
             {% for group in product_group %}
                 <a href="{% url 'product' group.slug %}">
-                    <button>{{ group.sizeorcolor }}</button>
+                    <button>{{ group.size }}</button>
                 </a>
             {% endfor %}
         {% endif %}
