@@ -910,12 +910,10 @@
         {% else %}
         <span class="tt-price-current">₹{{ product.price }}</span>
         {% endif %}
-        {% if product.del_price %}
-          <span class="tt-price-del">₹{{ product.del_price }}</span>
-          {% if product.save %}
-            <span class="tt-price-save">Save ₹{{ product.save }}</span>
-          {% endif %}
-        {% endif %}
+       {% if product.del_price and product.save %}
+    <span class="tt-price-del">₹{{ product.del_price }}</span>
+    <span class="tt-price-save">Save ₹{{ product.save }}</span>
+{% endif %}
       </div>
 
       <div class="tt-divider"></div>

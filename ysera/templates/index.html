@@ -284,7 +284,7 @@
                                             <div class="group-info">
 
                                                 <div class="price">
-                                                    {% if bestseller.del_price %}
+                                                    {% if bestseller.del_price and bestseller.save %}
                                                     <del>
                                                         Rs.{{bestseller.del_price}}
                                                     </del>
@@ -356,7 +356,7 @@
                                             </h5>
                                             <div class="group-info">
                                                 <div class="price">
-                                                    {% if newarrivals.del_price %}
+                                                    {% if newarrivals.del_price and newarrivals.save %}
                                                     <del>
                                                         Rs.{{newarrivals.del_price}}
                                                     </del>
@@ -428,7 +428,7 @@
                                             <div class="group-info">
 
                                                 <div class="price">
-                                                    {% if toprated.del_price %}
+                                                    {% if toprated.del_price and toprated.save %}
                                                     <del>
                                                         Rs.{{toprated.del_price}}
                                                     </del>

@@ -172,11 +172,9 @@
                                     <div class="group-info">
                                         
                                         <div class="price">
-                                            {% if result.del_price %}
-                                            <del>
-                                                {{result.del_price}}
-                                            </del>
-                                            {% endif %}
+                                            {% if result.save and result.save != 0 %}
+    <span class="tt-price-save">Save ₹{{ result.save }}</span>
+{% endif %}
                                             <ins>
                                                 {{result.price}}
                                             </ins>
