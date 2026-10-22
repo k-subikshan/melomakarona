@@ -183,7 +183,7 @@ class ProductImage(models.Model):
                 img = img.convert('RGB')
 
             # RESIZE HERE
-            img.thumbnail((1500, 1500))
+            img.thumbnail((3000, 3000))
 
             # Use basename only; upload_to='images/' is applied by Django.
             webp_filename = os.path.basename(
