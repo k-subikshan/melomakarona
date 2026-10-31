@@ -88,7 +88,7 @@ def home(request):
     # ---------------- TOP RATED ----------------
     toprated_products = (
         Product.objects
-        .filter(where_to_display='home', where_in_home='EARRING')
+        .filter(where_to_display='home', category__c_name__iexact='EARRING')
         .select_related('category')
         .prefetch_related(image_prefetch)
     )
@@ -96,7 +96,7 @@ def home(request):
     # ---------------- BRIDAL ----------------
     bridalsets_products = (
         Product.objects
-        .filter(where_to_display='home', where_in_home='Rings')
+        .filter(where_to_display='home', category__c_name__iexact='Rings')
         .select_related('category')
         .prefetch_related(image_prefetch)
     )
