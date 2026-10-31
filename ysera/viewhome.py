@@ -96,7 +96,7 @@ def home(request):
     # ---------------- BRIDAL ----------------
     bridalsets_products = (
         Product.objects
-        .filter(where_to_display='home', category__c_name__iexact='Rings')
+        .filter(where_to_display='home', where_in_home="newarrivals")
         .select_related('category')
         .prefetch_related(image_prefetch)
     )

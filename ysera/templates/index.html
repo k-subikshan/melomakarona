@@ -83,11 +83,7 @@
                     <h3>Necklaces <span>for Every Occasion</span></h3>
                     <p>Statement pieces that make every entrance unforgettable.</p>
                 </div>
-                <a class="tt-view-all" href="/shop/?category=necklaces"
-                   aria-label="View all necklaces">
-                    <span>Explore Necklaces</span>
-                    <span class="tt-view-all__icon" aria-hidden="true">↗</span>
-                </a>
+               
             </div>
 
             <div class="tt-product-grid">
@@ -177,11 +173,7 @@
                     <h3>Bangles <span>Tradition in Every Curve</span></h3>
                     <p>Beautiful finishing touches inspired by timeless tradition.</p>
                 </div>
-                <a class="tt-view-all" href="/shop/?category=bangles"
-                   aria-label="View all bangles">
-                    <span>Explore Bangles</span>
-                    <span class="tt-view-all__icon" aria-hidden="true">↗</span>
-                </a>
+              
             </div>
 
             <div class="tt-product-grid">
@@ -217,52 +209,6 @@
             </div>
         </div>
 
-        <div class="tt-collection tt-reveal" id="tt-rings">
-            <div class="tt-collection__header">
-                <div class="tt-collection__title">
-                    <span class="tt-collection__number">04 / COLLECTION</span>
-                    <h3>Rings <span>Made to Mean Something</span></h3>
-                    <p>Small treasures that celebrate your own kind of beautiful.</p>
-                </div>
-                <a class="tt-view-all" href="/shop/?category=rings"
-                   aria-label="View all rings">
-                    <span>Explore Rings</span>
-                    <span class="tt-view-all__icon" aria-hidden="true">↗</span>
-                </a>
-            </div>
-
-            <div class="tt-product-grid">
-                {% if bridalsets %}
-                    {% for bridalset in bridalsets %}
-                    <article class="tt-product">
-                        <a href="{% url 'product' p=bridalset.slug %}" class="tt-product__image-link"
-                           aria-label="View {{ bridalset.p_name }}">
-                            <div class="tt-product__image">
-                                <img src="{{ bridalset.image_url }}" alt="{{ bridalset.p_name }}" loading="lazy">
-                                {% if bridalset.new == 'yes' %}
-                                <span class="tt-product__tag">NEW ARRIVAL</span>
-                                {% elif bridalset.save %}
-                                <span class="tt-product__tag tt-product__tag--soft">{{ bridalset.save }}% OFF</span>
-                                {% endif %}
-                            </div>
-                        </a>
-                        <a class="tt-wishlist"
-                           href="{% url 'add to wishlist' product_slug=bridalset.slug %}"
-                           aria-label="Add {{ bridalset.p_name }} to wishlist">♡</a>
-                        <div class="tt-product__info">
-                            <span class="tt-product__category">RINGS</span>
-                            <h4>{{ bridalset.p_name }}</h4>
-                            <div class="tt-product__bottom">
-                                <span class="tt-product__price">₹{{ bridalset.price }}</span>
-                                <a href="{% url 'product' p=bridalset.slug %}" class="tt-product__arrow"
-                                   aria-label="View {{ bridalset.p_name }}">↗</a>
-                            </div>
-                        </div>
-                    </article>
-                    {% endfor %}
-                {% endif %}
-            </div>
-        </div>
 
         <div class="tt-collections__footer tt-reveal">
             <span class="tt-footer-ornament">✧</span>
