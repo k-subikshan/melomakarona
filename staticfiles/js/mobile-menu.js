@@ -325,3 +325,268 @@
     }, false);
 
 })(jQuery);
+
+
+/* ==========================================================
+   THARA TRINKETS - COLLECTION INTERACTIONS
+   ========================================================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+    const section = document.querySelector("#tt-collections");
+
+    if (!section) return;
+
+    // 1. Reveal sections smoothly as they enter the viewport
+    const revealElements = section.querySelectorAll(".tt-reveal");
+
+    if ("IntersectionObserver" in window) {
+        const revealObserver = new IntersectionObserver(
+            function (entries, observer) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("is-visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                threshold: 0.08,
+                rootMargin: "0px 0px -30px 0px"
+            }
+        );
+
+        revealElements.forEach(function (element) {
+            revealObserver.observe(element);
+        });
+    } else {
+        revealElements.forEach(function (element) {
+            element.classList.add("is-visible");
+        });
+    }
+
+    // 2. Smooth-scroll to each collection
+    const navLinks = section.querySelectorAll(
+        ".tt-collection-nav__link"
+    );
+
+    navLinks.forEach(function (link) {
+        link.addEventListener("click", function (event) {
+            const targetId = link.getAttribute("href");
+
+            // Only handle anchors within this section
+            if (!targetId || !targetId.startsWith("#")) return;
+
+            const target = section.querySelector(targetId);
+
+            if (!target) return;
+
+            event.preventDefault();
+
+            target.scrollIntoView({
+                behavior: window.matchMedia(
+                    "(prefers-reduced-motion: reduce)"
+                ).matches ? "auto" : "smooth",
+                block: "start"
+            });
+
+            navLinks.forEach(function (navLink) {
+                navLink.classList.remove("is-active");
+            });
+
+            link.classList.add("is-active");
+        });
+    });
+
+    // 3. Update active collection in the navigation while scrolling
+    if ("IntersectionObserver" in window) {
+        const collections = section.querySelectorAll(".tt-collection");
+
+        const collectionObserver = new IntersectionObserver(
+            function (entries) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) return;
+
+                    const id = "#" + entry.target.id;
+
+                    navLinks.forEach(function (link) {
+                        link.classList.toggle(
+                            "is-active",
+                            link.getAttribute("href") === id
+                        );
+                    });
+                });
+            },
+            {
+                rootMargin: "-20% 0px -65% 0px",
+                threshold: 0
+            }
+        );
+
+        collections.forEach(function (collection) {
+            collectionObserver.observe(collection);
+        });
+    }
+
+    // 4. Wishlist heart interaction
+    // This is a frontend-only interaction; it does not save
+    // favourites to a database or across browser sessions.
+    const wishlistButtons = section.querySelectorAll(".tt-wishlist");
+
+    wishlistButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            const isFavourite =
+                button.getAttribute("aria-pressed") === "true";
+
+            button.setAttribute(
+                "aria-pressed",
+                String(!isFavourite)
+            );
+
+            button.classList.toggle(
+                "is-favourite",
+                !isFavourite
+            );
+
+            button.innerHTML = isFavourite ? "♡" : "♥";
+
+            const originalLabel = button.getAttribute("aria-label") || "";
+
+            button.setAttribute(
+                "aria-label",
+                isFavourite
+                    ? originalLabel.replace("Remove from wishlist", "Add to wishlist")
+                    : originalLabel.replace("Add ", "Remove ").replace(" to wishlist", " from wishlist")
+            );
+        });
+    });
+});
+
+
+
+
+
+// testimonials carousel
+
+document.addEventListener("DOMContentLoaded", function () {
+    const section = document.querySelector("#customer-stories");
+
+    if (!section) return;
+
+    const viewport = section.querySelector(".stories-viewport");
+    const track = section.querySelector(".stories-track");
+    const cards = Array.from(track.querySelectorAll(".story-card"));
+    const prevButton = section.querySelector(".stories-prev");
+    const nextButton = section.querySelector(".stories-next");
+    const progressBar = section.querySelector(".stories-progress-bar");
+
+    if (!cards.length) return;
+
+    let currentIndex = 0;
+    let autoplayTimer = null;
+
+    const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+    );
+
+    function getVisibleCards() {
+        if (window.innerWidth <= 600) return 1;
+        if (window.innerWidth <= 1000) return 2;
+        return 3;
+    }
+
+    function getMaxIndex() {
+        return Math.max(0, cards.length - getVisibleCards());
+    }
+
+    function updateCarousel() {
+        const maxIndex = getMaxIndex();
+
+        currentIndex = Math.min(currentIndex, maxIndex);
+        currentIndex = Math.max(0, currentIndex);
+
+        const card = cards[currentIndex];
+
+        if (!card) return;
+
+        const offset = card.offsetLeft - cards[0].offsetLeft;
+
+        track.style.transform = `translateX(-${offset}px)`;
+
+        prevButton.disabled = currentIndex === 0;
+        nextButton.disabled = currentIndex === maxIndex;
+
+        const progress = ((currentIndex + 1) / (maxIndex + 1)) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function nextSlide() {
+        const maxIndex = getMaxIndex();
+
+        currentIndex = currentIndex >= maxIndex
+            ? 0
+            : currentIndex + 1;
+
+        updateCarousel();
+    }
+
+    function prevSlide() {
+        const maxIndex = getMaxIndex();
+
+        currentIndex = currentIndex <= 0
+            ? maxIndex
+            : currentIndex - 1;
+
+        updateCarousel();
+    }
+
+    function stopAutoplay() {
+        if (autoplayTimer) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
+    }
+
+    function startAutoplay() {
+        stopAutoplay();
+
+        if (reducedMotion.matches || cards.length <= getVisibleCards()) {
+            return;
+        }
+
+        autoplayTimer = setInterval(nextSlide, 4000);
+    }
+
+    nextButton.addEventListener("click", function () {
+        nextSlide();
+        startAutoplay();
+    });
+
+    prevButton.addEventListener("click", function () {
+        prevSlide();
+        startAutoplay();
+    });
+
+    viewport.addEventListener("mouseenter", stopAutoplay);
+    viewport.addEventListener("mouseleave", startAutoplay);
+
+    viewport.addEventListener("focusin", stopAutoplay);
+    viewport.addEventListener("focusout", startAutoplay);
+
+    section.addEventListener("touchstart", stopAutoplay, {
+        passive: true
+    });
+
+    section.addEventListener("touchend", startAutoplay, {
+        passive: true
+    });
+
+    reducedMotion.addEventListener("change", startAutoplay);
+
+    window.addEventListener("resize", function () {
+        updateCarousel();
+        startAutoplay();
+    });
+
+    updateCarousel();
+    startAutoplay();
+});

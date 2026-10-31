@@ -1,659 +1,525 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Home{% endblock title %}
+
+{% block title %}Thara Trinkets | Fancy Jewellery, Bridal Jewellery & Rental Jewellery in Erode{% endblock title %}
+
 {% block metatag %}
-<meta name="description"
-    content="Thara Trinkets is a premium fancy jewellery ecommerce store in Erode, Tamil Nadu offering bridal jewellery, imitation jewellery, and rental jewellery collections for weddings and special occasions.">
-
-<meta name="keywords"
-    content="Thara Trinkets, fancy jewellery erode, bridal jewellery erode, rental jewellery tamil nadu, imitation jewellery shop erode, wedding jewellery rental erode, artificial jewellery online india">
-
+<meta name="description" content="Thara Trinkets is a premium fancy jewellery ecommerce store in Erode, Tamil Nadu offering bridal jewellery, imitation jewellery, and rental jewellery collections for weddings and special occasions.">
+<meta name="keywords" content="Thara Trinkets, fancy jewellery erode, bridal jewellery erode, rental jewellery tamil nadu, imitation jewellery shop erode, wedding jewellery rental erode, artificial jewellery online india">
 <meta name="author" content="Thara Trinkets">
-
 <meta name="robots" content="index, follow">
-<meta name="googlebot"
-    content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-
-<!-- ================= MOBILE ================= -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- ================= THEME COLOR ================= -->
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="theme-color" content="#EDD1A4">
-<meta name="msapplication-TileColor" content="#EDD1A4">
-
-<!-- ================= CANONICAL ================= -->
 <link rel="canonical" href="https://www.tharatrinkets.com/">
-
-<!-- ================= FAVICON ================= -->
-<link rel="apple-touch-icon" sizes="180x180" href="assets/favicon_io/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon_io/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon_io/favicon-16x16.png">
-<link rel="manifest" href="assets/favicon_io/site.webmanifest">
-<link rel="shortcut icon" href="assets/favicon_io/favicon.ico" type="image/x-icon">
-
-<!-- ================= OPEN GRAPH ================= -->
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon_io/apple-touch-icon.png' %}">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon_io/favicon-32x32.png' %}">
+<link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon_io/favicon-16x16.png' %}">
+<link rel="manifest" href="{% static 'favicon_io/site.webmanifest' %}">
+<link rel="shortcut icon" href="{% static 'favicon_io/favicon.ico' %}" type="image/x-icon">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Thara Trinkets | Bridal & Fancy Jewellery in Erode">
-<meta property="og:description"
-    content="Explore bridal jewellery, fancy jewellery and rental wedding collections at Thara Trinkets, Erode. Perfect jewellery for every occasion.">
+<meta property="og:description" content="Explore bridal jewellery, fancy jewellery and rental wedding collections at Thara Trinkets, Erode. Perfect jewellery for every occasion.">
 <meta property="og:url" content="https://www.tharatrinkets.com/">
 <meta property="og:image" content="https://www.tharatrinkets.com/assets/images/og-image.jpg">
 <meta property="og:site_name" content="Thara Trinkets">
-
-<!-- ================= TWITTER CARD ================= -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Thara Trinkets | Jewellery Store Erode">
-<meta name="twitter:description"
-    content="Premium bridal, imitation & rental jewellery collections in Erode, Tamil Nadu.">
+<meta name="twitter:description" content="Premium bridal, imitation & rental jewellery collections in Erode, Tamil Nadu.">
 <meta name="twitter:image" content="https://www.tharatrinkets.com/assets/images/og-image.jpg">
-
-<!-- ================= STRUCTURED DATA ================= -->
 <script type="application/ld+json">
 {
- "@context": "https://schema.org",
- "@type": "JewelryStore",
- "name": "Thara Trinkets",
- "url": "https://www.tharatrinkets.com/",
- "image": "https://www.tharatrinkets.com/assets/images/logo.png",
- "address": {
-   "@type": "PostalAddress",
-   "addressLocality": "Erode",
-   "addressRegion": "Tamil Nadu",
-   "addressCountry": "IN"
- },
- "priceRange": "₹₹",
- "areaServed": "Tamil Nadu",
- "makesOffer": {
-   "@type": "Offer",
-   "itemOffered": "Bridal Jewellery Rental & Fancy Jewellery"
- }
+  "@context": "https://schema.org",
+  "@type": "JewelryStore",
+  "name": "Thara Trinkets",
+  "url": "https://www.tharatrinkets.com/",
+  "image": "https://www.tharatrinkets.com/assets/images/logo.png",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Erode",
+    "addressRegion": "Tamil Nadu",
+    "addressCountry": "IN"
+  },
+  "priceRange": "₹₹",
+  "areaServed": "Tamil Nadu",
+  "makesOffer": {
+    "@type": "Offer",
+    "itemOffered": "Bridal Jewellery Rental & Fancy Jewellery"
+  }
 }
 </script>
 {% endblock metatag %}
+
 {% block index %}
-    <div class="main-content">
-        <div class="fullwidth-template">
-            <div class="home-slider style1 rows-space-30">
-                <div class="container">
-                    <div class="slider-owl owl-slick equal-container nav-center"
-                        data-slick='{"autoplay":true, "autoplaySpeed":9000, "arrows":true, "dots":false, "infinite":true, "speed":1000, "rows":1}'
-                        data-responsive='[{"breakpoint":"2000","settings":{"slidesToShow":1}}]'>
-                        {% if offers_1 %}
-                        {% for offer_1 in offers_1  %}
-                        <!-- Slide 1 FIRST OFFER-->
-                        <div class="slider-item style1">
-                            <div class="slider-inner equal-element">
 
-                                <img  loading="lazy"loading="lazy"class="slider-bg-img" src="{{ offer_1.image.url }}" alt="{{ offer_1.title }}">
+<div class="main-content">
+   
+            <!-- ================= Css in mobile-menu.css ================= -->
+        
+<!-- ================= THARA TRINKETS COLLECTIONS ================= -->
+<section class="tt-collections" id="tt-collections">
+    <div class="tt-collections__container">
+        <div class="tt-collections__heading tt-reveal">
+            <span class="tt-eyebrow">
+                <span class="tt-eyebrow__line"></span>
+                THE ART OF ADORNMENT
+                <span class="tt-eyebrow__line"></span>
+            </span>
+            <h2>Jewels That Tell <em>Your Story</em></h2>
+            <p>Discover timeless treasures, thoughtfully curated
+                to make every moment a little more extraordinary.</p>
+        </div>
 
-                                <div class="slider-infor">
-                                    <h5 class="title-small"></h5>
-                                    <h3 class="title-big">
-                                        <br/>
-                                    </h3>
-                                    <div class="price">
-    
-                                        <span class="number-price"></span>
-                                    </div>
-                                    
-                                </div>
+        <nav class="tt-collection-nav" aria-label="Jewellery collections">
+            <a href="#tt-necklaces" class="tt-collection-nav__link is-active">Necklaces</a>
+            <a href="#tt-earrings" class="tt-collection-nav__link">Earrings</a>
+            <a href="#tt-bangles" class="tt-collection-nav__link">Bangles</a>
+            <a href="#tt-rings" class="tt-collection-nav__link">Rings</a>
+        </nav>
 
+        <div class="tt-collection tt-reveal" id="tt-necklaces">
+            <div class="tt-collection__header">
+                <div class="tt-collection__title">
+                    <span class="tt-collection__number">01 / COLLECTION</span>
+                    <h3>Necklaces <span>for Every Occasion</span></h3>
+                    <p>Statement pieces that make every entrance unforgettable.</p>
+                </div>
+                <a class="tt-view-all" href="/shop/?category=necklaces"
+                   aria-label="View all necklaces">
+                    <span>Explore Necklaces</span>
+                    <span class="tt-view-all__icon" aria-hidden="true">↗</span>
+                </a>
+            </div>
+
+            <div class="tt-product-grid">
+                {% if bestseller_products %}
+                    {% for bestseller in bestseller_products %}
+                    <article class="tt-product">
+                        <a href="{% url 'product' p=bestseller.slug %}" class="tt-product__image-link"
+                           aria-label="View {{ bestseller.p_name }}">
+                            <div class="tt-product__image">
+                                <img src="{{ bestseller.image_url }}" alt="{{ bestseller.p_name }}" loading="lazy">
+                                {% if bestseller.new == 'yes' %}
+                                <span class="tt-product__tag">NEW ARRIVAL</span>
+                                {% elif bestseller.save %}
+                                <span class="tt-product__tag tt-product__tag--soft">{{ bestseller.save }}% OFF</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                        <a class="tt-wishlist"
+                           href="{% url 'add to wishlist' product_slug=bestseller.slug %}"
+                           aria-label="Add {{ bestseller.p_name }} to wishlist">♡</a>
+                        <div class="tt-product__info">
+                            <span class="tt-product__category">NECKLACES</span>
+                            <h4>{{ bestseller.p_name }}</h4>
+                            <div class="tt-product__bottom">
+                                <span class="tt-product__price">₹{{ bestseller.price }}</span>
+                                <a href="{% url 'product' p=bestseller.slug %}" class="tt-product__arrow"
+                                   aria-label="View {{ bestseller.p_name }}">↗</a>
                             </div>
                         </div>
-                        {% endfor %}
-                        {% endif %}
-                    </div>
-                </div>
+                    </article>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
 
-
-
-        <style>
-            .two-grid-mobile {
-                display: flex;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                gap: 6px;
-                /* remove spacing */
-                scroll-behavior: smooth;
-                padding-bottom: 10px;
-            }
-
-            /* remove bootstrap default gutter padding */
-            .two-grid-mobile>div[class*="col"] {
-                padding: 5px !important;
-            }
-
-            /* optional - remove container gap */
-            .banner-video-wrapp .container {
-                padding: 4px !important;
-            }
-
-            /* Each banner fixed width (keeps ratio perfect) */
-            .two-grid-mobile>div {
-                flex: 0 0 70%;
-                /* mobile width: 70% of screen */
-                max-width: 70%;
-            }
-
-            /* On desktop, show 2 per row */
-            @media(min-width: 992px) {
-                .two-grid-mobile>div {
-                    flex: 0 0 50%;
-                    max-width: 50%;
-                }
-            }
-
-            /* Keep banner image ratio perfect */
-            .item-banner {
-                background-size: cover !important;
-                background-position: center !important;
-                background-repeat: no-repeat !important;
-            }
-
-            /* FIX banner border-radius visibility */
-            .banner,
-            .item-banner,
-            .item-banner .inner {
-                border-radius: 12px;
-                overflow: hidden;
-                /* 👈 THIS is the key */
-            }
-
-            /* Product grid container */
-            .ysera-tabs .product-grid {
-                display: flex;
-                flex-wrap: wrap;
-            }
-
-            /* FORCE 2 products per row on mobile */
-            .ysera-tabs .product-grid>li {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-
-            /* Desktop keeps original layout */
-            @media (min-width: 992px) {
-                .ysera-tabs .product-grid>li {
-                    flex: 0 0 25%;
-                    max-width: 25%;
-                }
-            }
-
-            /* Product card radius */
-            .ysera-tabs .product-inner {
-                border-radius: 14px;
-                overflow: hidden;
-                /* important */
-            }
-
-            /* Image radius */
-            .ysera-tabs .product-thumb,
-            .ysera-tabs .thumb-inner,
-            .ysera-tabs .product-thumb img {
-                border-radius: 14px;
-            }
-
-            /* Smooth visual polish */
-            .ysera-tabs .product-item {
-                padding: 8px;
-            }
-
-            /* Optional hover refinement */
-            .ysera-tabs .product-inner:hover {
-                transform: translateY(-3px);
-                transition: 0.25s ease;
-            }
-        </style>
-   
-
-
-        <div class="ysera-tabs  default rows-space-40">
-            <div class="container">
-                <div class="tab-head">
-                    <ul class="tab-link">
-                        <li class="active">
-                            <a data-toggle="tab" aria-expanded="true" href="#bestseller">Bestseller</a>
-                        </li>
-                        <li class="">
-                            <a data-toggle="tab" aria-expanded="true" href="#new_arrivals">New Arrivals </a>
-                        </li>
-                        <li class="">
-                            <a data-toggle="tab" aria-expanded="true" href="#top-rated">Top Rated</a>
-                        </li>
-                    </ul>
+        <div class="tt-collection tt-reveal" id="tt-earrings">
+            <div class="tt-collection__header">
+                <div class="tt-collection__title">
+                    <span class="tt-collection__number">02 / COLLECTION</span>
+                    <h3>Earrings <span>Little Details, Lasting Impressions</span></h3>
+                    <p>From delicate everyday favourites to occasion-ready designs.</p>
                 </div>
-                <div class="tab-container">
-                    <div id="bestseller" class="tab-panel active">
-                        <div class="ysera-product">
-                            <!--bestsellers-->
-                            <ul class="row list-products auto-clear equal-container product-grid">
-                                {% if bestseller_products %}
-                                {% for bestseller in bestseller_products %}
-                                <li class="product-item  col-lg-3 col-md-4 col-sm-6 col-xs-6 col-ts-12 style-1">
-                                    <div class="product-inner equal-element">
-                                        <div class="product-top">
-                                            {% if bestseller.new == 'yes' %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    
-                                                    <span class="text">
-                                                        new
-                                                    </span>
-                                                    
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                             {% if bestseller.save %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    
-                                                    <span class="text">
-                                                        {{bestseller.save}}% Off
-                                                    </span>
-                                                    
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                       
-                                        <div class="product-thumb">
-                                            <div class="thumb-inner">
-                                                <a href="{% url "product" p=bestseller.slug %}">
-                                                    <img  loading="lazy"loading="lazy"src="{{ bestseller.image_url }}" alt="{{bestseller.p_name}}">
-                                                </a>
-                                                <div class="thumb-group">
-                                                    <div class="yith-wcwl-add-to-wishlist">
-                                                        <div class="yith-wcwl-add-button">
-                                                            <a href="{% url 'add to wishlist' product_slug=bestseller.slug %}">Add to Wishlist</a>
-                                                        </div>
-                                                    </div>
-                                                    <a href="#" class="button quick-wiew-button">Quick View</a>
-                                                    <div class="loop-form-add-to-cart">
-                                                        <button class="single_add_to_cart_button button">Add to cart
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <h5 class="product-name product_title">
-                                                <a href="{% url "product" p=bestseller.slug %}">{{bestseller.p_name}}</a>
-                                            </h5>
-                                            <div class="group-info">
+                <a class="tt-view-all" href="/shop/?category=earrings"
+                   aria-label="View all earrings">
+                    <span>Explore Earrings</span>
+                    <span class="tt-view-all__icon" aria-hidden="true">↗</span>
+                </a>
+            </div>
 
-                                                <div class="price">
-                                                    {% if bestseller.del_price and bestseller.save %}
-                                                    <del>
-                                                        Rs.{{bestseller.del_price}}
-                                                    </del>
-
-                                                    {% endif %}
-                                                    <ins>
-                                                        Rs.{{bestseller.price}}
-                                                    </ins>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                {% endfor %}
+            <div class="tt-product-grid">
+                {% if newarrivals_products %}
+                    {% for newarrivals in newarrivals_products %}
+                    <article class="tt-product">
+                        <a href="{% url 'product' p=newarrivals.slug %}" class="tt-product__image-link"
+                           aria-label="View {{ newarrivals.p_name }}">
+                            <div class="tt-product__image">
+                                <img src="{{ newarrivals.image_url }}" alt="{{ newarrivals.p_name }}" loading="lazy">
+                                {% if newarrivals.new == 'yes' %}
+                                <span class="tt-product__tag">NEW ARRIVAL</span>
+                                {% elif newarrivals.save %}
+                                <span class="tt-product__tag tt-product__tag--soft">{{ newarrivals.save }}% OFF</span>
                                 {% endif %}
-                            </ul>
+                            </div>
+                        </a>
+                        <a class="tt-wishlist"
+                           href="{% url 'add to wishlist' product_slug=newarrivals.slug %}"
+                           aria-label="Add {{ newarrivals.p_name }} to wishlist">♡</a>
+                        <div class="tt-product__info">
+                            <span class="tt-product__category">EARRINGS</span>
+                            <h4>{{ newarrivals.p_name }}</h4>
+                            <div class="tt-product__bottom">
+                                <span class="tt-product__price">₹{{ newarrivals.price }}</span>
+                                <a href="{% url 'product' p=newarrivals.slug %}" class="tt-product__arrow"
+                                   aria-label="View {{ newarrivals.p_name }}">↗</a>
+                            </div>
                         </div>
-                    </div>
-                    <div id="new_arrivals" class="tab-panel">
-                        <div class="ysera-product">
-                            <ul class="row list-products auto-clear equal-container product-grid">
-                                <!--newarrivals-->
-                                {% if newarrivals_products %}
-                                {% for newarrivals in newarrivals_products  %}
-                                <li class="product-item  col-lg-3 col-md-4 col-sm-6 col-xs-6 col-ts-12 style-1">
-                                    <div class="product-inner equal-element">
-                                        <div class="product-top">
-                                            {% if newarrivals.new == 'yes' %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    <span class="text">
-                                                        new
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                            {% if newarrivals.save %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    <span class="text">
-                                                        {{newarrivals.save}}% Off
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="product-thumb">
-                                            <div class="thumb-inner">
-                                                <a href="{% url "product" p=newarrivals.slug %}">
-                                                    <img  loading="lazy"loading="lazy"src="{{newarrivals.image_url}}" alt="{{newarrivals.p_name}}">
-                                                </a>
-                                                <div class="thumb-group">
-                                                    <div class="yith-wcwl-add-to-wishlist">
-                                                        <div class="yith-wcwl-add-button">
-                                                            <a href="{% url 'add to wishlist' product_slug=newarrivals.slug %}">Add to Wishlist</a>
-                                                        </div>
-                                                    </div>
-                                                    <a href="#" class="button quick-wiew-button">Quick View</a>
-                                                    <div class="loop-form-add-to-cart">
-                                                        <button class="single_add_to_cart_button button">Add to cart
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <h5 class="product-name product_title">
-                                                <a href="{% url "product" p=newarrivals.slug %}">{{newarrivals.p_name}}</a>
-                                            </h5>
-                                            <div class="group-info">
-                                                <div class="price">
-                                                    {% if newarrivals.del_price and newarrivals.save %}
-                                                    <del>
-                                                        Rs.{{newarrivals.del_price}}
-                                                    </del>
-                                                    {% endif %}
-                                                    <ins>
-                                                        Rs.{{newarrivals.price}}
-                                                    </ins>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                {% endfor %}
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div id="top-rated" class="tab-panel">
-                        <div class="ysera-product">
-                            <ul class="row list-products auto-clear equal-container product-grid">
-                                <!--toprated-->
-                                {% if toprated_products %}
-                                {% for toprated in toprated_products %}
-                                <li class="product-item  col-lg-3 col-md-4 col-sm-6 col-xs-6 col-ts-12 style-1">
-                                    <div class="product-inner equal-element">
-                                        <div class="product-top">
-                                            {% if toprated.new == 'yes' %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    <span class="text">
-                                                        new
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                              {% if toprated.save %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    <span class="text">
-                                                       {{toprated.save}}% Off
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <div class="product-thumb">
-                                            <div class="thumb-inner">
-                                                <a href="{% url "product" p=toprated.slug %}">
-                                                    <img  loading="lazy"loading="lazy"src="{{toprated.image_url}}" alt="{{toprated.p_name}}">
-                                                </a>
-                                                <div class="thumb-group">
-                                                    <div class="yith-wcwl-add-to-wishlist">
-                                                        <div class="yith-wcwl-add-button">
-                                                            <a href="{% url 'add to wishlist' product_slug=toprated.slug %}">Add to Wishlist</a>
-                                                        </div>
-                                                    </div>
-                                                    <a href="#" class="button quick-wiew-button">Quick View</a>
-                                                    <div class="loop-form-add-to-cart">
-                                                        <button class="single_add_to_cart_button button">Add to cart
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info">
-                                            <h5 class="product-name product_title">
-                                                <a href="{% url "product" p=toprated.slug %}">{{toprated.p_name}}</a>
-                                            </h5>
-                                            <div class="group-info">
-
-                                                <div class="price">
-                                                    {% if toprated.del_price and toprated.save %}
-                                                    <del>
-                                                        Rs.{{toprated.del_price}}
-                                                    </del>
-                                                    {% endif %}
-                                                    <ins>
-                                                        Rs.{{toprated.price}}
-                                                    </ins>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                {% endfor %}
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                    </article>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
-       
-        <style>
-            @media(max-width:768px) {
 
-                .mobile-scroll {
-                    overflow-x: auto;
-                    overflow-y: hidden;
-                    -webkit-overflow-scrolling: touch;
-                    padding-bottom: 10px;
+        <div class="tt-collection tt-reveal" id="tt-bangles">
+            <div class="tt-collection__header">
+                <div class="tt-collection__title">
+                    <span class="tt-collection__number">03 / COLLECTION</span>
+                    <h3>Bangles <span>Tradition in Every Curve</span></h3>
+                    <p>Beautiful finishing touches inspired by timeless tradition.</p>
+                </div>
+                <a class="tt-view-all" href="/shop/?category=bangles"
+                   aria-label="View all bangles">
+                    <span>Explore Bangles</span>
+                    <span class="tt-view-all__icon" aria-hidden="true">↗</span>
+                </a>
+            </div>
 
-                    /* HIDE SCROLLBAR */
-                    scrollbar-width: none;
-                    /* Firefox */
-                }
+            <div class="tt-product-grid">
+                {% if toprated_products %}
+                    {% for toprated in toprated_products %}
+                    <article class="tt-product">
+                        <a href="{% url 'product' p=toprated.slug %}" class="tt-product__image-link"
+                           aria-label="View {{ toprated.p_name }}">
+                            <div class="tt-product__image">
+                                <img src="{{ toprated.image_url }}" alt="{{ toprated.p_name }}" loading="lazy">
+                                {% if toprated.new == 'yes' %}
+                                <span class="tt-product__tag">NEW ARRIVAL</span>
+                                {% elif toprated.save %}
+                                <span class="tt-product__tag tt-product__tag--soft">{{ toprated.save }}% OFF</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                        <a class="tt-wishlist"
+                           href="{% url 'add to wishlist' product_slug=toprated.slug %}"
+                           aria-label="Add {{ toprated.p_name }} to wishlist">♡</a>
+                        <div class="tt-product__info">
+                            <span class="tt-product__category">BANGLES</span>
+                            <h4>{{ toprated.p_name }}</h4>
+                            <div class="tt-product__bottom">
+                                <span class="tt-product__price">₹{{ toprated.price }}</span>
+                                <a href="{% url 'product' p=toprated.slug %}" class="tt-product__arrow"
+                                   aria-label="View {{ toprated.p_name }}">↗</a>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
 
-                .mobile-scroll::-webkit-scrollbar {
-                    display: none;
-                    /* Chrome/Safari */
-                }
+        <div class="tt-collection tt-reveal" id="tt-rings">
+            <div class="tt-collection__header">
+                <div class="tt-collection__title">
+                    <span class="tt-collection__number">04 / COLLECTION</span>
+                    <h3>Rings <span>Made to Mean Something</span></h3>
+                    <p>Small treasures that celebrate your own kind of beautiful.</p>
+                </div>
+                <a class="tt-view-all" href="/shop/?category=rings"
+                   aria-label="View all rings">
+                    <span>Explore Rings</span>
+                    <span class="tt-view-all__icon" aria-hidden="true">↗</span>
+                </a>
+            </div>
 
-                .mobile-scroll ul {
-                    display: flex;
-                    flex-wrap: nowrap !important;
-                    width: max-content;
+            <div class="tt-product-grid">
+                {% if bridalsets %}
+                    {% for bridalset in bridalsets %}
+                    <article class="tt-product">
+                        <a href="{% url 'product' p=bridalset.slug %}" class="tt-product__image-link"
+                           aria-label="View {{ bridalset.p_name }}">
+                            <div class="tt-product__image">
+                                <img src="{{ bridalset.image_url }}" alt="{{ bridalset.p_name }}" loading="lazy">
+                                {% if bridalset.new == 'yes' %}
+                                <span class="tt-product__tag">NEW ARRIVAL</span>
+                                {% elif bridalset.save %}
+                                <span class="tt-product__tag tt-product__tag--soft">{{ bridalset.save }}% OFF</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                        <a class="tt-wishlist"
+                           href="{% url 'add to wishlist' product_slug=bridalset.slug %}"
+                           aria-label="Add {{ bridalset.p_name }} to wishlist">♡</a>
+                        <div class="tt-product__info">
+                            <span class="tt-product__category">RINGS</span>
+                            <h4>{{ bridalset.p_name }}</h4>
+                            <div class="tt-product__bottom">
+                                <span class="tt-product__price">₹{{ bridalset.price }}</span>
+                                <a href="{% url 'product' p=bridalset.slug %}" class="tt-product__arrow"
+                                   aria-label="View {{ bridalset.p_name }}">↗</a>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
 
-                    /* reduce gap between items */
-                    gap: 0px;
-                    padding: 0;
-                    margin: 0;
-                }
+        <div class="tt-collections__footer tt-reveal">
+            <span class="tt-footer-ornament">✧</span>
+            <p>Find the piece that feels like <em>you.</em></p>
+            <span class="tt-footer-ornament">✧</span>
+        </div>
+    </div>
+</section>
 
-                .mobile-scroll li {
-                    flex: 0 0 40%;
-                    /* control card width */
-                    max-width: 40%;
-                    min-width: 150px;
-                }
-
-                .mobile-scroll .product-inner {
-                    padding: 5px;
-                    background: #fff;
-                    border-radius: 8px;
-                }
-
-                .mobile-scroll img {
-                    width: 100%;
-                    height: 150px;
-                    object-fit: cover;
-                    border-radius: 6px;
-                }
-            }
-        </style>
-        <div class="product-in-stock-wrapp">
-            <div class="container">
-                <h3 class="custommenu-title-blog white">
-                    Bridal Sets
-                </h3>
-                <div class="ysera-product style3">
-                    <div class="mobile-scroll">
-                        <ul class="row list-products auto-clear equal-container product-grid">
-                            <!--bridal sets-->
-                            {% if bridalsets %}
-                            {% for bridalset  in bridalsets %}
-                            <li class="product-item  col-lg-4 col-md-6 col-sm-6 col-xs-6 col-ts-12 style-3">
+<div class="ysera-tabs default rows-space-40">
+    <div class="container">
+        <div class="tab-head">
+            <ul class="tab-link">
+                <li class="active">
+                    <a data-toggle="tab" aria-expanded="true" href="#new_arrivals">New Arrivals</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-container">
+            <div id="new_arrivals" class="tab-panel active">
+                <div class="ysera-product">
+                    <ul class="row list-products auto-clear equal-container product-grid">
+                        {% if newarrivals_products %}
+                            {% for newarrivals in newarrivals_products %}
+                            <li class="product-item col-lg-3 col-md-4 col-sm-6 col-xs-6 col-ts-12 style-1">
                                 <div class="product-inner equal-element">
+                                    <div class="product-top">
+                                        {% if newarrivals.new == 'yes' %}
+                                        <div class="flash"><span class="onnew"><span class="text">new</span></span></div>
+                                        {% endif %}
+                                        {% if newarrivals.save %}
+                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
+                                        {% endif %}
+                                    </div>
                                     <div class="product-thumb">
-                                        <div class="product-top">
-                                            {% if bridalset.new == 'yes' %}
-                                            <div class="flash">
-                                                <span class="onnew">
-                                                    <span class="text">
-                                                        new
-                                                    </span>
-                                                </span>
-                                            </div>
-                                            {% endif %}
-                                            <div class="yith-wcwl-add-to-wishlist">
-                                                <div class="yith-wcwl-add-button">
-                                                    <a href="#" tabindex="0">Add to Wishlist</a>
+                                        <div class="thumb-inner">
+                                            <a href="{% url 'product' p=newarrivals.slug %}">
+                                                <img src="{{ newarrivals.image_url }}" alt="{{ newarrivals.p_name }}" loading="lazy">
+                                            </a>
+                                            <div class="thumb-group">
+                                                <div class="yith-wcwl-add-to-wishlist">
+                                                    <div class="yith-wcwl-add-button">
+                                                        <a href="{% url 'add to wishlist' product_slug=newarrivals.slug %}">Add to Wishlist</a>
+                                                    </div>
+                                                </div>
+                                                <div class="loop-form-add-to-cart">
+                                                    <a class="single_add_to_cart_button button" href="{% url 'product' p=newarrivals.slug %}">View Product</a>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="thumb-inner">
-                                            <a href="{% url "product" p=bridalset.slug %}" tabindex="0">
-                                                <img  loading="lazy"loading="lazy"src="{{bridalset.image_url}}" alt="{{bridalset.p_name}}">
-                                            </a>
-                                        </div>
-                                        <a href="{% url "product" p=bridalset.slug %}" class="button quick-wiew-button" tabindex="0"></a>
                                     </div>
                                     <div class="product-info">
                                         <h5 class="product-name product_title">
-                                            <a href="{% url "product" p=bridalset.slug %}" tabindex="0">{{bridalset.p_name}}</a>
+                                            <a href="{% url 'product' p=newarrivals.slug %}">{{ newarrivals.p_name }}</a>
                                         </h5>
                                         <div class="group-info">
-                                           
                                             <div class="price">
-                                                <span>Rs.{{bridalset.price}}</span>
+                                                {% if newarrivals.del_price and newarrivals.save %}
+                                                <del>Rs.{{ newarrivals.del_price }}</del>
+                                                {% endif %}
+                                                <ins>Rs.{{ newarrivals.price }}</ins>
                                             </div>
-                                        </div>
-                                        <div class="group-buttons">
-                                            <div class="quantity">
-                                                <div class="control">
-                                                    <a class="btn-number qtyminus quantity-minus" href="#">-</a>
-                                                    <input type="text" data-step="1" data-min="0" value="1" title="Qty"
-                                                        class="input-qty qty" size="4">
-                                                    <a href="#" class="btn-number qtyplus quantity-plus">+</a>
-                                                </div>
-                                            </div>
-                                            <a href="{% url "product" p=bridalset.slug %}"><button class="add_to_cart_button button" tabindex="0">Shop now</button></a>
                                         </div>
                                     </div>
                                 </div>
                             </li>
                             {% endfor %}
-                            {% endif %}
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-      
-        <div class="ysera-blog-wraap">
-            <div class="container">
-                <h3 class="custommenu-title-blog">
-                    Our Latest News
-                </h3>
-                <div class="ysera-blog default">
-                    <div class="owl-slick equal-container nav-center"
-                        data-slick='{"autoplay":false, "autoplaySpeed":1000, "arrows":false, "dots":true, "infinite":true, "speed":800, "rows":1}'
-                        data-responsive='[{"breakpoint":"2000","settings":{"slidesToShow":3}},{"breakpoint":"1200","settings":{"slidesToShow":3}},{"breakpoint":"992","settings":{"slidesToShow":2}},{"breakpoint":"768","settings":{"slidesToShow":2}},{"breakpoint":"481","settings":{"slidesToShow":1}}]'>
-                        {% if blog %}
-                        {% for b in blog %}
-                    
-                        <div class="ysera-blog-item equal-element layout1">
-                            <div class="post-thumb">
-                                <a href="#">
-                                    <img  loading="lazy"loading="lazy"src="{{b.image.url}}" alt="img">
-                                </a>
-                                <div class="post-item-share">
-                                    <a href="#" class="icon">
-                                        <i class="fa fa-share-alt" aria-hidden="true"></i>
-                                    </a>
-                                    <div class="box-content">
-                                        <a href="#">
-                                            <i class="fa fa-facebook"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fa fa-twitter"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fa fa-google-plus"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fa fa-pinterest"></i>
-                                        </a>
-                                        <a href="#">
-                                            <i class="fa fa-linkedin"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="blog-info">
-                                <div class="blog-meta">
-                                    <div class="post-date">
-                                        {{b.date}}
-                                    </div>
-                                    <span class="view">
-                                        <i class="icon fa fa-eye" aria-hidden="true"></i>
-                                        631
-                                    </span>
-                                    <span class="comment">
-                                        <i class="icon fa fa-commenting" aria-hidden="true"></i>
-                                        84
-                                    </span>
-                                </div>
-                                <h2 class="blog-title">
-                                    <a href="{{b.link}}">{{b.title}}</a>
-                                </h2>
-                                <div class="main-info-post">
-                                    <p class="des">
-                                       {{b.desc}}
-    
-                                    </p>
-                          
-                                </div>
-                            </div>
-                        </div>
-                         {% endfor %}
                         {% endif %}
-                    </div>
+                    </ul>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<section class="customer-stories" id="customer-stories">
+
+    <div class="stories-heading">
+        <span class="stories-eyebrow">LOVE, WRAPPED IN GOLD</span>
+
+        <h2>Stories That Shine</h2>
+
+        <p>
+            Every piece becomes part of a memory.
+            Discover the moments our customers treasure.
+        </p>
+
+        <span class="heading-decoration">✧ ───── ✧</span>
+    </div>
+
+    <div class="stories-carousel">
+
+        <button class="stories-arrow stories-prev"
+                type="button"
+                aria-label="Previous testimonials">
+            &#10094;
+        </button>
+
+        <div class="stories-viewport">
+            <div class="stories-track">
+
+                <!-- Testimonial 1 -->
+                <article class="story-card">
+                    <div class="story-image">
+                        <img
+                            src="{% static 'images/testimonials/customer1.jpg' %}"
+                            alt="Customer wearing elegant jewelry"
+                            loading="lazy">
+                        <span class="story-number">01</span>
+                    </div>
+
+                    <div class="story-content">
+                        <div class="story-stars" aria-label="5 out of 5 stars">
+                            ★★★★★
+                        </div>
+
+                        <p class="story-quote">
+                            "The necklace was even more beautiful
+                            in person. It made my special day feel
+                            extra memorable."
+                        </p>
+
+                        <div class="story-divider"></div>
+
+                        <h3>The Sharma Family</h3>
+                        <span class="story-caption">
+                            A treasured celebration
+                        </span>
+                    </div>
+                </article>
+
+                <!-- Testimonial 2 -->
+                <article class="story-card">
+                    <div class="story-image">
+                        <img
+                            src="{% static 'images/testimonials/customer2.jpg' %}"
+                            alt="Customer showcasing a bracelet"
+                            loading="lazy">
+                        <span class="story-number">02</span>
+                    </div>
+
+                    <div class="story-content">
+                        <div class="story-stars" aria-label="5 out of 5 stars">
+                            ★★★★★
+                        </div>
+
+                        <p class="story-quote">
+                            "We found the perfect gift for our
+                            anniversary. The finish, packaging,
+                            and attention to detail were lovely."
+                        </p>
+
+                        <div class="story-divider"></div>
+
+                        <h3>The Reddy Family</h3>
+                        <span class="story-caption">
+                            An anniversary to remember
+                        </span>
+                    </div>
+                </article>
+
+                <!-- Testimonial 3 -->
+                <article class="story-card">
+                    <div class="story-image">
+                        <img
+                            src="{% static 'images/testimonials/customer3.jpg' %}"
+                            alt="Customer wearing a statement ring"
+                            loading="lazy">
+                        <span class="story-number">03</span>
+                    </div>
+
+                    <div class="story-content">
+                        <div class="story-stars" aria-label="5 out of 5 stars">
+                            ★★★★★
+                        </div>
+
+                        <p class="story-quote">
+                            "Elegant, comfortable, and easy to style.
+                            I love how these pieces add something
+                            special to my everyday outfits."
+                        </p>
+
+                        <div class="story-divider"></div>
+
+                        <h3>The Iyer Family</h3>
+                        <span class="story-caption">
+                            Everyday elegance
+                        </span>
+                    </div>
+                </article>
+
+                <!-- Testimonial 4 -->
+                <article class="story-card">
+                    <div class="story-image">
+                        <img
+                            src="{% static 'images/testimonials/customer4.jpg' %}"
+                            alt="Customer celebrating a special occasion"
+                            loading="lazy">
+                        <span class="story-number">04</span>
+                    </div>
+
+                    <div class="story-content">
+                        <div class="story-stars" aria-label="5 out of 5 stars">
+                            ★★★★★
+                        </div>
+
+                        <p class="story-quote">
+                            "We chose these beautiful earrings for
+                            a family celebration. They completed
+                            the look perfectly."
+                        </p>
+
+                        <div class="story-divider"></div>
+
+                        <h3>The Mehta Family</h3>
+                        <span class="story-caption">
+                            Made for special moments
+                        </span>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+
+        <button class="stories-arrow stories-next"
+                type="button"
+                aria-label="Next testimonials">
+            &#10095;
+        </button>
+
+    </div>
+
+    <div class="stories-footer">
+        <div class="stories-progress">
+            <span class="stories-progress-bar"></span>
+        </div>
+
+        <span class="stories-hint">A little love, one story at a time</span>
+    </div>
+
+</section>
+              
     </div>
     </div>
     <div class="instagram-wrapp">
         <div>
+            <h3 class="custommenu-title-blog">
+                <i class="flaticon-instagram" aria-hidden="true"></i>
+                Instagram Feed
+            </h3>
             <div class="ysera-instagram">
                 <div class="instagram owl-slick equal-container"
                     data-slick='{"autoplay":false, "autoplaySpeed":1000, "arrows":false, "dots":false, "infinite":true, "speed":800, "rows":1}'
                     data-responsive='[{"breakpoint":"2000","settings":{"slidesToShow":5}},{"breakpoint":"1200","settings":{"slidesToShow":4}},{"breakpoint":"992","settings":{"slidesToShow":3}},{"breakpoint":"768","settings":{"slidesToShow":2}},{"breakpoint":"481","settings":{"slidesToShow":2}}]'>
                     <div class="item-instagram">
                         <a href="#">
-                            <img  loading="lazy"loading="lazy"src="{% static "images/freepik_elegant-indian-jewelry-ba_2636327939.png" %}" alt="img">
+                            <img src="{% static 'images/item-instagram-1.jpg' %}" alt="img">
                         </a>
                         <span class="text">
                             <i class="icon flaticon-instagram" aria-hidden="true"></i>
@@ -661,7 +527,7 @@
                     </div>
                     <div class="item-instagram">
                         <a href="#">
-                            <img  loading="lazy"loading="lazy"src="{% static "images/freepik_elegant-indian-jewelry-ba_2636327956.png" %}" alt="img">
+                            <img src="{% static 'images/item-instagram-2.jpg' %}" alt="img">
                         </a>
                         <span class="text">
                             <i class="icon flaticon-instagram" aria-hidden="true"></i>
@@ -669,7 +535,7 @@
                     </div>
                     <div class="item-instagram">
                         <a href="#">
-                            <img  loading="lazy"loading="lazy"src="{% static "images/freepik_elegant-luxury-banner-fea_2636338750.png" %}" alt="img">
+                            <img src="{% static 'images/item-instagram-3.jpg' %}" alt="img">
                         </a>
                         <span class="text">
                             <i class="icon flaticon-instagram" aria-hidden="true"></i>
@@ -677,7 +543,7 @@
                     </div>
                     <div class="item-instagram">
                         <a href="#">
-                            <img  loading="lazy"loading="lazy"src="{% static "images/freepik_elegant-luxury-banner-fea_2636338772.png" %}" alt="img">
+                            <img src="{% static 'images/item-instagram-4.jpg' %}" alt="img">
                         </a>
                         <span class="text">
                             <i class="icon flaticon-instagram" aria-hidden="true"></i>
@@ -685,7 +551,7 @@
                     </div>
                     <div class="item-instagram">
                         <a href="#">
-                            <img  loading="lazy"loading="lazy"src="{% static "images/freepik_minimal-gold-jewelry-layo_2636399791.png" %}" alt="img">
+                            <img src="{% static 'images/item-instagram-5.jpg' %}" alt="img">
                         </a>
                         <span class="text">
                             <i class="icon flaticon-instagram" aria-hidden="true"></i>
@@ -695,4 +561,4 @@
             </div>
         </div>
     </div>
-    {% endblock index %}
+{% endblock index %}
