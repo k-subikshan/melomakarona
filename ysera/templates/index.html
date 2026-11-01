@@ -134,6 +134,12 @@
             <div class="tt-product-grid">
                 {% if newarrivals_products %}
                     {% for newarrivals in newarrivals_products %}
+                    <div class="product-top">
+                                       
+                                        {% if newarrivals.save %}
+                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
+                                        {% endif %}
+                                    </div>
                     <article class="tt-product">
                         <a href="{% url 'product' p=newarrivals.slug %}" class="tt-product__image-link"
                            aria-label="View {{ newarrivals.p_name }}">
@@ -144,10 +150,7 @@
                                        
                             </div>
                         </a>
-                         {% if newarrivals.save %}
-                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
-                                        {% endif %}
-                                    </div>
+                        
                         <a class="tt-wishlist"
                            href="{% url 'add to wishlist' product_slug=newarrivals.slug %}"
                            aria-label="Add {{ newarrivals.p_name }} to wishlist">♡</a>
@@ -179,6 +182,12 @@
             <div class="tt-product-grid">
                 {% if toprated_products %}
                     {% for toprated in toprated_products %}
+                    <div class="product-top">
+                                       
+                                        {% if newarrivals.save %}
+                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
+                                        {% endif %}
+                                    </div>
                     <article class="tt-product">
 
                         <a href="{% url 'product' p=toprated.slug %}" class="tt-product__image-link"
