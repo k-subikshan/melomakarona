@@ -56,6 +56,121 @@
             <!-- ================= Css in mobile-menu.css ================= -->
         
 <!-- ================= THARA TRINKETS COLLECTIONS ================= -->
+ <!-- Premium Offer Banner -->
+<section class="tt-offer-banner">
+    <a href="shop.html" aria-label="Shop now and get 30% off">
+        <img
+            src="assets/images/offer.jpeg"
+            alt="Thara Trinket - Flat 30% Off on All Products"
+            loading="eager"
+        >
+    </a>
+</section>
+<style>
+
+/* =========================================
+   THARA TRINKET - LUXURY OFFER BANNER
+========================================= */
+
+.tt-offer-banner {
+    --offer-cream: #fbf8f3;
+    --offer-gold: #b58a52;
+
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 35px 24px 45px;
+
+    background: linear-gradient(
+        180deg,
+        #f7f0e6 0%,
+        #fbf8f3 100%
+    );
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tt-offer-banner a {
+    display: block;
+    width: 100%;
+    max-width: 1180px;
+
+    overflow: hidden;
+    position: relative;
+
+    border: 1px solid rgba(181, 138, 82, 0.35);
+    border-radius: 5px;
+
+    box-shadow:
+        0 8px 28px rgba(91, 65, 42, 0.07),
+        0 2px 6px rgba(91, 65, 42, 0.04);
+
+    transition:
+        box-shadow 0.4s ease,
+        transform 0.4s ease;
+}
+
+.tt-offer-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
+
+    aspect-ratio: 1600 / 650;
+    object-fit: contain;
+
+    transition: transform 0.7s ease;
+}
+
+/* Elegant hover */
+@media (hover: hover) {
+    .tt-offer-banner a:hover {
+        box-shadow:
+            0 14px 35px rgba(91, 65, 42, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .tt-offer-banner a:hover img {
+        transform: scale(1.01);
+    }
+}
+
+/* Large desktop */
+@media (min-width: 1400px) {
+    .tt-offer-banner {
+        padding: 38px 30px 48px;
+    }
+
+    .tt-offer-banner a {
+        max-width: 1120px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .tt-offer-banner {
+        padding: 25px 18px 32px;
+    }
+
+    .tt-offer-banner a {
+        max-width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .tt-offer-banner {
+        padding: 20px 12px 28px;
+    }
+
+    .tt-offer-banner a {
+        border-radius: 3px;
+        box-shadow: 0 5px 18px rgba(91, 65, 42, 0.07);
+    }
+}
+
+</style>
 <section class="tt-collections" id="tt-collections">
     <div class="tt-collections__container">
         <div class="tt-collections__heading tt-reveal">
