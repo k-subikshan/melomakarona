@@ -96,9 +96,12 @@
                                 <img src="{{ bestseller.image_url }}" alt="{{ bestseller.p_name }}" loading="lazy">
                                 {% if bestseller.new == 'yes' %}
                                 <span class="tt-product__tag">NEW ARRIVAL</span>
-                                {% elif bestseller.save %}
-                                <span class="tt-product__tag tt-product__tag--soft">{{ bestseller.save }}% OFF</span>
-                                {% endif %}
+                                <div class="product-top">
+                                       
+                                        {% if bestseller.save %}
+                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
+                                        {% endif %}
+                                    </div>
                             </div>
                         </a>
                         <a class="tt-wishlist"
@@ -139,9 +142,12 @@
                                 <img src="{{ newarrivals.image_url }}" alt="{{ newarrivals.p_name }}" loading="lazy">
                                 {% if newarrivals.new == 'yes' %}
                                 <span class="tt-product__tag">NEW ARRIVAL</span>
-                                {% elif newarrivals.save %}
-                                <span class="tt-product__tag tt-product__tag--soft">{{ newarrivals.save }}% OFF</span>
-                                {% endif %}
+                               <div class="product-top">
+                                       
+                                        {% if newarrivals.save %}
+                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
+                                        {% endif %}
+                                    </div>
                             </div>
                         </a>
                         <a class="tt-wishlist"
@@ -176,6 +182,7 @@
                 {% if toprated_products %}
                     {% for toprated in toprated_products %}
                     <article class="tt-product">
+
                         <a href="{% url 'product' p=toprated.slug %}" class="tt-product__image-link"
                            aria-label="View {{ toprated.p_name }}">
                             <div class="tt-product__image">
@@ -232,9 +239,7 @@
                             <li class="product-item col-lg-3 col-md-4 col-sm-6 col-xs-6 col-ts-12 style-1">
                                 <div class="product-inner equal-element">
                                     <div class="product-top">
-                                        {% if newarrivals.new == 'yes' %}
-                                        <div class="flash"><span class="onnew"><span class="text">new</span></span></div>
-                                        {% endif %}
+                                       
                                         {% if newarrivals.save %}
                                         <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
                                         {% endif %}

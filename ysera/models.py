@@ -72,7 +72,7 @@ class Product(models.Model):
     availablity = models.CharField(max_length=10, choices=CHOICES, default='2')
 
     # Discount Percentage
-    save_upto = models.IntegerField(default=0)
+    save_upto = models.IntegerField(default=30)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     shop_by_type = models.ForeignKey(Type, on_delete=models.CASCADE, null=True, blank=True)
