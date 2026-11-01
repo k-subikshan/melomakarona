@@ -141,12 +141,13 @@
                                 <img src="{{ newarrivals.image_url }}" alt="{{ newarrivals.p_name }}" loading="lazy">
                                
                                        
-                                        {% if newarrivals.save %}
+                                       
+                            </div>
+                        </a>
+                         {% if newarrivals.save %}
                                         <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
                                         {% endif %}
                                     </div>
-                            </div>
-                        </a>
                         <a class="tt-wishlist"
                            href="{% url 'add to wishlist' product_slug=newarrivals.slug %}"
                            aria-label="Add {{ newarrivals.p_name }} to wishlist">♡</a>
