@@ -137,12 +137,7 @@
             <div class="tt-product-grid">
                 {% if newarrivals_products %}
                     {% for newarrivals in newarrivals_products %}
-                    <div class="product-top">
-                                       
-                                        {% if newarrivals.save %}
-                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
-                                        {% endif %}
-                                    </div>
+                   
                     <article class="tt-product">
                         <a href="{% url 'product' p=newarrivals.slug %}" class="tt-product__image-link"
                            aria-label="View {{ newarrivals.p_name }}">
@@ -187,21 +182,15 @@
             <div class="tt-product-grid">
                 {% if toprated_products %}
                     {% for toprated in toprated_products %}
-                    <div class="product-top">
-                                       
-                                        {% if newarrivals.save %}
-                                        <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
-                                        {% endif %}
-                                    </div>
+                  
                     <article class="tt-product">
 
                         <a href="{% url 'product' p=toprated.slug %}" class="tt-product__image-link"
                            aria-label="View {{ toprated.p_name }}">
                             <div class="tt-product__image">
                                 <img src="{{ toprated.image_url }}" alt="{{ toprated.p_name }}" loading="lazy">
-                                {% if toprated.new == 'yes' %}
-                                <span class="tt-product__tag">NEW ARRIVAL</span>
-                                {% elif toprated.save %}
+                                
+                                {% if toprated.save %}
                                 <span class="tt-product__tag tt-product__tag--soft">{{ toprated.save }}% OFF</span>
                                 {% endif %}
                             </div>
