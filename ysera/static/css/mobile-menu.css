@@ -1868,3 +1868,77 @@
         transition: none !important;
     }
 }
+/* =========================================
+   NEW ARRIVALS - COMPACT 2 COLUMN GRID
+========================================= */
+
+@media (max-width: 767px) {
+
+    /* Reduce spacing between product columns */
+    #new_arrivals .products,
+    #new_arrivals .product-list,
+    #new_arrivals .product-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        column-gap: 8px !important;
+        row-gap: 14px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Remove theme column spacing */
+    #new_arrivals .product-item,
+    #new_arrivals .product,
+    #new_arrivals .product-col,
+    #new_arrivals .products > *,
+    #new_arrivals .product-list > * {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        float: none !important;
+    }
+
+    /* Compact product cards */
+    #new_arrivals .product-inner {
+        margin: 0 !important;
+        border-radius: 12px !important;
+    }
+
+    /* Image */
+    #new_arrivals .product-thumb {
+        margin: 0 !important;
+    }
+
+    #new_arrivals .product-thumb img {
+        display: block;
+        width: 100% !important;
+        height: auto;
+    }
+
+    /* Product details */
+    #new_arrivals .product-info {
+        padding: 12px 6px 15px !important;
+    }
+
+    #new_arrivals .product-name.product_title {
+        font-size: 13px;
+        line-height: 1.35;
+        margin-bottom: 6px;
+    }
+}
+
+/* Smaller phones */
+@media (max-width: 380px) {
+    #new_arrivals .products,
+    #new_arrivals .product-list,
+    #new_arrivals .product-grid {
+        column-gap: 6px !important;
+        row-gap: 11px !important;
+    }
+
+    #new_arrivals .product-name.product_title {
+        font-size: 12px;
+    }
+}
