@@ -112,6 +112,7 @@
                             <h4>{{ bestseller.p_name }}</h4>
                             <div class="tt-product__bottom">
                                 <span class="tt-product__price">₹{{ bestseller.price }}</span>
+                                <span class="tt-product__price">₹<del>{{ bestseller.del_price }}</del></span>
                                 <a href="{% url 'product' p=bestseller.slug %}" class="tt-product__arrow"
                                    aria-label="View {{ bestseller.p_name }}">↗</a>
                             </div>
@@ -160,6 +161,7 @@
                             <h4>{{ newarrivals.p_name }}</h4>
                             <div class="tt-product__bottom">
                                 <span class="tt-product__price">₹{{ newarrivals.price }}</span>
+                                <span class="tt-product__price">₹<del>{{ newarrivals.del_price }}</del></span>
                                 <a href="{% url 'product' p=newarrivals.slug %}" class="tt-product__arrow"
                                    aria-label="View {{ newarrivals.p_name }}">↗</a>
                             </div>
@@ -210,6 +212,7 @@
                             <h4>{{ toprated.p_name }}</h4>
                             <div class="tt-product__bottom">
                                 <span class="tt-product__price">₹{{ toprated.price }}</span>
+                                <span class="tt-product__price">₹<del>{{ toprated.del_price }}</del></span>
                                 <a href="{% url 'product' p=toprated.slug %}" class="tt-product__arrow"
                                    aria-label="View {{ toprated.p_name }}">↗</a>
                             </div>
