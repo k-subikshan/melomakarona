@@ -94,8 +94,7 @@
                            aria-label="View {{ bestseller.p_name }}">
                             <div class="tt-product__image">
                                 <img src="{{ bestseller.image_url }}" alt="{{ bestseller.p_name }}" loading="lazy">
-                                {% if bestseller.new == 'yes' %}
-                                <span class="tt-product__tag">NEW ARRIVAL</span>
+                               
                                 <div class="product-top">
                                        
                                         {% if bestseller.save %}
@@ -140,9 +139,7 @@
                            aria-label="View {{ newarrivals.p_name }}">
                             <div class="tt-product__image">
                                 <img src="{{ newarrivals.image_url }}" alt="{{ newarrivals.p_name }}" loading="lazy">
-                                {% if newarrivals.new == 'yes' %}
-                                <span class="tt-product__tag">NEW ARRIVAL</span>
-                               <div class="product-top">
+                               
                                        
                                         {% if newarrivals.save %}
                                         <div class="flash"><span class="onnew"><span class="text">{{ newarrivals.save }}% Off</span></span></div>
@@ -234,7 +231,7 @@
             <div id="new_arrivals" class="tab-panel active">
                 <div class="ysera-product">
                     <ul class="row list-products auto-clear equal-container product-grid">
-                        {% if newarrivals_products %}
+                        {% if bridalsets %}
                             {% for newarrivals in bridalsets %}
                             <li class="product-item col-lg-3 col-md-4 col-sm-6 col-xs-6 col-ts-12 style-1">
                                 <div class="product-inner equal-element">
